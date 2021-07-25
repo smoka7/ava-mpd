@@ -62,8 +62,8 @@ export default {
     this.$store.dispatch("getCurrentPlaylist");
     this.$store.dispatch("startCounter");
   },
-  async mounted() {
-    await this.connectToSocket();
+  mounted() {
+    this.connectToSocket();
     setColorScheme();
   },
 };
