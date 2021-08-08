@@ -11,6 +11,7 @@ import (
 type Connection struct {
 	Address  string      //address of mpd server
 	Password string      //password of mpd server
+	AppPort  string      //port of current app
 	Client   *mpd.Client //connected client
 }
 
@@ -24,26 +25,24 @@ func (c *Connection) ReadEnv() {
 
 //parse the MPD server connection from bin flag
 func (c *Connection) ReadFromFlags() {
-	var host, port string
-	flag.StringVar(&host, "host", host, "host of mpd server")
-	flag.StringVar(&port, "port", port, "port of mpd server")
+	var address string
+	flag.StringVar(&address, "address", "", "address of mpd server host:port")
 	flag.StringVar(&c.Password, "password", c.Password, "password of mpd server")
+	flag.StringVar(&c.AppPort, "port", "3001", "The port to run this app on it")
 	flag.Parse()
-	if host != "" && port != "" {
-		c.Address = host + ":" + port
+	if address != "" {
+		c.Address = address
 	}
 }
 
 //connects to server
 func (c *Connection) Connect() {
 	if c.Address == "" {
-		log.Println("enter host and port of server")
+		log.Println("mpd server address is empty")
 		os.Exit(1)
 	}
 	c.Client, err = mpd.DialAuthenticated("tcp", c.Address, c.Password)
-	if err != nil {
-		Log(err)
-	}
+	Log(err)
 }
 
 //closes the connection to server
@@ -68,10 +67,12 @@ func Log(err error) {
 	cache, e := os.UserCacheDir()
 	if e != nil {
 		log.Println(e)
+		return
 	}
 	logFile, e := os.OpenFile(cache+"/ava-mpd/ava.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if e != nil {
 		log.Println(e)
+		return
 	}
 	defer logFile.Close()
 	Log := log.New(logFile, "", log.LstdFlags|log.Lshortfile)
