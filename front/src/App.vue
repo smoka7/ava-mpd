@@ -39,8 +39,8 @@ export default {
       this.settingIsOpen = !this.settingIsOpen;
     },
     connectToSocket() {
-      let hostname = new URL(window.location.href).hostname;
-      let socket = new WebSocket("ws://" + hostname + ":3001/update");
+      let hostname = new URL(window.location.href).host;
+      let socket = new WebSocket("ws://" + hostname + "/update");
       socket.onmessage = (event) => {
         let some = JSON.parse(event.data);
         if (some.Subsystem == "playlist") {

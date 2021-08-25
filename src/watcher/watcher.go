@@ -31,7 +31,6 @@ func (m *Mpd) Serve(ws *websocket.Conn) {
 func eventWatcher(c config.Connection, event chan string) {
 	watcher, err := mpd.NewWatcher("tcp", c.Address, c.Password)
 	config.Log(err)
-	defer watcher.Close()
 	go func() {
 		for err := range watcher.Error {
 			config.Log(err)

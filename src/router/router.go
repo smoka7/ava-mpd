@@ -1,7 +1,6 @@
 package router
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -25,15 +24,7 @@ func init() {
 	ip := getHostIP()
 	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.Client.AppPort)
 	serveCoverArts()
-	serveAppPort(cl.Client.AppPort)
 	go wc.RecordPlayCount()
-}
-
-//serves this app port
-func serveAppPort(port string) {
-	http.HandleFunc("/api/port", func(rw http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(rw).Encode(map[string]string{"port": port})
-	})
 }
 
 //sets cache-control max-age's to 2 days
