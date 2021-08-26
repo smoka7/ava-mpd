@@ -27,6 +27,13 @@ func init() {
 	go wc.RecordPlayCount()
 }
 
+func Router() {
+	http.Handle("/update", websocket.Handler(wc.Serve))
+	log.Panic(
+		http.ListenAndServe(":"+cl.Client.AppPort, nil),
+	)
+}
+
 //sets cache-control max-age's to 2 days
 func CacheControl(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
