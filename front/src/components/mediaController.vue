@@ -352,7 +352,7 @@ import progressBar from "./progressBar.vue";
 import {
   sendCommand,
   humanizeTime,
-  toggleMediaPlayer,
+  toggleMediaController,
   toggleFolders,
 } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -408,7 +408,7 @@ export default {
       sendCommand("/api/queue", "save", { playlist: this.playListName });
       this.togglePlaylistSave();
     },
-    openPlaylist: toggleMediaPlayer,
+    openPlaylist: toggleMediaController,
     openFolders: toggleFolders,
     humanizeTime: humanizeTime,
     sendCommand: sendCommand,
