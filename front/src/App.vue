@@ -44,7 +44,7 @@ export default {
       socket.onmessage = (event) => {
         let some = JSON.parse(event.data);
         if (some.Subsystem == "playlist") {
-          this.$store.dispatch("getCurrentPlaylist");
+          this.$store.dispatch("getQueue");
         }
         if (
           some.Subsystem == "player" ||
@@ -59,7 +59,7 @@ export default {
   },
   created() {
     this.$store.dispatch("getCurrentSong");
-    this.$store.dispatch("getCurrentPlaylist");
+    this.$store.dispatch("getQueue");
     this.$store.dispatch("startCounter");
   },
   mounted() {
