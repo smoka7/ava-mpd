@@ -6,7 +6,7 @@ const store = createStore({
     status: Object,
     albumArt: "default",
     storedPlaylist: Array,
-    Queue: Array,
+    queue: Array,
   },
   mutations: {
     setCurrentSong(state, song) {
@@ -14,6 +14,9 @@ const store = createStore({
     },
     setStatus(state, status) {
       state.status = status;
+    },
+    setQueue(state, playlist) {
+      state.queue = playlist;
     },
     setAlbumArt(state, albumArt) {
       state.albumArt = albumArt;
@@ -35,6 +38,15 @@ const store = createStore({
         store.commit("setCurrentSong", json.CurrentSong);
         store.commit("setStatus", json.Status);
         store.commit("setAlbumArt", json.AlbumArt);
+        return;
+      }
+      console.log(response.error);
+    },
+    async getQueue() {
+      let response = await fetch("/api/queue");
+      if (response.ok) {
+        let json = await response.json();
+        store.commit("setQueue", json);
         return;
       }
       console.log(response.error);
