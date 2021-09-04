@@ -31,6 +31,7 @@ func Router() {
 	http.Handle("/update", websocket.Handler(wc.Serve))
 	http.HandleFunc("/api/playback", cl.Playback)
 	http.HandleFunc("/api/status", cl.Status)
+	http.HandleFunc("/api/stored", cl.StoredPlaylist)
 	http.HandleFunc("/api/queue", cl.Queue)
 	http.HandleFunc("/api/song", cl.Song)
 	log.Panic(

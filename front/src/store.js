@@ -18,6 +18,9 @@ const store = createStore({
     setQueue(state, playlist) {
       state.queue = playlist;
     },
+    setStoredPlaylist(state, playlist) {
+      state.storedPlaylist = playlist;
+    },
     setAlbumArt(state, albumArt) {
       state.albumArt = albumArt;
     },
@@ -38,6 +41,15 @@ const store = createStore({
         store.commit("setCurrentSong", json.CurrentSong);
         store.commit("setStatus", json.Status);
         store.commit("setAlbumArt", json.AlbumArt);
+        return;
+      }
+      console.log(response.error);
+    },
+    async getStoredPlaylist() {
+      let response = await fetch("/api/stored");
+      if (response.ok) {
+        let json = await response.json();
+        store.commit("setStoredPlaylist", json);
         return;
       }
       console.log(response.error);
