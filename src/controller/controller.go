@@ -94,3 +94,33 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		json.NewDecoder(r.Body).Decode(&request)
+		switch request.Command {
+		case "crossfade":
+			config.ChangeCrossfade(c.Client, request.Data.Start)
+			return
+		case "enableOutput":
+			config.EnableOutput(c.Client, request.Data.Start)
+			return
+		case "disableOutput":
+			config.DisableOutput(c.Client, request.Data.Start)
+			return
+		case "setGain":
+			config.ChangeReplayGain(c.Client, request.Data.Start)
+			return
+		case "updateDatabase":
+			config.UpdateDatabase(c.Client)
+			return
+		}
+	}
+	databaseStats := config.DatabaseStats(c.Client)
+	replayGain := config.GetReplayGain(c.Client)
+	outputs := config.ListOutputs(c.Client)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"outputs":       outputs,
+		"databaseStats": databaseStats,
+		"replayGain":    replayGain,
+	})
+}

@@ -33,7 +33,10 @@ func Router() {
 	http.HandleFunc("/api/status", cl.Status)
 	http.HandleFunc("/api/stored", cl.StoredPlaylist)
 	http.HandleFunc("/api/queue", cl.Queue)
+	http.HandleFunc("/api/folders", cl.ServerFolders)
+	http.HandleFunc("/api/search", cl.SearchServer)
 	http.HandleFunc("/api/song", cl.Song)
+	http.HandleFunc("/api/setting", cl.Settings)
 	log.Panic(
 		http.ListenAndServe(":"+cl.Client.AppPort, nil),
 	)

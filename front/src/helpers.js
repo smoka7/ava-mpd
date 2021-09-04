@@ -43,3 +43,14 @@ export function toggleFolders() {
     document.getElementById('sidebar').classList.toggle('z-20');
 };
 
+export function toggleDarkMode() {
+    if (localStorage.theme === "dark") {
+        document.documentElement.classList.remove("dark");
+        localStorage.theme = "light";
+        this.theme = "light";
+    } else {
+        document.documentElement.classList.add("dark");
+        localStorage.theme = "dark";
+        this.theme = "dark";
+    }
+};
