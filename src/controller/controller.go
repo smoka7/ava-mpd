@@ -77,3 +77,20 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		json.NewDecoder(r.Body).Decode(&request)
+		switch request.Command {
+		case "albumart":
+			albumArtUrl := song.ServeAlbumArt(c.Client, request.Data.Song)
+			json.NewEncoder(w).Encode(
+				map[string]string{
+					"AlbumArt": albumArtUrl,
+				})
+			return
+		case "like":
+			song.ToggleLike(c.Client, request.Data.Song)
+		}
+	}
+}
+
