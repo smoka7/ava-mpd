@@ -57,12 +57,175 @@ func SaveQueue(c config.Connection, name string) {
 	c.Close()
 }
 
+//return a list of playlists
+func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
+	c.Connect()
+	playlist, err := c.Client.ListPlaylists()
+	config.Log(err)
+	for _, v := range playlist {
+		songCount := 0
+		playlistDuration := 0.0
+		songs, _ := c.Client.PlaylistContents(v["playlist"])
+		for _, song := range songs {
+			duration, _ := strconv.ParseFloat(song["duration"], 64)
+			playlistDuration += duration
+			songCount++
+		}
+		v["songsCount"] = fmt.Sprintf("%d", songCount)
+		v["duration"] = fmt.Sprintf("%f", playlistDuration)
+	}
+	c.Close()
+	return
+}
+
+// returns list of playlist's song
+func ListSongs(c config.Connection, playlist string) (songs []mpd.Attrs) {
+	c.Connect()
+	contents, err := c.Client.PlaylistContents(playlist)
+	config.Log(err)
+	for _, song := range contents {
+		m := map[string]string{
+			"Title":  song["Title"],
+			"Album":  song["Album"],
+			"Artist": song["Artist"]}
+		songs = append(songs, m)
+	}
+	c.Close()
+	return
+}
+
+//adds the playlist to the current queue
+func LoadPlaylist(c config.Connection, playlist string) {
+	c.Connect()
+	err := c.Client.PlaylistLoad(playlist, -1, -1)
+	config.Log(err)
+	c.Close()
+}
+
+//clears the current queue and plays the playlist
+func PlayPlaylist(c config.Connection, name string) {
+	c.Connect()
+	cm := c.Client.BeginCommandList()
+	cm.Clear()
+	cm.PlaylistLoad(name, -1, -1)
+	cm.Play(0)
+	err := cm.End()
+	config.Log(err)
+	c.Close()
+}
+
+//returns content of the folder
+func ListFolders(c config.Connection, folder string) (folderAndFiles []mpd.Attrs) {
+	files := make([]mpd.Attrs, 0)
+	c.Connect()
+	contents, err := c.Client.ListInfo(folder)
+	config.Log(err)
+	c.Close()
+	for _, item := range contents {
+		//ignore playlists
+		if _, ok := item["playlist"]; ok {
+			continue
+		}
+		//append files to the end of list
+		if _, ok := item["file"]; ok {
+			files = append(files, item)
+			continue
+		}
+		folderAndFiles = append(folderAndFiles, item)
+	}
+	folderAndFiles = append(folderAndFiles, files...)
+	return
+}
+
+//clears the current queue and plays the folder
+func PlayFolder(c config.Connection, uris ...string) {
+	c.Connect()
+	cm := c.Client.BeginCommandList()
+	cm.Clear()
+	for _, uri := range uris {
+		cm.Add(uri)
+	}
+	cm.Play(0)
+	err := cm.End()
+	config.Log(err)
+	c.Close()
+}
+
+//adds the folder to the current queue
+func AddFolder(c config.Connection, uris ...string) {
+	c.Connect()
+	cm := c.Client.BeginCommandList()
+	for _, uri := range uris {
+		cm.Add(uri)
+	}
+	err := cm.End()
+	config.Log(err)
+	c.Close()
+}
+
 //adds the song to playlist
 func AddSongToPlaylist(c config.Connection, playlist, uri string) {
 	c.Connect()
 	err := c.Client.PlaylistAdd(playlist, uri)
 	config.Log(err)
 	c.Close()
+}
+
+//search for songs in the server
+func SearchServer(c config.Connection, term ...string) (files []mpd.Attrs) {
+	c.Connect()
+	files, err = c.Client.Search(term...)
+	config.Log(err)
+	c.Close()
+	if len(files) >= 100 {
+		files = files[:100]
+	}
+	return files
+}
+
+//returns a list of liked songs
+func GetLikedSongs(c config.Connection) (likedSongs []string) {
+	c.Connect()
+	uris, stickers, e := c.Client.StickerFind("", "liked")
+	config.Log(e)
+	c.Close()
+	likedSongs = make([]string, 0)
+	for i := 0; i < len(stickers); i++ {
+		if stickers[i].Value == "true" {
+			likedSongs = append(likedSongs, uris[i])
+		}
+	}
+	return likedSongs
+}
+
+//returns the list of most played songs
+func GetMostPlayed(c config.Connection) (mostPlayed []string) {
+	c.Connect()
+	uris, stickers, err := c.Client.StickerFind("", "playedcount")
+	c.Close()
+	config.Log(err)
+	count := len(uris)
+	unOrdered := make([]map[string]string, 0)
+	mostPlayed = make([]string, 0)
+	for i := 0; i < count; i++ {
+		m := map[string]string{"uri": uris[i], "count": stickers[i].Value}
+		unOrdered = append(unOrdered, m)
+	}
+	//sort songs based on played time
+	sort.Slice(unOrdered, func(i, j int) bool {
+		a, err := strconv.Atoi(unOrdered[i]["count"])
+		config.Log(err)
+		b, err := strconv.Atoi(unOrdered[j]["count"])
+		config.Log(err)
+		return a > b
+	})
+	if count > 100 {
+		count = 100
+	}
+	for i := 0; i < count; i++ {
+		mostPlayed = append(mostPlayed, unOrdered[i]["uri"])
+	}
+	return
 }
 
 //filter album info
