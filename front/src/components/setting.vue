@@ -31,8 +31,8 @@
       ></font-awesome-icon>
     </button>
     <div class="card-class">
-      <h2>themes:</h2>
-      <form class="flex w-1/2 space-x-2 items-center" @change="toggleDarkMode">
+      <h2 class="text-lg">themes:</h2>
+      <form class="flex space-x-2 items-center" @change="toggleDarkMode">
         <input
           type="radio"
           name="theme"
@@ -50,17 +50,19 @@
         />
         <label for="dark">dark</label>
       </form>
-      <h2 class="mt-2">color schemes:</h2>
-      <form @change="changeColorScheme">
-        <input
-          type="radio"
-          name="colorScheme"
-          v-model="colorScheme"
-          value="auto"
-          id="auto"
-        />
-        <label for="auto" class="ml-2">auto</label>
-        <div v-for="(scheme, index) in colorSchemes" :key="index" class="p-2">
+      <h2 class="text-lg">color schemes:</h2>
+      <form @change="changeColorScheme" class="flex flex-col space-y-3">
+        <div>
+          <input
+            type="radio"
+            name="colorScheme"
+            v-model="colorScheme"
+            value="auto"
+            id="auto"
+          />
+          <label for="auto" class="ml-2">auto</label>
+        </div>
+        <div v-for="(scheme, index) in colorSchemes" :key="index" class="">
           <input
             type="radio"
             name="colorScheme"
@@ -77,7 +79,7 @@
       </form>
     </div>
     <div class="card-class">
-      <h2>database stats:</h2>
+      <h2 class="text-lg">database stats:</h2>
       <p>
         songs: <span>{{ databaseStats["songs"] }}</span>
       </p>
@@ -105,14 +107,37 @@
       </p>
       <button
         aria-label="update-database"
-        class="border-2 border-green-500 text-green-500 p-2 rounded float-right"
+        class="
+          border-2 border-green-500
+          text-green-500
+          p-2
+          my-2
+          rounded
+          hover:bg-green-500 hover:text-white
+        "
         @click="updateDatabase"
       >
-        <font-awesome-icon icon="database"></font-awesome-icon> update database
+        <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
+        database
+      </button>
+      <button
+        aria-label="delete-cache"
+        class="
+          border-2 border-red-500
+          text-red-500
+          p-2
+          my-2
+          rounded
+          hover:bg-red-500 hover:text-white
+        "
+        @click="deleteCache"
+      >
+        <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover
+        Art cache
       </button>
     </div>
     <div class="card-class">
-      <h2 class="mb-2">playback options:</h2>
+      <h2 class="text-lg mb-2">playback options:</h2>
       <label for="crossfade"> crossfade </label>
       <input
         class="border border-blue-500 p-2 rounded dark:bg-gray-700"
@@ -148,7 +173,7 @@
       </select>
     </div>
     <div class="card-class">
-      <h2 class="mb-2">list of outputs:</h2>
+      <h2 class="text-lg mb-2">list of outputs:</h2>
       <div
         v-for="(output, index) in outputs"
         :key="index"
@@ -199,6 +224,9 @@ export default {
   methods: {
     updateDatabase() {
       sendCommand("/api/setting", "updateDatabase");
+    },
+    deleteCache() {
+      sendCommand("/api/setting", "deleteCache");
     },
     toggleOutput(index) {
       let id = Number(this.outputs[index]["outputid"]);

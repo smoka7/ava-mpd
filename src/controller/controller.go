@@ -104,20 +104,18 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 		switch request.Command {
 		case "crossfade":
 			config.ChangeCrossfade(c.Client, request.Data.Start)
-			return
 		case "enableOutput":
 			config.EnableOutput(c.Client, request.Data.Start)
-			return
 		case "disableOutput":
 			config.DisableOutput(c.Client, request.Data.Start)
-			return
+		case "deleteCache":
+			config.DeleteCache()
 		case "setGain":
 			config.ChangeReplayGain(c.Client, request.Data.Start)
-			return
 		case "updateDatabase":
 			config.UpdateDatabase(c.Client)
-			return
 		}
+		return
 	}
 	databaseStats := config.DatabaseStats(c.Client)
 	replayGain := config.GetReplayGain(c.Client)
