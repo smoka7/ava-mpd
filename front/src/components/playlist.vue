@@ -66,6 +66,7 @@
               w-full
               flex
               items-center
+              cursor-pointer
             "
             @click.stop="play(song.Pos)"
           >

@@ -7,7 +7,7 @@
 }
 
 .tooltip .tooltiptext {
-  @apply invisible bg-accent bg-opacity-70 text-foreground w-auto text-center p-2 rounded bottom-full left-1/2 -ml-10 absolute z-10 inline;
+  @apply invisible bg-lightest bg-opacity-70 text-primary w-auto text-center p-2 rounded bottom-full left-1/2 -ml-10 absolute z-10 inline;
 }
 
 .tooltip:hover .tooltiptext {
@@ -28,7 +28,7 @@
 }
 * {
   scrollbar-color: var(--primary-color) var(--lightest-color);
-  scrollbar-width: medium;
+  accent-color: var(--primary-color);
 }
 ::-webkit-scrollbar {
   @apply w-2;
