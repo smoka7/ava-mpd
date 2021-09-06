@@ -13,12 +13,11 @@ var err error
 //toggles the state between play and pause
 func Toggle(c config.Connection) {
 	status := song.GetStatus(c)
-	playing := false
 	if status["state"] == "play" {
-		playing = true
+		c.Client.Pause(true)
+		return
 	}
-	err = c.Client.Pause(playing)
-	config.Log(err)
+	c.Client.Play(-1)
 }
 
 //stops the current queue
