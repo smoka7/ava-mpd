@@ -136,7 +136,7 @@
       >
         <div
           class="p-2 hover:bg-blue-100 dark:hover:text-black"
-          @click="deleteSong(selected)"
+          @click="deleteSong(selected.position)"
         >
           delete
         </div>
@@ -158,24 +158,41 @@
             </p>
           </div>
         </details>
-        <div class="p-2 hover:bg-blue-100 dark:hover:text-black">info</div>
+        <div
+          @click="songInfo = true;hideMenu();
+          "
+          class="p-2 hover:bg-blue-100 dark:hover:text-black"
+        >
+          info
+        </div>
       </div>
     </div>
+    <songInfo
+      v-if="songInfo"
+      :song="selected.file"
+      @close="songInfo = false"
+    ></songInfo>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import { sendCommand, humanizeTime, toggleMediaController } from "../helpers.js";
+import {
+  sendCommand,
+  humanizeTime,
+  toggleMediaController,
+} from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import songInfo from "./songInfo.vue";
 export default {
   components: {
     FontAwesomeIcon,
+    songInfo,
   },
   data() {
     return {
       menu: false,
-      selected: -1,
-      uri: "",
+      songInfo: false,
+      selected: { position: -1, file: "" },
     };
   },
   async mounted() {
@@ -197,7 +214,7 @@ export default {
     },
     addSongTo(playlist) {
       sendCommand("api/queue", "addsong", {
-        song: this.uri,
+        song: this.selected.file,
         playlist: playlist,
       });
     },
@@ -208,14 +225,14 @@ export default {
       if (el) el.classList.toggle("invisible");
     },
     showMenu(pos, uri, e) {
-      (this.selected = pos), (this.uri = uri);
+      this.selected = { position: pos, file: uri };
       let el = document.getElementById("context-menu");
       el.style.left = e.pageX + "px";
       el.style.top = e.pageY + "px";
       this.menu = true;
     },
     hideMenu() {
-      this.selected = { position: -1, file: "" };
+      this.selected.position = -1;
       this.menu = false;
     },
     animate(id) {
@@ -234,6 +251,7 @@ export default {
         End: Number(end),
       };
       sendCommand("/api/queue", "delete", data);
+      this.menu = false;
     },
   },
   computed: {

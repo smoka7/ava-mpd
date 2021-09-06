@@ -90,6 +90,10 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 			return
 		case "like":
 			song.ToggleLike(c.Client, request.Data.Song)
+		case "info":
+			song := song.Song{}
+			song.GetSongInfo(c.Client, request.Data.Song)
+			json.NewEncoder(w).Encode(song.Info)
 		}
 	}
 }
