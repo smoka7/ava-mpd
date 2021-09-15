@@ -25,12 +25,17 @@
           class="
             flex
             px-8
-            py-2
+            md:py-2
+            py-4
+            md:mx-2
+            my-1
+            md:rounded
             sticky
             top-0
             text-primary
             bg-lightest
             items-center
+            cursor-pointer
           "
           @click="animate(album[0].Pos)"
         >
@@ -48,10 +53,12 @@
           v-for="song in album"
           :key="song.Pos"
           class="
-            py-1
+            md:py-1
+            py-2
             px-4
             grid grid-cols-12
             snap-child
+            md:rounded md:mx-2
             hover:bg-blue-100
             dark:hover:text-black
           "
@@ -119,7 +126,7 @@
     </button>
     <div
       v-show="menu"
-      class="bg-transparent absolute top-0 bottom-0 left-0 right-0"
+      class="bg-white bg-opacity-10 absolute top-0 bottom-0 left-0 right-0"
       @click.self="hideMenu"
     >
       <div
@@ -132,6 +139,7 @@
           z-50
           rounded
           border-2 border-primary
+          dark:border-lightest
           cursor-pointer
         "
       >
@@ -148,10 +156,17 @@
           >
             add to playlist
           </summary>
-          <div class="border-primary border-t-2 border-b-2">
+          <div
+            class="
+              border-primary
+              dark:border-lightest
+              border-t-2 border-b-2
+              dark:hover:text-black
+            "
+          >
             <p
               @click="addSongTo(pl.playlist)"
-              class="px-4 py-1 hover:bg-blue-100 dark:border-gray-800"
+              class="px-4 py-1 hover:bg-blue-100"
               v-for="pl in storedPlaylist"
               :key="pl.playlist"
             >
@@ -160,7 +175,9 @@
           </div>
         </details>
         <div
-          @click="songInfo = true;hideMenu();
+          @click="
+            songInfo = true;
+            hideMenu();
           "
           class="p-2 hover:bg-blue-100 dark:hover:text-black"
         >
@@ -200,7 +217,7 @@ export default {
     setTimeout(() => {
       let el = document.getElementById("song" + this.currentSong.Pos);
       if (el !== null) {
-        el.classList.add("bg-red-100");
+        el.classList.add("bg-red-200");
         el.classList.add("dark:text-black");
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
@@ -268,13 +285,13 @@ export default {
       let newId = "song" + newSong.Pos;
       let el = document.getElementById(oldId);
       if (el) {
-        el.classList.remove("bg-red-100");
+        el.classList.remove("bg-red-200");
         el.classList.remove("dark:text-black");
       }
       el = document.getElementById(newId);
       if (el) {
         el.classList.toggle("dark:text-black");
-        el.classList.toggle("bg-red-100");
+        el.classList.toggle("bg-red-200");
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
     },

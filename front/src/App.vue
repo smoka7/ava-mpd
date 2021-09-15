@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col-reverse">
+  <div class="flex flex-col-reverse text-lg">
     <main class="h-full w-full mx-auto flex">
       <sidebar id="sidebar" class="md:w-1/4 w-full fixed md:static h-full">
       </sidebar>
