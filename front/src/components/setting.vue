@@ -52,16 +52,6 @@
       </form>
       <h2 class="text-lg">color schemes:</h2>
       <form @change="changeColorScheme" class="flex flex-col space-y-3">
-        <div>
-          <input
-            type="radio"
-            name="colorScheme"
-            v-model="colorScheme"
-            value="auto"
-            id="auto"
-          />
-          <label for="auto" class="ml-2">auto</label>
-        </div>
         <div v-for="(scheme, index) in colorSchemes" :key="index" class="">
           <input
             type="radio"
