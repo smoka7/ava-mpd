@@ -1,6 +1,16 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex justify-between p-2 text-primary dark:text-white">
+    <div
+      class="
+        flex
+        justify-between
+        p-2
+        text-primary
+        dark:text-white
+        hover:bg-blue-200
+        rounded
+      "
+    >
       <span>
         <font-awesome-icon icon="heart"></font-awesome-icon>
         liked Songs
@@ -14,7 +24,17 @@
         </button>
       </span>
     </div>
-    <div class="flex justify-between p-2 text-primary dark:text-white">
+    <div
+      class="
+        flex
+        justify-between
+        p-2
+        text-primary
+        dark:text-white
+        hover:bg-blue-200
+        rounded
+      "
+    >
       <span>
         <font-awesome-icon icon="chart-area"></font-awesome-icon>
         most Played Songs
@@ -39,11 +59,15 @@
         class="
           flex
           justify-between
-          p-2
+          md:p-2
+          py-4
+          px-2
           text-primary
           cursor-pointer
           border-primary
           dark:text-white dark:border-gray-800
+          hover:bg-blue-200
+          rounded
         "
       >
         <span @click="getSongs(index)">

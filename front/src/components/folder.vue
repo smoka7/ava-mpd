@@ -1,8 +1,21 @@
 <template>
   <div class="flex flex-col">
     <details>
-      <summary class="flex text-primary dark:text-white justify-between p-2">
-        <span class="w-5/6" @click.self="listFolders(index)">
+      <summary
+        class="
+          flex
+          text-primary
+          dark:text-white
+          justify-between
+          md:p-2
+          px-2
+          py-4
+          hover:bg-blue-200
+          dark:hover:text-primary
+          rounded
+        "
+      >
+        <span class="w-5/6 overflow-clip" @click.self="listFolders(index)">
           <FontAwesomeIcon
             :icon="folder.directory ? 'folder' : 'music'"
           ></FontAwesomeIcon>
@@ -23,10 +36,19 @@
           </button>
         </span>
       </summary>
-      <div class="flex flex-col border-2 border-primary rounded-lg m-1">
+      <div
+        class="
+          flex flex-col
+          border-2 border-primary
+          rounded-lg
+          m-1
+          dark:border-lightest
+        "
+        v-if="hasChild"
+      >
         <Folder
-          class="ml-2"
-          v-for="(folder, index) in folder.folders"
+          class="m-1"
+          v-for="(folder, index) in folder.children"
           :key="index"
           :data="folder"
         >
@@ -52,13 +74,10 @@ export default {
   },
   methods: {
     async listFolders() {
-      // if its not a folder do nothing
-      if (!this.folder.directory) {
-        return;
-      }
-      //if folder list exists delete it
-      if (this.folder.folders && this.folder.folders.length) {
-        this.folder.folders = [];
+      // if its not a folder do nothing and if folder list exists delete it
+      if (!this.folder.directory) return;
+      if (this.hasChild) {
+        this.folder.children = [];
         return;
       }
       let request = {
@@ -76,18 +95,18 @@ export default {
       });
       if (response.ok) {
         let json = await response.json();
-        this.folder.folders = json;
+        this.folder.children = json;
         return;
       }
       console.log(response.error);
     },
-    PlayFolder(index) {
+    PlayFolder() {
       let data = {
         playlist: this.folder.directory || this.folder.file,
       };
       sendCommand("api/folders", "play", data);
     },
-    addFolder(index) {
+    addFolder() {
       let data = {
         playlist: this.folder.directory || this.folder.file,
       };
@@ -100,6 +119,10 @@ export default {
       let index = name.lastIndexOf("/");
       if (index > -1) return name.substring(index + 1);
       return name;
+    },
+    hasChild() {
+      if (this.folder.children && this.folder.children.length > 0) return true;
+      return false;
     },
   },
 };
