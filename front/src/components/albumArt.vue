@@ -18,7 +18,6 @@
   </div>
 </template>
 <script>
-import { writeColors } from "../colors";
 export default {
   props: ["url"],
   data() {

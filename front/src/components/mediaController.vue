@@ -10,7 +10,7 @@
       md:h-36 md:grid-rows-3 md:grid-cols-12 md:p-4
       bg-primary
       text-foreground
-      z-20
+      z-10
     "
     id="mediaController"
   >
@@ -73,36 +73,8 @@
         justify-start
       "
     >
-      <div
-        @click.self="zoom"
-        :class="
-          albumArtZoomed
-            ? 'fixed top-0 left-0 w-screen h-screen flex justify-center z-50 md:py-10 py-44'
-            : ''
-        "
-      >
-        <div
-          v-if="defaultAlbumArt"
-          class="rounded-xl w-full md:w-20 md:h-20 md:mx-4 avatar"
-        ></div>
-        <img
-          v-show="!defaultAlbumArt"
-          id="albumArt"
-          @click="zoom"
-          :class="
-            albumArtZoomed
-              ? 'rounded-xl w-auto h-auto'
-              : 'rounded-xl w-full md:w-20 md:h-20 md:mx-4 cursor-pointer'
-          "
-          height="80"
-          width="80"
-          loading="lazy"
-          :src="defaultAlbumArt ? '' : albumArt"
-          :alt="
-            'album art of ' + currentSong.Title + ' by ' + currentSong.Artist
-          "
-        />
-      </div>
+      <album-art :url="albumArt"       id="albumArt"
+ class="w-full md:w-24 md:mx-4"></album-art>
       <div
         class="
           flex flex-col
@@ -349,6 +321,7 @@
 
 <script>
 import progressBar from "./progressBar.vue";
+import albumArt from "./albumArt.vue";
 import {
   sendCommand,
   humanizeTime,
@@ -357,16 +330,15 @@ import {
 } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { mapState } from "vuex";
-import { writeColors } from "../colors";
 export default {
   components: {
     progressBar,
     FontAwesomeIcon,
+    albumArt,
   },
   emits: ["openSetting"],
   data() {
     return {
-      albumArtZoomed: false,
       playListName: "",
       playListSave: false,
     };
@@ -379,9 +351,6 @@ export default {
       if (volume > 100) volume = 100;
       if (volume < 0) volume = 0;
       sendCommand("/api/playback", "changeVolume", { start: volume });
-    },
-    zoom() {
-      this.albumArtZoomed = !this.albumArtZoomed;
     },
     likeSong() {
       let el = document.getElementById("like-btn");
@@ -415,20 +384,6 @@ export default {
   },
   computed: {
     ...mapState(["currentSong", "albumArt", "status"]),
-    defaultAlbumArt() {
-      writeColors();
-      return this.albumArt === "default";
-    },
   },
 };
 </script>
-<style>
-.avatar {
-  background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
-    linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
-    linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
-    radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
-    radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
-  background-blend-mode: screen, color-dodge, overlay, difference, normal;
-}
-</style>
