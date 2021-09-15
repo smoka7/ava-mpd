@@ -13,17 +13,16 @@
         right-0
         md:w-3/4 md:left-1/4 md:top-1
         app-height
-        z-20
+        z-auto
         p-8
         space-y-2
-        border-2 border-primary
         rounded
         overflow-auto
         bg-lightest
       "
     >
       <div class="flex flex-row align-baseline justify-between">
-        <h1 class="text-primary text-4xl">song Info</h1>
+        <h1 class="text-primary text-bold text-4xl">song Info</h1>
         <button
           aria-label="close-info"
           @click="$emit('close')"
@@ -39,15 +38,32 @@
       <div
         class="
           flex flex-col
-          rounded
-          p-4
-          bg-white
-          dark:text-white dark:bg-gray-700
+          md:flex-row
+          justify-around
+          md:space-x-2 md:space-y-0
+          space-y-2
         "
       >
-        <p v-for="(value, index) in info" :key="index">
-          {{ index }} : {{ value }}
-        </p>
+        <album-art :url="albumArt" class="md:w-1/2"></album-art>
+        <dl
+          class="
+            flex flex-col
+            rounded
+            p-4
+            bg-white
+            dark:text-white dark:bg-gray-700
+          "
+        >
+          <p v-for="(value, index) in info" :key="index" class="flex space-x-2">
+            <dt>{{ index }}:</dt>
+            <dd>
+              {{ value }}
+            </dd>
+          </p>
+          <p v-for="(sticker, index) in stickers" :key="index">
+            {{ sticker.Name }} : {{ sticker.Value }}
+          </p>
+        </dl>
       </div>
     </div>
   </div>
@@ -55,12 +71,15 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import albumArt from "./albumArt.vue";
 export default {
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, albumArt },
   props: ["song"],
   data() {
     return {
       info: {},
+      stickers: {},
+      albumArt: "",
     };
   },
   methods: {},
@@ -77,7 +96,10 @@ export default {
       body: JSON.stringify(request),
     });
     if (response.ok) {
-      this.info = await response.json();
+      let song = await response.json();
+      this.info = song.Info;
+      this.stickers = song.Stickers;
+      this.albumArt = song.AlbumArt;
     }
   },
 };

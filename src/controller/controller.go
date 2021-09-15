@@ -91,9 +91,15 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 		case "like":
 			song.ToggleLike(c.Client, request.Data.Song)
 		case "info":
-			song := song.Song{}
-			song.GetSongInfo(c.Client, request.Data.Song)
-			json.NewEncoder(w).Encode(song.Info)
+			info := song.Song{}
+			info.GetSongInfo(c.Client, request.Data.Song)
+			stickers := song.GetStickers(c.Client, request.Data.Song)
+			albumArtUrl := song.ServeAlbumArt(c.Client, request.Data.Song)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"Info":     info.Info,
+				"Stickers": stickers,
+				"AlbumArt": albumArtUrl,
+			})
 		}
 	}
 }
