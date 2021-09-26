@@ -73,8 +73,11 @@
         justify-start
       "
     >
-      <album-art :url="albumArt"       id="albumArt"
- class="w-full md:w-24 md:mx-4"></album-art>
+      <album-art
+        :url="albumArt"
+        id="albumArt"
+        class="w-full md:w-24 md:mx-4"
+      ></album-art>
       <div
         class="
           flex flex-col
@@ -93,6 +96,7 @@
           {{ currentSong.Title }}
           <button
             id="like-btn"
+            aria-label="like-song"
             class="rating text-red-500 transition-all duration-200 transform"
             @click="likeSong"
           >

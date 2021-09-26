@@ -21,7 +21,6 @@
     <div class="overflow-y-auto snap-container">
       <details v-for="(album, index) in queue" :key="index" open>
         <summary
-          id="album-title"
           class="
             flex
             px-8

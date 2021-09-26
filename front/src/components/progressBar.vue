@@ -43,7 +43,7 @@ progress {
   @apply bg-gradient-to-r from-lighter via-accent to-secondary rounded;
 }
 ::-webkit-progress-bar {
-  @apply bg-lightest rounded;
+  @apply bg-lightest rounded h-4;
 }
 ::-moz-progress-bar {
   @apply bg-gradient-to-r from-lighter via-accent to-secondary rounded;

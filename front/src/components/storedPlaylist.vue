@@ -8,6 +8,7 @@
         text-primary
         dark:text-white
         hover:bg-blue-200
+        dark:hover:text-primary
         rounded
       "
     >
@@ -32,6 +33,7 @@
         text-primary
         dark:text-white
         hover:bg-blue-200
+        dark:hover:text-primary
         rounded
       "
     >
@@ -67,6 +69,7 @@
           border-primary
           dark:text-white dark:border-gray-800
           hover:bg-blue-200
+          dark:hover:text-primary
           rounded
         "
       >
