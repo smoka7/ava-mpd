@@ -15,6 +15,11 @@ type Connection struct {
 	Client   *mpd.Client //connected client
 }
 
+//maximm log size in bytes
+const MaxLogSize = 20000
+
+const LogFilePath = "/ava-mpd/ava.log"
+
 var err error
 
 //Reads the MPD server connection from environment values
@@ -69,14 +74,23 @@ func Log(err error) {
 		log.Println(e)
 		return
 	}
-	logFile, e := os.OpenFile(cache+"/ava-mpd/ava.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	logFile, e := os.OpenFile(cache+LogFilePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if e != nil {
 		log.Println(e)
 		return
 	}
-	defer logFile.Close()
+	stat, _ := logFile.Stat()
+	if stat.Size() > MaxLogSize {
+		logFile.Close()
+		logFile, e = os.OpenFile(cache+LogFilePath, os.O_TRUNC|os.O_WRONLY, 0600)
+		if e != nil {
+			log.Println(e)
+			return
+		}
+	}
 	Log := log.New(logFile, "", log.LstdFlags|log.Lshortfile)
 	Log.Println(err)
+	logFile.Close()
 }
 
 //updates the MPD server database
