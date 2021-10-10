@@ -26,14 +26,14 @@
     >
       <button
         aria-label="previous-song"
-        @click="sendCommand('/api/playback', 'previous')"
+        @click="playbackCommand('previous')"
         class="text-lightest py-7 px-8 rounded-full md:p-3"
       >
         <font-awesome-icon icon="step-backward" size="lg" />
       </button>
       <button
         aria-label="toggle-playback"
-        @click="sendCommand('/api/playback', 'toggle')"
+        @click="playbackCommand('toggle')"
         :class="[
           status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
           'text-white md:py-7 md:px-7 rounded-full px-12 flex items-center',
@@ -48,14 +48,14 @@
       </button>
       <button
         aria-label="stop-song"
-        @click="sendCommand('/api/playback', 'stop')"
+        @click="playbackCommand('stop')"
         class="text-lightest py-7 px-8 rounded-full md:pl-3 md:p-0"
       >
         <font-awesome-icon icon="stop" size="lg" />
       </button>
       <button
         aria-label="next-song"
-        @click="sendCommand('/api/playback', 'next')"
+        @click="playbackCommand('next')"
         class="text-lightest py-7 px-8 rounded-full md:p-3"
       >
         <font-awesome-icon icon="step-forward" size="lg" />
@@ -130,14 +130,7 @@
       "
     >
       <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-between">
-        <button
-          aria-label="save-queue"
-          @click="togglePlaylistSave"
-          class="p-2 px-3 text-foreground rounded-full md:p-0 tooltip"
-        >
-          <font-awesome-icon icon="save" size="lg"></font-awesome-icon>
-          <span class="tooltiptext">save current queue</span>
-        </button>
+      <save-queue/>
         <button
           aria-label="clear-queue"
           @click="clearQueue"
@@ -148,7 +141,7 @@
         </button>
         <button
           aria-label="repeat"
-          @click="sendCommand('/api/playback', 'repeat')"
+          @click="playbackCommand('repeat')"
           :class="[
             status.repeat == '1'
               ? 'md:text-green-500 bg-green-500 md:bg-transparent'
@@ -161,7 +154,7 @@
         </button>
         <button
           aria-label="single"
-          @click="sendCommand('/api/playback', 'single')"
+          @click="playbackCommand('single')"
           :class="[
             status.single == '1'
               ? 'md:text-green-500 bg-green-500 md:bg-transparent'
@@ -174,7 +167,7 @@
         </button>
         <button
           aria-label="random"
-          @click="sendCommand('/api/playback', 'random')"
+          @click="playbackCommand('random')"
           :class="[
             status.random == '1'
               ? 'md:text-green-500 bg-green-500 md:bg-transparent'
@@ -187,7 +180,7 @@
         </button>
         <button
           aria-label="consume"
-          @click="sendCommand('/api/playback', 'consume')"
+          @click="playbackCommand('consume')"
           :class="[
             status.consume == '1'
               ? 'md:text-green-500 bg-green-500 md:bg-transparent'
@@ -286,46 +279,13 @@
         v-on:seek="seek"
       ></progress-bar>
     </div>
-    <form
-      v-if="playListSave"
-      @submit.prevent="saveQueue"
-      class="
-        fixed
-        top-0
-        left-0
-        w-screen
-        h-screen
-        flex
-        justify-center
-        items-center
-        z-50
-        bg-transparent bg-blue-200 bg-opacity-40
-      "
-      @click.self="togglePlaylistSave"
-    >
-      <input
-        type="text"
-        v-model="playListName"
-        class="
-          border-2 border-primary
-          rounded
-          mx-2
-          px-2
-          h-12
-          text-black
-          w-full
-          md:w-1/3
-        "
-        placeholder="playlist name"
-        autofocus
-      />
-    </form>
   </div>
 </template>
 
 <script>
 import progressBar from "./progressBar.vue";
 import albumArt from "./albumArt.vue";
+import saveQueue from "./saveQueue.vue";
 import {
   sendCommand,
   humanizeTime,
@@ -339,17 +299,15 @@ export default {
     progressBar,
     FontAwesomeIcon,
     albumArt,
+    saveQueue,
   },
   emits: ["openSetting"],
-  data() {
-    return {
-      playListName: "",
-      playListSave: false,
-    };
-  },
   methods: {
     seek(time) {
       sendCommand("/api/playback", "seek", { start: Number(time) });
+    },
+    playbackCommand(command) {
+      sendCommand("/api/playback", command);
     },
     changeVolume(volume) {
       if (volume > 100) volume = 100;
@@ -357,6 +315,7 @@ export default {
       sendCommand("/api/playback", "changeVolume", { start: volume });
     },
     likeSong() {
+      sendCommand("/api/song", "like", { song: this.currentSong.file });
       let el = document.getElementById("like-btn");
       el.classList.add("scale-105", "rotate-45");
       setTimeout(() => {
@@ -366,7 +325,6 @@ export default {
       setTimeout(() => {
         el.classList.remove("scale-105", "-rotate-45");
       }, 300);
-      sendCommand("/api/song", "like", { song: this.currentSong.file });
     },
     openSetting() {
       this.$emit("openSetting");
@@ -374,17 +332,9 @@ export default {
     clearQueue() {
       sendCommand("/api/playback", "clear");
     },
-    togglePlaylistSave() {
-      this.playListSave = !this.playListSave;
-    },
-    saveQueue() {
-      sendCommand("/api/queue", "save", { playlist: this.playListName });
-      this.togglePlaylistSave();
-    },
     openPlaylist: toggleMediaController,
     openFolders: toggleFolders,
     humanizeTime: humanizeTime,
-    sendCommand: sendCommand,
   },
   computed: {
     ...mapState(["currentSong", "albumArt", "status"]),
