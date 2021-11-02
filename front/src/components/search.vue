@@ -35,7 +35,7 @@
               cursor-default
               bg-white
               focus:outline-none focus:ring-2 focus:ring-primary
-              dark:bg-gray-700 dark:text-white
+              dark:focus:ring-lightest dark:bg-gray-700 dark:text-white
             "
           >
             <ListboxOption
@@ -46,8 +46,9 @@
             >
               <li
                 :class="{
-                  'p-2 focus-within:bg-blue-200 hover:bg-blue-200': !selected,
-                  'p-2 bg-lightest': selected,
+                  'p-2 focus-within:bg-blue-200 hover:bg-blue-200 dark:hover:text-primary':
+                    !selected,
+                  'p-2 bg-lightest dark:text-primary': selected,
                 }"
               >
                 {{ tag }}
