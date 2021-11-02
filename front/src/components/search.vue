@@ -1,22 +1,67 @@
 <template>
   <div class="flex flex-col">
     <form class="p-2 w-full flex" @submit.prevent>
-      <select
-        class="
-          p-2
-          dark:bg-lightest
-          bg-primary
-          dark:text-primary
-          text-foreground
-          rounded-l-lg
-        "
-        name="tag"
-        v-model.lazy="tag"
-      >
-        <option v-for="tag in searchTags" :key="tag" :value="tag">
-          {{ tag }}
-        </option>
-      </select>
+      <Listbox v-model="tag">
+        <ListboxButton
+          class="
+            p-2
+            dark:bg-lightest
+            bg-primary
+            dark:text-primary
+            text-foreground
+            rounded-l-lg
+          "
+        >
+          <span class="flex items-center">
+            {{ tag }}
+            <FontAwesomeIcon icon="angle-down" class="ml-2"></FontAwesomeIcon>
+          </span>
+        </ListboxButton>
+        <transition
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-75 ease-out"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
+        >
+          <ListboxOptions
+            class="
+              fixed
+              mt-14
+              text-left
+              rounded
+              shadow-md
+              cursor-default
+              bg-white
+              focus:outline-none focus:ring-2 focus:ring-primary
+              dark:focus:ring-lightest dark:bg-gray-700 dark:text-white
+            "
+          >
+            <ListboxOption
+              v-for="tag in searchTags"
+              :key="tag"
+              :value="tag"
+              v-slot="{ selected }"
+            >
+              <li
+                :class="{
+                  'p-2 focus-within:bg-blue-200 hover:bg-blue-200 dark:hover:text-primary':
+                    !selected,
+                  'p-2 bg-lightest dark:text-primary': selected,
+                }"
+              >
+                {{ tag }}
+                <FontAwesomeIcon
+                  v-show="selected"
+                  icon="check"
+                  class="ml-2 transform-gpu duration-200"
+                ></FontAwesomeIcon>
+              </li>
+            </ListboxOption>
+          </ListboxOptions>
+        </transition>
+      </Listbox>
       <input
         class="
           p-2
@@ -40,9 +85,21 @@
 </template>
 <script>
 import Folder from "./folder.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/vue";
 export default {
   components: {
     Folder,
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+    FontAwesomeIcon,
   },
   data() {
     return {

@@ -30,43 +30,57 @@
         size="2x"
       ></font-awesome-icon>
     </button>
-    <div class="card-class">
-      <h2 class="text-lg">themes:</h2>
-      <form class="flex space-x-2 items-center" @change="toggleDarkMode">
-        <input
-          type="radio"
-          name="theme"
-          value="light"
-          id="light"
-          v-model="lightOrDark"
-        />
-        <label for="light">light</label>
-        <input
-          type="radio"
-          name="theme"
-          value="dark"
-          id="dark"
-          v-model="lightOrDark"
-        />
-        <label for="dark">dark</label>
-      </form>
-      <h2 class="text-lg">color schemes:</h2>
-      <form @change="changeColorScheme" class="flex flex-col space-y-3">
-        <div v-for="(scheme, index) in colorSchemes" :key="index" class="">
-          <input
-            type="radio"
-            name="colorScheme"
-            :value="index"
-            :id="index"
-            v-model="colorScheme"
+    <div class="card-class space-y-1">
+      <SwitchGroup>
+        <SwitchLabel class="mr-2">Dark Mode</SwitchLabel>
+        <Switch
+          v-model="isDark"
+          :class="isDark ? 'bg-teal-900' : 'bg-teal-700'"
+          isDark
+          class="
+            relative
+            bg-lighter
+            inline-flex
+            items-center
+            h-6
+            rounded
+            w-11
+          "
+        >
+          <span class="sr-only">Enable notifications</span>
+          <span
+            :class="isDark ? 'translate-x-6' : 'translate-x-1'"
+            class="inline-block w-4 h-4 transform bg-primary rounded"
+            isDark
           />
-          <label :for="index" class="ml-2">{{ index }} </label>
-          <div
-            :style="renderScheme(scheme)"
-            class="h-8 w-full rounded shadow"
-          ></div>
-        </div>
-      </form>
+        </Switch>
+      </SwitchGroup>
+      <h2 class="text-lg">color schemes:</h2>
+      <RadioGroup v-model="colorScheme" class="flex flex-col space-y-3">
+        <template v-for="(scheme, index) in colorSchemes" :key="index">
+          <RadioGroupOption v-slot="{ checked }" :value="index">
+            <div
+              :class="[
+                { 'bg-blue-200 text-primary rounded': checked },
+                'p-2 cursor-pointer',
+              ]"
+            >
+              <div class="flex justify-between">
+                <RadioGroupLabel>{{ index }}</RadioGroupLabel>
+                <font-awesome-icon
+                  v-show="checked"
+                  class="text-primary ml-auto"
+                  icon="check-circle"
+                ></font-awesome-icon>
+              </div>
+              <div
+                :style="renderScheme(scheme)"
+                class="h-8 w-full rounded shadow"
+              ></div>
+            </div>
+          </RadioGroupOption>
+        </template>
+      </RadioGroup>
     </div>
     <div class="card-class">
       <h2 class="text-lg">database stats:</h2>
@@ -192,11 +206,25 @@
 </template>
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  RadioGroup,
+  RadioGroupLabel,
+  RadioGroupOption,
+  Switch,
+  SwitchGroup,
+  SwitchLabel,
+} from "@headlessui/vue";
 import { sendCommand, humanizeTime } from "../helpers.js";
 import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
 export default {
   components: {
     FontAwesomeIcon,
+    RadioGroup,
+    RadioGroupLabel,
+    RadioGroupOption,
+    Switch,
+    SwitchGroup,
+    SwitchLabel,
   },
   emits: ["close"],
   data() {
@@ -206,8 +234,8 @@ export default {
       crossfade: 0,
       replayGainMods: ["off", "track", "album", "auto"],
       replayGain: "off",
-      lightOrDark: localStorage.getItem("theme") || "light",
-      colorScheme: localStorage.getItem("colorScheme") || "auto",
+      isDark: localStorage.getItem("theme") == "dark",
+      colorScheme: localStorage.getItem("colorScheme") || "first",
       colorSchemes: colorSchemes,
     };
   },
@@ -250,7 +278,7 @@ export default {
       console.log(response.error);
     },
     toggleDarkMode() {
-      if (this.lightOrDark === "light") {
+      if (!this.isDark) {
         document.documentElement.classList.remove("dark");
         localStorage.setItem("theme", "light");
         return;
@@ -292,6 +320,14 @@ export default {
   async created() {
     this.crossfade = Number(this.$store.state.status.xfade || 0);
     await this.getSettings();
+  },
+  watch: {
+    colorScheme(newCS) {
+      this.changeColorScheme(newCS);
+    },
+    isDark() {
+      this.toggleDarkMode();
+    },
   },
 };
 </script>

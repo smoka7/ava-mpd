@@ -123,67 +123,12 @@
     >
       <font-awesome-icon icon="arrow-right" size="2x"></font-awesome-icon>
     </button>
-    <div
-      v-show="menu"
-      class="bg-white bg-opacity-10 absolute top-0 bottom-0 left-0 right-0"
-      @click.self="hideMenu"
-    >
-      <div
-        id="context-menu"
-        class="
-          flex flex-col
-          bg-white
-          dark:bg-gray-600
-          absolute
-          z-50
-          rounded
-          border-2 border-primary
-          dark:border-lightest
-          cursor-pointer
-        "
-      >
-        <div
-          class="p-2 hover:bg-blue-100 dark:hover:text-black"
-          @click="deleteSong(selected.position)"
-        >
-          delete
-        </div>
-        <details>
-          <summary
-            @click="getStoredPlaylist"
-            class="flex p-2 hover:bg-blue-100 dark:hover:text-black"
-          >
-            add to playlist
-          </summary>
-          <div
-            class="
-              border-primary
-              dark:border-lightest
-              border-t-2 border-b-2
-              dark:hover:text-black
-            "
-          >
-            <p
-              @click="addSongTo(pl.playlist)"
-              class="px-4 py-1 hover:bg-blue-100"
-              v-for="pl in storedPlaylist"
-              :key="pl.playlist"
-            >
-              {{ pl.playlist }}
-            </p>
-          </div>
-        </details>
-        <div
-          @click="
-            songInfo = true;
-            hideMenu();
-          "
-          class="p-2 hover:bg-blue-100 dark:hover:text-black"
-        >
-          info
-        </div>
-      </div>
-    </div>
+    <queue-menu
+      :open="menu"
+      @close="hideMenu"
+      :song="selected"
+      @showInfo="songInfo = true"
+    />
     <songInfo
       v-if="songInfo"
       :song="selected.file"
@@ -200,10 +145,12 @@ import {
 } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import songInfo from "./songInfo.vue";
+import queueMenu from "./queueMenu.vue";
 export default {
   components: {
     FontAwesomeIcon,
     songInfo,
+    queueMenu,
   },
   data() {
     return {
@@ -216,8 +163,7 @@ export default {
     setTimeout(() => {
       let el = document.getElementById("song" + this.currentSong.Pos);
       if (el !== null) {
-        el.classList.add("bg-red-200");
-        el.classList.add("dark:text-black");
+        el.classList.add("current-song");
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
     }, 1000);
@@ -225,16 +171,6 @@ export default {
   methods: {
     humanizeTime: humanizeTime,
     closePlaylist: toggleMediaController,
-    getStoredPlaylist() {
-      if (this.storedPlaylist.length) return;
-      this.$store.dispatch("getStoredPlaylist");
-    },
-    addSongTo(playlist) {
-      sendCommand("api/queue", "addsong", {
-        song: this.selected.file,
-        playlist: playlist,
-      });
-    },
     show(id) {
       let el = document.getElementById(id);
       if (el) el.classList.toggle("invisible");
@@ -262,19 +198,10 @@ export default {
       };
       sendCommand("/api/queue", "play", data);
     },
-    deleteSong(start = -1, end = -1) {
-      let data = {
-        Start: Number(start),
-        End: Number(end),
-      };
-      sendCommand("/api/queue", "delete", data);
-      this.menu = false;
-    },
   },
   computed: {
     ...mapState({
       queue: (state) => state.queue,
-      storedPlaylist: (state) => state.storedPlaylist,
       currentSong: (state) => state.currentSong,
     }),
   },
@@ -284,16 +211,19 @@ export default {
       let newId = "song" + newSong.Pos;
       let el = document.getElementById(oldId);
       if (el) {
-        el.classList.remove("bg-red-200");
-        el.classList.remove("dark:text-black");
+        el.classList.remove("current-song");
       }
       el = document.getElementById(newId);
       if (el) {
-        el.classList.toggle("dark:text-black");
-        el.classList.toggle("bg-red-200");
+        el.classList.add("current-song");
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
     },
   },
 };
 </script>
+<style>
+.current-song {
+  @apply bg-red-200 dark:text-primary;
+}
+</style>
