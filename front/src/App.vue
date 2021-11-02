@@ -1,11 +1,10 @@
 <template>
   <div class="flex flex-col-reverse text-lg">
     <main class="h-full w-full mx-auto flex">
-      <sidebar id="sidebar" class="md:w-1/4 w-full fixed md:static h-full">
-      </sidebar>
+      <sidebar id="sidebar" class="md:w-1/4 w-full fixed md:static h-full" />
       <div class="w-full md:w-3/4 md:ml-2 md:m-1">
-        <setting v-if="settingIsOpen" @close="toggleSetting()"></setting>
-        <playlist v-else></playlist>
+        <setting v-if="settingIsOpen" @close="toggleSetting()" />
+        <playlist v-else />
       </div>
     </main>
     <media-controller @openSetting="toggleSetting()"> </media-controller>
@@ -34,6 +33,7 @@ export default {
   methods: {
     updatePlayer() {
       this.$store.dispatch("getCurrentSong");
+      this.$store.dispatch("getQueue");
     },
     toggleSetting() {
       this.settingIsOpen = !this.settingIsOpen;
@@ -41,19 +41,8 @@ export default {
     connectToSocket() {
       let hostname = new URL(window.location.href).host;
       let socket = new WebSocket("ws://" + hostname + "/update");
-      socket.onmessage = (event) => {
-        let some = JSON.parse(event.data);
-        if (some.Subsystem == "playlist") {
-          this.$store.dispatch("getQueue");
-        }
-        if (
-          some.Subsystem == "player" ||
-          some.Subsystem == "mixer" ||
-          some.Subsystem == "sticker" ||
-          some.Subsystem == "options"
-        ) {
-          this.updatePlayer();
-        }
+      socket.onmessage = () => {
+        this.updatePlayer();
       };
     },
   },
