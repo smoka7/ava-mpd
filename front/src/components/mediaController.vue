@@ -19,6 +19,8 @@
         md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-3
         row-start-7 row-end-9
         w-full
+        h-28
+        md:h-auto
         md:w-auto
         flex
         justify-around
@@ -129,7 +131,7 @@
         md:p-0
       "
     >
-      <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-between">
+      <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-around">
         <save-queue />
         <button
           v-for="command in playbackCommands"
@@ -188,11 +190,7 @@
           icon="volume-down"
           size="lg"
         />
-        <font-awesome-icon
-          v-else
-          icon="volume-off"
-          size="lg"
-        />
+        <font-awesome-icon v-else icon="volume-off" size="lg" />
         <progressBar
           class="md:w-32 w-full"
           :data="{ value: status.volume, max: 100 }"
@@ -279,8 +277,8 @@ export default {
       },
     ]);
     const btnClass = {
-      active: "md:text-green-500 md:bg-transparent bg-green-500",
-      normal: "md:text-foreground md:bg-transparent bg-gray-700",
+      active: "text-green-500 bg-transparent",
+      normal: "text-foreground bg-transparent",
       base: "p-2 md:p-0 rounded-full tooltip md:hover:text-blue-200",
     };
     return { playbackCommands, btnClass };
