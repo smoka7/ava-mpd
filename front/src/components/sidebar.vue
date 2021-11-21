@@ -85,3 +85,8 @@ export default {
   },
 };
 </script>
+<style>
+.sidebar-btn{
+    @apply p-1 hover:bg-white p-1 rounded
+}
+</style>

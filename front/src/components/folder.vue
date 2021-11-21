@@ -22,13 +22,13 @@
           {{ folderName }}
         </span>
         <span class="text-sm space-x-2">
-          <button aria-label="add">
+          <button aria-label="add" class="sidebar-btn">
             <font-awesome-icon
               @click="addFolder(index)"
               icon="plus"
             ></font-awesome-icon>
           </button>
-          <button aria-label="play">
+          <button aria-label="play" class="sidebar-btn">
             <font-awesome-icon
               @click="PlayFolder(index)"
               icon="play"

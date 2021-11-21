@@ -17,10 +17,10 @@
         liked Songs
       </span>
       <span class="space-x-2 text-sm">
-        <button aria-label="add-liked-song">
+        <button aria-label="add-liked-song" class="sidebar-btn">
           <font-awesome-icon @click="addLiked" icon="plus"></font-awesome-icon>
         </button>
-        <button aria-label="play-liked-song">
+        <button aria-label="play-liked-song" class="sidebar-btn">
           <font-awesome-icon @click="playLiked" icon="play"></font-awesome-icon>
         </button>
       </span>
@@ -42,13 +42,13 @@
         most Played Songs
       </span>
       <span class="space-x-2 text-sm">
-        <button aria-label="add-most-played-song">
+        <button aria-label="add-most-played-song" class="sidebar-btn">
           <font-awesome-icon
             @click="addMostPlayed"
             icon="plus"
           ></font-awesome-icon>
         </button>
-        <button aria-label="play-most-played-song">
+        <button aria-label="play-most-played-song" class="sidebar-btn">
           <font-awesome-icon
             @click="playMostPlayed"
             icon="play"
@@ -82,14 +82,18 @@
           {{ playlist.playlist }}
         </span>
         <span class="text-sm space-x-2">
-          {{ playlist.songsCount }} song ({{ humanizeTime(playlist.duration) }})
-          <button aria-label="add">
+          <span>
+            {{ playlist.songsCount }} song ({{
+              humanizeTime(playlist.duration)
+            }})
+          </span>
+          <button aria-label="add" class="sidebar-btn">
             <font-awesome-icon
               @click="addPlaylist(index)"
               icon="plus"
             ></font-awesome-icon>
           </button>
-          <button aria-label="play">
+          <button aria-label="play" class="sidebar-btn">
             <font-awesome-icon
               @click="PlayPlaylist(index)"
               icon="play"
