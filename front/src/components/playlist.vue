@@ -48,7 +48,6 @@
         <div
           @mouseenter="show(song.Pos)"
           @mouseleave="show(song.Pos)"
-          @click="showMenu(song.Pos, song.file, $event)"
           v-for="song in album"
           :key="song.Pos"
           class="
@@ -96,8 +95,9 @@
             class="col-start-11 md:col-start-12 col-end-13 justify-self-center"
           >
             <FontAwesomeIcon
+              @click="showMenu(song.Pos, song.file, $event)"
               :id="'delete' + song.Pos"
-              class="text-primary mr-2 invisible"
+              class="text-primary mr-2 invisible cursor-pointer"
               icon="ellipsis-h"
             ></FontAwesomeIcon>
             {{ humanizeTime(song.duration) }}
@@ -180,7 +180,6 @@ export default {
     showMenu(pos, uri, e) {
       this.selected = { position: pos, file: uri };
       let el = document.getElementById("context-menu");
-      el.style.left = e.pageX + "px";
       el.style.top = e.pageY + "px";
       this.menu = true;
     },

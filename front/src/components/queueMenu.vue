@@ -11,6 +11,7 @@
       bg-white
       dark:bg-gray-600
       absolute
+      right-10
       z-50
       rounded
       border-2 border-primary
