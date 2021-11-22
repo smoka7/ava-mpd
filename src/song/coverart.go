@@ -3,6 +3,7 @@ package song
 import (
 	"errors"
 	"os"
+	"strings"
 
 	"github.com/smoka7/ava/src/config"
 )
@@ -59,9 +60,15 @@ func (s *Song) getCoverArtPath() (coverPath string, url string) {
 	if _, e := os.Stat(coverFolder); os.IsNotExist(e) {
 		err := os.MkdirAll(coverFolder, 0777)
 		config.Log(err)
-
 	}
-	coverPath = coverFolder + s.Info["Album"] + "-" + s.Info["Artist"]
-	url = "/coverart/" + s.Info["Album"] + "-" + s.Info["Artist"]
+	albumName := sanitize(s.Info["Album"])
+	albumArtist := sanitize(s.Info["AlbumArtist"])
+	coverPath = coverFolder + albumName + "-" + albumArtist
+	url = "/coverart/" + albumName + "-" + albumArtist
 	return
+}
+
+//return a valid file name
+func sanitize(name string) string {
+	return strings.ReplaceAll(name, string(os.PathSeparator), "-")
 }
