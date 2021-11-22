@@ -33,7 +33,7 @@ func (s *Song) getAlbumArt(c config.Connection) (err error) {
 		return
 	}
 	// get the embed cover
-	coverBin, err = s.readEmbedCover(c)
+	coverBin, err = c.Client.ReadPicture(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return
@@ -64,22 +64,4 @@ func (s *Song) getCoverArtPath() (coverPath string, url string) {
 	coverPath = coverFolder + s.Info["Album"] + "-" + s.Info["Artist"]
 	url = "/coverart/" + s.Info["Album"] + "-" + s.Info["Artist"]
 	return
-}
-
-//reads the song's embed cover
-func (s *Song) readEmbedCover(c config.Connection) (data []byte, err error) {
-	//copied from https://github.com/fhs/gompd/blob/5f471998a4fb7c6cb9f0eba81ae1119b2eb20161/mpd/client.go#L1027
-	offset := 0
-	for {
-		chunk, size, err := c.Client.Command("readpicture %s %d", s.Info["file"], offset).Binary()
-		if err != nil {
-			return data, err
-		}
-		data = append(data, chunk...)
-		offset = len(data)
-		if offset >= size {
-			break
-		}
-	}
-	return data, nil
 }
