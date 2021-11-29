@@ -24,8 +24,12 @@ var err error
 
 //Reads the MPD server connection from environment values
 func (c *Connection) ReadEnv() {
-	c.Address = os.Getenv("MPD_HOST") + ":" + os.Getenv("MPD_PORT")
-	c.Password = os.Getenv("MPD_PASSWORD")
+	host := os.Getenv("MPD_HOST")
+	port := os.Getenv("MPD_PORT")
+	if host != "" && port != "" {
+		c.Address = host + ":" + port
+		c.Password = os.Getenv("MPD_PASSWORD")
+	}
 }
 
 //parse the MPD server connection from bin flag
@@ -42,10 +46,6 @@ func (c *Connection) ReadFromFlags() {
 
 //connects to server
 func (c *Connection) Connect() {
-	if c.Address == "" {
-		log.Println("mpd server address is empty")
-		os.Exit(1)
-	}
 	c.Client, err = mpd.DialAuthenticated("tcp", c.Address, c.Password)
 	Log(err)
 }

@@ -19,6 +19,10 @@ var wc watcher.Mpd
 func init() {
 	cl.Client.ReadEnv()
 	cl.Client.ReadFromFlags()
+	if cl.Client.Address == "" {
+		log.Println("mpd server address is empty")
+		os.Exit(1)
+	}
 	wc.Client.Address = cl.Client.Address
 	wc.Client.Password = cl.Client.Password
 	ip := getHostIP()
