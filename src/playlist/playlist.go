@@ -41,6 +41,14 @@ func PlaySong(c config.Connection, id int) {
 	c.Close()
 }
 
+//moves the song from position in queue to newPosition
+func MoveSong(c config.Connection, position int, newPosition int) {
+	c.Connect()
+	err := c.Client.Move(position, -1, newPosition)
+	config.Log(err)
+	c.Close()
+}
+
 //deletes the song from start to end from current Queue
 func DeleteSong(c config.Connection, start, end int) {
 	c.Connect()

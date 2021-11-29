@@ -46,6 +46,11 @@
           {{ album[0].Artist }} - {{ album[0].Album }} ({{ album[0].Date }})
         </summary>
         <div
+          draggable="true"
+          @dragover.prevent
+          @dragenter.prevent
+          @drop="moveSong($event, song.Pos)"
+          @dragstart="startMoveSong($event, song.Pos)"
           @mouseenter="show(song.Pos)"
           @mouseleave="show(song.Pos)"
           v-for="song in album"
@@ -59,6 +64,7 @@
             md:rounded md:mx-2
             hover:bg-blue-100
             dark:hover:text-black
+            cursor-pointer
           "
           :id="'song' + song.Pos"
         >
@@ -71,14 +77,13 @@
               w-full
               flex
               items-center
-              cursor-pointer
             "
             @click.stop="play(song.Pos)"
           >
             <FontAwesomeIcon
               :id="song.Pos"
               v-if="song.Pos !== currentSong.Pos"
-              class="invisible text-green-500 mr-2 cursor-pointer"
+              class="invisible text-green-500 mr-2"
               icon="play"
             ></FontAwesomeIcon>
             <FontAwesomeIcon
@@ -97,7 +102,7 @@
             <FontAwesomeIcon
               @click="showMenu(song.Pos, song.file, $event)"
               :id="'delete' + song.Pos"
-              class="text-primary mr-2 invisible cursor-pointer"
+              class="text-primary mr-2 invisible"
               icon="ellipsis-h"
             ></FontAwesomeIcon>
             {{ humanizeTime(song.duration) }}
@@ -182,6 +187,19 @@ export default {
       let el = document.getElementById("context-menu");
       el.style.top = e.pageY + "px";
       this.menu = true;
+    },
+    startMoveSong(event, position) {
+      event.dataTransfer.setData("position", position);
+      event.dataTransfer.dropEfect = "move";
+      event.dataTransfer.effectAllowed = "move";
+    },
+    moveSong(event, position) {
+      const start = event.dataTransfer.getData("position");
+      let data = {
+        Start: Number(start),
+        Finish: Number(position),
+      };
+      sendCommand("/api/queue", "move", data);
     },
     hideMenu() {
       this.selected.position = -1;

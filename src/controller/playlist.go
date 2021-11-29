@@ -49,6 +49,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 			playlist.AddSongToPlaylist(c.Client, request.Data.Playlist, request.Data.Song)
 		case "delete":
 			playlist.DeleteSong(c.Client, request.Data.Start, -1)
+		case "move":
+			playlist.MoveSong(c.Client, request.Data.Start, request.Data.Finish)
 		case "play":
 			playlist.PlaySong(c.Client, request.Data.Start)
 		case "save":
