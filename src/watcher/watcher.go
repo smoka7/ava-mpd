@@ -1,6 +1,9 @@
 package watcher
 
 import (
+	"log"
+	"os"
+
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/song"
@@ -29,6 +32,10 @@ func (m *Mpd) Serve(ws *websocket.Conn) {
 
 //connect to mpd server and watches for the subsystem change
 func eventWatcher(c config.Connection, event chan string) {
+	if c.Address == "" {
+		log.Println("MPD server address is empty")
+		os.Exit(1)
+	}
 	watcher, err := mpd.NewWatcher("tcp", c.Address, c.Password)
 	config.Log(err)
 	go func() {
