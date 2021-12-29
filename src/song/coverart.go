@@ -1,9 +1,9 @@
 package song
 
 import (
+	"encoding/base32"
 	"errors"
 	"os"
-	"strings"
 
 	"github.com/smoka7/ava/src/config"
 )
@@ -61,14 +61,13 @@ func (s *Song) getCoverArtPath() (coverPath string, url string) {
 		err := os.MkdirAll(coverFolder, 0777)
 		config.Log(err)
 	}
-	albumName := sanitize(s.Info["Album"])
-	albumArtist := sanitize(s.Info["AlbumArtist"])
-	coverPath = coverFolder + albumName + "-" + albumArtist
-	url = "/coverart/" + albumName + "-" + albumArtist
+	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
+	coverPath = coverFolder + fileName
+	url = "/coverart/" + fileName
 	return
 }
 
 //return a valid file name
 func sanitize(name string) string {
-	return strings.ReplaceAll(name, string(os.PathSeparator), "-")
+	return base32.StdEncoding.EncodeToString([]byte(name))
 }
