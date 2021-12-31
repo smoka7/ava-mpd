@@ -64,21 +64,12 @@
       </button>
     </div>
     <div
-      class="
-        md:col-start-3 md:col-end-11 md:row-start-1 md:row-end-3
-        row-start-1 row-end-4
-        w-full
-        md:w-auto
-        flex
-        md:flex-row
-        flex-col-reverse
-        justify-start
-      "
+      class="md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 row-start-1 row-end-5 w-full md:w-auto flex flex-col-reverse md:flex-row justify-start"
     >
       <album-art
         :url="albumArt"
         id="albumArt"
-        class="w-full md:w-24 md:mx-4"
+        class="w-full md:w-24 md:h-24 md:mx-2"
       ></album-art>
       <div
         class="

@@ -1,18 +1,10 @@
 <template>
-  <div
-    @click.self="zoom"
-    :class="
-      isZoomed
-        ? 'fixed top-12 left-0 md:left-1/3 w-screen h-auto md:w-auto z-50'
-        : ''
-    "
-  >
-    <div v-if="defaultAlbumArt" class="rounded w-full h-full avatar"></div>
+  <div @click.self="zoom" class="avatar rounded">
     <img
       v-show="!defaultAlbumArt"
       @click="zoom"
       loading="lazy"
-      class="rounded cursor-pointer shadow-md"
+      :class="albumArtClass"
       :src="defaultAlbumArt ? '' : url"
     />
   </div>
@@ -31,6 +23,14 @@ export default {
   computed: {
     defaultAlbumArt() {
       return this.url === "default";
+    },
+    albumArtClass() {
+      return {
+        "fixed z-50 top-2 bottom-2 w-screen h-auto md:w-1/2 aspect-square inset-0 md:left-1/4":
+          this.isZoomed,
+        "w-full aspect-square": !this.isZoomed,
+        "rounded cursor-pointer": true,
+      };
     },
   },
 };
