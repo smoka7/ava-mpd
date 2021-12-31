@@ -18,24 +18,10 @@
     "
     id="queue"
   >
-    <div class="overflow-y-auto snap-container">
+    <div class="overflow-y-auto snap-y">
       <details v-for="(album, index) in queue" :key="index" open>
         <summary
-          class="
-            flex
-            px-8
-            md:py-2
-            py-4
-            md:mx-2
-            my-1
-            md:rounded
-            sticky
-            top-0
-            text-primary
-            bg-lightest
-            items-center
-            cursor-pointer
-          "
+          class="flex px-8 md:py-2 py-4 md:mx-2 my-1 md:rounded sticky top-0 text-primary bg-lightest items-center cursor-pointer snap-both"
           @click="animate(album[0].Pos)"
         >
           <FontAwesomeIcon
@@ -55,17 +41,7 @@
           @mouseleave="show(song.Pos)"
           v-for="song in album"
           :key="song.Pos"
-          class="
-            md:py-1
-            py-2
-            px-4
-            grid grid-cols-12
-            snap-child
-            md:rounded md:mx-2
-            hover:bg-blue-100
-            dark:hover:text-black
-            cursor-pointer
-          "
+          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 hover:bg-blue-100 dark:hover:text-black cursor-pointer"
           :id="'song' + song.Pos"
         >
           <span

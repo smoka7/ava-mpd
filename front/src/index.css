@@ -18,21 +18,10 @@
     height: calc(100vh - 9.5rem);
   }
 }
-.snap-container {
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 4rem;
-  scroll-behavior: smooth;
-}
-.snap-child {
-  scroll-snap-align: start;
-}
 body {
   font-family: Cantarell, ui-sans-serif, system-ui, -apple-system;
   font-size: 16px;
   scrollbar-color: var(--primary-color) var(--lightest-color);
-}
-input{
-  accent-color: var(--primary-color);
 }
 ::-webkit-scrollbar {
   @apply w-2;

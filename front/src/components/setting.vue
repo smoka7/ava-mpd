@@ -185,17 +185,11 @@
         @click="toggleOutput(index)"
       >
         <input
-          v-if="output['outputenabled'] == 1"
           type="checkbox"
+          class="accent-primary"
+          :checked="output['outputenabled'] == 1"
           :name="output['outputname']"
           :aria-label="output['outputname']"
-          checked
-        />
-        <input
-          v-else
-          type="checkbox"
-          :aria-label="output['outputname']"
-          :name="output['outputname']"
         />
         <label :for="output['outputname']">
           {{ output["outputname"] }}
