@@ -15,23 +15,25 @@
     id="mediaController"
   >
     <div
-      class="
-        md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-3
-        row-start-7 row-end-9
-        w-full
-        h-28
-        md:h-auto
-        md:w-auto
-        flex
-        justify-around
-      "
+      class="md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 row-start-7 row-end-9 w-full h-28 md:h-auto md:w-auto flex justify-center md:space-x-6 space-x-10 text-lightest"
     >
       <button
         aria-label="previous-song"
         @click="playbackCommand('previous')"
-        class="text-lightest py-7 px-8 rounded-full md:p-3"
+        class="scale-110 md:scale-75 hover:text-blue-200"
       >
-        <font-awesome-icon icon="step-backward" size="lg" />
+        <font-awesome-icon icon="step-backward" size="2x" />
+      </button>
+      <button
+        ref="like"
+        aria-label="like-song"
+        class="px-2 md:p-0 text-red-500 transition-all duration-200 transform"
+        @click="likeSong"
+      >
+        <font-awesome-icon
+          :icon="[currentSong.liked == 'true' ? 'far' : 'fas', 'heart']"
+          size="lg"
+        />
       </button>
       <button
         aria-label="toggle-playback"
@@ -42,25 +44,31 @@
         ]"
       >
         <font-awesome-icon
+          class="hover:text-green-400"
           v-if="status.state === 'play'"
           icon="pause"
           size="lg"
         />
-        <font-awesome-icon v-else icon="play" size="lg" />
+        <font-awesome-icon
+          v-else
+          class="hover:text-accent"
+          icon="play"
+          size="lg"
+        />
       </button>
       <button
         aria-label="stop-song"
         @click="playbackCommand('stop')"
-        class="text-lightest py-7 px-8 rounded-full md:pl-3 md:p-0"
+        class="scale-110 md:scale-75 hover:text-blue-200"
       >
-        <font-awesome-icon icon="stop" size="lg" />
+        <font-awesome-icon icon="stop" size="2x" />
       </button>
       <button
         aria-label="next-song"
         @click="playbackCommand('next')"
-        class="text-lightest py-7 px-8 rounded-full md:p-3"
+        class="scale-110 md:scale-75 hover:text-blue-200"
       >
-        <font-awesome-icon icon="step-forward" size="lg" />
+        <font-awesome-icon icon="step-forward" size="2x" />
       </button>
     </div>
     <div
@@ -87,19 +95,6 @@
       >
         <span>
           {{ currentSong.Title }}
-          <button
-            id="like-btn"
-            aria-label="like-song"
-            class="rating text-red-500 transition-all duration-200 transform"
-            @click="likeSong"
-          >
-            <font-awesome-icon
-              v-if="currentSong.liked == 'true'"
-              :icon="['fas', 'heart']"
-              size="lg"
-            />
-            <font-awesome-icon v-else :icon="['far', 'heart']" size="lg" />
-          </button>
         </span>
         <span>
           {{ currentSong.Artist }} - {{ currentSong.Album }} ({{
