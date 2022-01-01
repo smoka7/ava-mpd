@@ -11,6 +11,10 @@
           class="text-primary text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-1"
         >
           {{ info.Title }}
+          <likeSong
+            :pLiked="liked"
+            :file="info['file']"
+          />
         </h1>
         <button
           aria-label="close-info"
@@ -56,9 +60,14 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import likeSong from "./likeSong.vue";
 import albumArt from "./albumArt.vue";
 export default {
-  components: { FontAwesomeIcon, albumArt },
+  components: {
+    FontAwesomeIcon,
+    albumArt,
+    likeSong,
+  },
   props: ["song"],
   data() {
     return {
@@ -71,33 +80,35 @@ export default {
   methods: {
     isItLiked() {
       let index = this.stickers.findIndex((stick) => {
-        if (stick.Name == "liked") return true;
+        if (stick.Name == "liked" && stick.Value == "true") return true;
       });
       if (index > -1) {
-        delete this.stickers[index];
         this.liked = true;
+      }
+    },
+    async getInfo() {
+      let request = {
+        command: "info",
+        data: { song: this.song },
+      };
+      let response = await fetch("/api/song", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(request),
+      });
+      if (response.ok) {
+        let song = await response.json();
+        this.info = song.Info;
+        this.stickers = song.Stickers;
+        this.albumArt = song.AlbumArt;
+        this.isItLiked();
       }
     },
   },
   async mounted() {
-    let request = {
-      command: "info",
-      data: { song: this.song },
-    };
-    let response = await fetch("/api/song", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(request),
-    });
-    if (response.ok) {
-      let song = await response.json();
-      this.info = song.Info;
-      this.stickers = song.Stickers;
-      this.albumArt = song.AlbumArt;
-      this.isItLiked();
-    }
+    this.getInfo();
   },
 };
 </script>

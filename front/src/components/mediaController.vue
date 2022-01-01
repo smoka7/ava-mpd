@@ -24,17 +24,10 @@
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
-      <button
-        ref="like"
-        aria-label="like-song"
-        class="px-2 md:p-0 text-red-500 transition-all duration-200 transform"
-        @click="likeSong"
-      >
-        <font-awesome-icon
-          :icon="[currentSong.liked == 'true' ? 'far' : 'fas', 'heart']"
-          size="lg"
-        />
-      </button>
+      <like-song
+        :pLiked="currentSong.liked == 'true'"
+        :file="currentSong.file"
+      />
       <button
         aria-label="toggle-playback"
         @click="playbackCommand('toggle')"
@@ -215,6 +208,7 @@
 import progressBar from "./progressBar.vue";
 import albumArt from "./albumArt.vue";
 import saveQueue from "./saveQueue.vue";
+import likeSong from "./likeSong.vue";
 import {
   sendCommand,
   humanizeTime,
@@ -231,6 +225,7 @@ export default {
     FontAwesomeIcon,
     albumArt,
     saveQueue,
+    likeSong,
   },
   emits: ["openSetting"],
   setup() {
@@ -280,18 +275,6 @@ export default {
       if (volume > 100) volume = 100;
       if (volume < 0) volume = 0;
       sendCommand("/api/playback", "changeVolume", { start: volume });
-    },
-    likeSong() {
-      sendCommand("/api/song", "like", { song: this.currentSong.file });
-      let el = document.getElementById("like-btn");
-      el.classList.add("scale-105", "rotate-45");
-      setTimeout(() => {
-        el.classList.remove("rotate-45");
-        el.classList.add("-rotate-45");
-      }, 150);
-      setTimeout(() => {
-        el.classList.remove("scale-105", "-rotate-45");
-      }, 300);
     },
     openSetting() {
       this.$emit("openSetting");
