@@ -4,25 +4,14 @@
     @click.self="$emit('close')"
   >
     <div
-      class="
-        flex flex-col
-        absolute
-        top-0
-        left-0
-        bottom-0
-        right-0
-        md:w-3/4 md:left-1/4 md:top-1
-        app-height
-        z-auto
-        p-8
-        space-y-2
-        rounded
-        overflow-auto
-        bg-lightest
-      "
+      class="flex flex-col absolute inset-0 md:w-3/4 md:left-1/4 md:top-1 app-height z-auto p-8 space-y-2 overflow-y-scroll overflow-x-hidden bg-lightest"
     >
       <div class="flex flex-row align-baseline justify-between">
-        <h1 class="text-primary text-bold text-4xl">song Info</h1>
+        <h1
+          class="text-primary text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-1"
+        >
+          {{ info.Title }}
+        </h1>
         <button
           aria-label="close-info"
           @click="$emit('close')"
@@ -36,34 +25,30 @@
         </button>
       </div>
       <div
-        class="
-          flex flex-col
-          md:flex-row
-          justify-around
-          md:space-x-2 md:space-y-0
-          space-y-2
-        "
+        class="flex flex-col md:flex-row justify-around md:space-x-2 md:space-y-0 space-y-2"
       >
-        <album-art :url="albumArt" class="md:w-1/2"></album-art>
-        <dl
-          class="
-            flex flex-col
-            rounded
-            p-4
-            bg-white
-            dark:text-white dark:bg-gray-700
-          "
+        <album-art
+          :url="albumArt"
+          class="md:w-1/2 h-fit sticky top-0"
+        ></album-art>
+        <ul
+          class="flex flex-col md:w-1/2 rounded bg-white dark:text-white dark:bg-gray-700"
         >
-          <p v-for="(value, index) in info" :key="index" class="flex space-x-2">
-            <dt>{{ index }}:</dt>
-            <dd>
-              {{ value }}
-            </dd>
-          </p>
-          <p v-for="(sticker, index) in stickers" :key="index">
+          <li
+            v-for="(value, index) in info"
+            :key="index"
+            class="even:bg-blue-50 dark:even:bg-gray-800 last:rounded-b first:rounded-t p-2"
+          >
+            {{ index }} : {{ value }}
+          </li>
+          <li
+            v-for="(sticker, index) in stickers"
+            :key="index"
+            class="even:bg-blue-50 dark:even:bg-gray-800 last:rounded-b p-2"
+          >
             {{ sticker.Name }} : {{ sticker.Value }}
-          </p>
-        </dl>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -80,9 +65,20 @@ export default {
       info: {},
       stickers: {},
       albumArt: "",
+      liked: false,
     };
   },
-  methods: {},
+  methods: {
+    isItLiked() {
+      let index = this.stickers.findIndex((stick) => {
+        if (stick.Name == "liked") return true;
+      });
+      if (index > -1) {
+        delete this.stickers[index];
+        this.liked = true;
+      }
+    },
+  },
   async mounted() {
     let request = {
       command: "info",
@@ -100,6 +96,7 @@ export default {
       this.info = song.Info;
       this.stickers = song.Stickers;
       this.albumArt = song.AlbumArt;
+      this.isItLiked();
     }
   },
 };
