@@ -61,7 +61,7 @@ func (m *Mpd) RecordPlayCount() {
 			config.Log(err)
 		}
 	}()
-	go func() {
+	func() {
 		status := song.GetStatus(client)["state"]
 		lastSong := song.GetCurrentSong(client)
 		if status == "play" {
