@@ -53,6 +53,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 			playlist.MoveSong(c.Client, request.Data.Start, request.Data.Finish)
 		case "play":
 			playlist.PlaySong(c.Client, request.Data.Start)
+		case "removeduplicate":
+			playlist.RemoveDuplicatesongs(c.Client)
 		case "save":
 			playlist.SaveQueue(c.Client, request.Data.Playlist)
 		}

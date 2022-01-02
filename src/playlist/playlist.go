@@ -33,6 +33,24 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 	return filteredQueue
 }
 
+//removes duplicate songs based on their file address from the queue
+func RemoveDuplicatesongs(c config.Connection) {
+	c.Connect()
+	queue, err := c.Client.PlaylistInfo(-1, -1)
+	config.Log(err)
+	var songs = make(map[string]bool)
+	cmds := c.Client.BeginCommandList()
+	for _, song := range queue {
+		if _, ok := songs[song["file"]]; ok {
+			index, _ := strconv.Atoi(song["Pos"])
+			cmds.Delete(index, -1)
+			continue
+		}
+		songs[song["file"]] = true
+	}
+	cmds.End()
+}
+
 //plays the id song in current Queue
 func PlaySong(c config.Connection, id int) {
 	c.Connect()

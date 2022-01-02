@@ -65,6 +65,7 @@ export default {
       actions: [
         { title: "delete", func: this.deleteSong },
         { title: "info", func: this.showInfo },
+        { title: "remove duplicate songs", func: this.removeDuplicate },
       ],
       btnClass:
         "w-full text-left p-2 hover:bg-blue-100 focus:bg-blue-100 dark:hover:text-black",
@@ -88,6 +89,10 @@ export default {
     },
     showInfo() {
       this.$emit("showInfo");
+      this.$emit("close");
+    },
+    removeDuplicate() {
+      sendCommand("api/queue", "removeduplicate");
       this.$emit("close");
     },
     getStoredPlaylist() {
