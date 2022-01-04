@@ -83,62 +83,7 @@
       </RadioGroup>
     </div>
     <div class="card-class">
-      <h2 class="text-lg">database stats:</h2>
-      <p>
-        songs: <span>{{ databaseStats["songs"] }}</span>
-      </p>
-      <p>
-        albums: <span>{{ databaseStats["albums"] }}</span>
-      </p>
-      <p>
-        artists: <span>{{ databaseStats["artists"] }}</span>
-      </p>
-      <p>
-        db_playtime:
-        <span>{{ humanizeTime(databaseStats["db_playtime"]) }}</span>
-      </p>
-      <p>
-        last update:
-        <span>{{
-          new Date(databaseStats["db_update"] * 1000).toString()
-        }}</span>
-      </p>
-      <p>
-        playtime: <span>{{ humanizeTime(databaseStats["playtime"]) }}</span>
-      </p>
-      <p>
-        uptime: <span>{{ humanizeTime(databaseStats["uptime"]) }}</span>
-      </p>
-      <button
-        aria-label="update-database"
-        class="
-          border-2 border-green-500
-          text-green-500
-          p-2
-          my-2
-          rounded
-          hover:bg-green-500 hover:text-white
-        "
-        @click="updateDatabase"
-      >
-        <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
-        database
-      </button>
-      <button
-        aria-label="delete-cache"
-        class="
-          border-2 border-red-500
-          text-red-500
-          p-2
-          my-2
-          rounded
-          hover:bg-red-500 hover:text-white
-        "
-        @click="deleteCache"
-      >
-        <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover
-        Art cache
-      </button>
+      <database-info :stats="databaseStats" />
     </div>
     <div class="card-class">
       <h2 class="text-lg mb-2">playback options:</h2>
@@ -208,7 +153,8 @@ import {
   SwitchGroup,
   SwitchLabel,
 } from "@headlessui/vue";
-import { sendCommand, humanizeTime } from "../helpers.js";
+import DatabaseInfo from "./databaseInfo.vue";
+import { sendCommand } from "../helpers.js";
 import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
 export default {
   components: {
@@ -219,6 +165,7 @@ export default {
     Switch,
     SwitchGroup,
     SwitchLabel,
+    DatabaseInfo,
   },
   emits: ["close"],
   data() {
@@ -234,12 +181,6 @@ export default {
     };
   },
   methods: {
-    updateDatabase() {
-      sendCommand("/api/setting", "updateDatabase");
-    },
-    deleteCache() {
-      sendCommand("/api/setting", "deleteCache");
-    },
     toggleOutput(index) {
       let id = Number(this.outputs[index]["outputid"]);
       if (this.outputs[index]["outputenabled"] == 1) {
@@ -309,7 +250,6 @@ export default {
         " 100%);"
       );
     },
-    humanizeTime: humanizeTime,
   },
   async created() {
     this.crossfade = Number(this.$store.state.status.xfade || 0);
