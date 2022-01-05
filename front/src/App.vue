@@ -48,7 +48,6 @@ export default {
   },
   created() {
     this.$store.dispatch("getCurrentSong");
-    this.$store.dispatch("getQueue");
     this.$store.dispatch("startCounter");
   },
   mounted() {

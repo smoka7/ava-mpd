@@ -37,29 +37,19 @@
           @dragenter.prevent
           @drop="moveSong($event, song.Pos)"
           @dragstart="startMoveSong($event, song.Pos)"
-          @mouseenter="show(song.Pos)"
-          @mouseleave="show(song.Pos)"
           v-for="song in album"
           :key="song.Pos"
-          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 hover:bg-blue-100 dark:hover:text-black cursor-pointer"
+          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 dark:hover:text-gray-800 cursor-pointer hover:bg-blue-100 group"
           :id="'song' + song.Pos"
         >
           <span
-            class="
-              col-start-1 col-end-3
-              md:col-end-2
-              justify-self-start
-              pr-2
-              w-full
-              flex
-              items-center
-            "
+            class="col-start-1 col-end-3 md:col-end-2 justify-self-start pr-2 w-full flex items-center cursor-pointer"
             @click.stop="play(song.Pos)"
           >
             <FontAwesomeIcon
               :id="song.Pos"
               v-if="song.Pos !== currentSong.Pos"
-              class="invisible text-green-500 mr-2"
+              class="invisible group-hover:visible text-green-500 mr-2"
               icon="play"
             ></FontAwesomeIcon>
             <FontAwesomeIcon
@@ -78,7 +68,7 @@
             <FontAwesomeIcon
               @click="showMenu(song.Pos, song.file, $event)"
               :id="'delete' + song.Pos"
-              class="text-primary mr-2 invisible"
+              class="text-primary mr-2 invisible group-hover:visible"
               icon="ellipsis-h"
             ></FontAwesomeIcon>
             {{ humanizeTime(song.duration) }}
@@ -141,23 +131,16 @@ export default {
     };
   },
   async mounted() {
-    setTimeout(() => {
-      let el = document.getElementById("song" + this.currentSong.Pos);
-      if (el !== null) {
-        el.classList.add("current-song");
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
-      }
-    }, 1000);
+    await this.$store.dispatch("getQueue");
+    let el = document.getElementById("song" + this.currentSong.Pos);
+    if (el !== null) {
+      el.classList.add("current-song");
+      el.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
   },
   methods: {
     humanizeTime: humanizeTime,
     closePlaylist: toggleMediaController,
-    show(id) {
-      let el = document.getElementById(id);
-      if (el) el.classList.toggle("invisible");
-      el = document.getElementById("delete" + id);
-      if (el) el.classList.toggle("invisible");
-    },
     showMenu(pos, uri, e) {
       this.selected = { position: pos, file: uri };
       let el = document.getElementById("context-menu");
