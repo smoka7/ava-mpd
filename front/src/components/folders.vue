@@ -6,10 +6,8 @@
 </template>
 <script>
 import Folder from "./folder.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 export default {
   components: {
-    FontAwesomeIcon,
     Folder,
   },
   data() {

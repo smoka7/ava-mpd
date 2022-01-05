@@ -2,48 +2,31 @@
   <div class="flex flex-col">
     <details>
       <summary
-        class="
-          flex
-          text-primary
-          dark:text-white
-          justify-between
-          md:p-2
-          px-2
-          py-4
-          hover:bg-blue-200
-          dark:hover:text-primary
-          rounded
-        "
+        class="flex text-primary dark:text-white justify-between md:p-2 px-2 py-4 hover:bg-blue-200 dark:hover:text-primary rounded group"
       >
-        <span class="w-5/6 overflow-clip" @click.self="listFolders(index)">
-          <FontAwesomeIcon
-            :icon="folder.directory ? 'folder' : 'music'"
-          ></FontAwesomeIcon>
+        <span class="w-4/6" @click.self="listFolders(index)">
+          <FontAwesomeIcon :icon="folder.directory ? 'folder' : 'music'" />
           {{ folderName }}
         </span>
-        <span class="text-sm space-x-2">
-          <button aria-label="add" class="sidebar-btn">
-            <font-awesome-icon
-              @click="addFolder(index)"
-              icon="plus"
-            ></font-awesome-icon>
+        <span class="text-sm space-x-2 invisible group-hover:visible">
+          <button
+            aria-label="add"
+            class="sidebar-btn"
+            @click="addFolder(index)"
+          >
+            <font-awesome-icon icon="plus"/>
           </button>
-          <button aria-label="play" class="sidebar-btn">
-            <font-awesome-icon
-              @click="PlayFolder(index)"
-              icon="play"
-            ></font-awesome-icon>
+          <button
+            aria-label="play"
+            class="sidebar-btn"
+            @click="PlayFolder(index)"
+          >
+            <font-awesome-icon icon="play"/>
           </button>
         </span>
       </summary>
       <div
-        class="
-          flex flex-col
-          border-2 border-primary
-          rounded-lg
-          m-1
-          dark:border-lightest
-        "
+        class="flex flex-col border-2 border-primary rounded-lg m-1 dark:border-lightest"
         v-if="hasChild"
       >
         <Folder

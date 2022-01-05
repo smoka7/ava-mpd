@@ -1,84 +1,41 @@
 <template>
   <div class="flex flex-col">
     <div
-      class="
-        flex
-        justify-between
-        p-2
-        text-primary
-        dark:text-white
-        hover:bg-blue-200
-        dark:hover:text-primary
-        rounded
-      "
+      v-for="playlist in playlists"
+      :key="playlist.name"
+      class="flex justify-between p-2 items-center text-primary dark:text-white hover:bg-blue-200 dark:hover:text-primary rounded group"
     >
       <span>
-        <font-awesome-icon icon="heart"></font-awesome-icon>
-        liked Songs
+        <font-awesome-icon :icon="['fas', playlist.icon]" />
+        {{ playlist.name }}
       </span>
-      <span class="space-x-2 text-sm">
-        <button aria-label="add-liked-song" class="sidebar-btn">
-          <font-awesome-icon @click="addLiked" icon="plus"></font-awesome-icon>
+      <span class="md:text-sm invisible group-hover:visible">
+        <button
+          aria-label="add-most-played-song"
+          class="sidebar-btn"
+          @click="sendCommand('api/stored', 'add' + playlist.method)"
+        >
+          <font-awesome-icon icon="plus" />
         </button>
-        <button aria-label="play-liked-song" class="sidebar-btn">
-          <font-awesome-icon @click="playLiked" icon="play"></font-awesome-icon>
-        </button>
-      </span>
-    </div>
-    <div
-      class="
-        flex
-        justify-between
-        p-2
-        text-primary
-        dark:text-white
-        hover:bg-blue-200
-        dark:hover:text-primary
-        rounded
-      "
-    >
-      <span>
-        <font-awesome-icon icon="chart-area"></font-awesome-icon>
-        most Played Songs
-      </span>
-      <span class="space-x-2 text-sm">
-        <button aria-label="add-most-played-song" class="sidebar-btn">
-          <font-awesome-icon
-            @click="addMostPlayed"
-            icon="plus"
-          ></font-awesome-icon>
-        </button>
-        <button aria-label="play-most-played-song" class="sidebar-btn">
-          <font-awesome-icon
-            @click="playMostPlayed"
-            icon="play"
-          ></font-awesome-icon>
+        <button
+          aria-label="play-most-played-song"
+          class="sidebar-btn"
+          @click="sendCommand('api/stored', 'play' + playlist.method)"
+        >
+          <font-awesome-icon icon="play" />
         </button>
       </span>
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
-        class="
-          flex
-          justify-between
-          md:p-2
-          py-4
-          px-2
-          text-primary
-          cursor-pointer
-          border-primary
-          dark:text-white dark:border-gray-800
-          hover:bg-blue-200
-          dark:hover:text-primary
-          rounded
-        "
+        class="flex justify-between items-center md:p-2 py-4 px-2 text-primary cursor-pointer border-primary dark:text-white dark:border-gray-800 hover:bg-blue-200 dark:hover:text-primary rounded group"
       >
         <span @click="getSongs(index)">
           <FontAwesomeIcon
             icon="angle-down"
             class="transform-gpu -rotate-90 duration-200"
             :id="'icon-' + playlist.playlist"
-          ></FontAwesomeIcon>
+          />
           {{ playlist.playlist }}
         </span>
         <span class="text-sm space-x-2">
@@ -87,25 +44,32 @@
               humanizeTime(playlist.duration)
             }})
           </span>
-          <button aria-label="add" class="sidebar-btn">
-            <font-awesome-icon
+          <span class="invisible group-hover:visible">
+            <button
+              aria-label="add"
+              class="sidebar-btn"
               @click="addPlaylist(index)"
-              icon="plus"
-            ></font-awesome-icon>
-          </button>
-          <button aria-label="play" class="sidebar-btn">
-            <font-awesome-icon
-              @click="PlayPlaylist(index)"
-              icon="play"
-            ></font-awesome-icon>
-          </button>
+            >
+              <font-awesome-icon icon="plus" />
+            </button>
+            <button aria-label="play" class="sidebar-btn"
+                                @click="PlayPlaylist(index)" 
+                            >
+              <font-awesome-icon
+                                icon="play" />
+            </button>
+          </span>
         </span>
       </summary>
-      <div class="space-y-1 divide-y dark:divide-gray-800 flex flex-col">
-        <p class="px-2" v-for="(song, index) in playlist.songs" :key="index">
+      <div class="divide-y dark:divide-gray-400 flex flex-col">
+        <p
+          class="px-2 dark:text-foreground"
+          v-for="(song, index) in playlist.songs"
+          :key="index"
+        >
           {{ song.Title }}<br />
-          <span class="text-sm text-gray-800 dark:text-gray-100">
-            {{ song.Artist }}
+          <span class="text-sm text-gray-800 dark:text-gray-400">
+            {{ song.Artist }} -
             {{ song.Album }}
           </span>
         </p>
@@ -121,11 +85,20 @@ export default {
   components: {
     FontAwesomeIcon,
   },
+  data() {
+    return {
+      playlists: [
+        { name: "Liked Songs", icon: "heart", method: "liked" },
+        { name: "Most Played Songs", icon: "chart-area", method: "most" },
+      ],
+    };
+  },
   created() {
     this.$store.dispatch("getStoredPlaylist");
   },
   methods: {
     humanizeTime: humanizeTime,
+    sendCommand: sendCommand,
     async getSongs(index) {
       this.animate(this.storedPlaylist[index].playlist);
       if (
@@ -160,18 +133,6 @@ export default {
         playlist: this.storedPlaylist[index].playlist,
       };
       sendCommand("api/stored", "play", data);
-    },
-    playLiked() {
-      sendCommand("api/stored", "playliked");
-    },
-    addLiked() {
-      sendCommand("api/stored", "addliked");
-    },
-    playMostPlayed() {
-      sendCommand("api/stored", "playmost");
-    },
-    addMostPlayed() {
-      sendCommand("api/stored", "addmost");
     },
     addPlaylist(index) {
       let data = {
