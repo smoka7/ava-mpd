@@ -1,7 +1,7 @@
 <template>
   <TabGroup
     as="div"
-    class="flex flex-col app-height overflow-y-auto p-2 rounded bg-white m-1 shadow-md dark:bg-gray-700"
+    class="flex flex-col app-height overflow-y-auto p-2 rounded bg-white m-1 shadow-md dark:bg-gray-700 text-primary dark:text-foreground"
   >
     <TabList as="div" class="flex w-full justify-around p-1">
       <Tab
@@ -18,7 +18,7 @@
         </button>
       </Tab>
       <button
-        class="p-2 px-6 md:hidden text-primary dark:text-lightest"
+        class="p-2 px-6 md:hidden dark:text-lightest"
         @click="closeFolders"
       >
         <font-awesome-icon icon="times" size="2x"></font-awesome-icon>
@@ -53,9 +53,9 @@ export default {
   data() {
     return {
       tabClasses: {
-        active: "bg-accent text-primary dark:bg-accent dark:text-primary",
+        active: "bg-accent text-primary",
         normal:
-          "flex space-x-1 items-center md:p-2 p-3 cursor-pointer text-primary dark:text-foreground hover:bg-blue-200 dark:hover:text-primary rounded",
+          "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-accent dark:hover:text-primary rounded",
       },
       tabs: {
         Playlists: {
@@ -80,6 +80,6 @@ export default {
 </script>
 <style>
 .sidebar-btn {
-  @apply p-2 hover:bg-white dark:hover:bg-gray-700 dark:hover:text-white rounded;
+  @apply p-2 hover:bg-white dark:hover:bg-gray-700 dark:hover:text-foreground rounded;
 }
 </style>

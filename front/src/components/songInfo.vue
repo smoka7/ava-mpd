@@ -11,10 +11,7 @@
           class="text-primary text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-1"
         >
           {{ info.Title }}
-          <likeSong
-            :pLiked="liked"
-            :file="info['file']"
-          />
+          <likeSong :pLiked="liked" :file="info['file']" />
         </h1>
         <button
           aria-label="close-info"
@@ -33,7 +30,7 @@
       >
         <album-art
           :url="albumArt"
-          class="md:w-1/2 h-fit sticky top-0"
+          class="md:w-1/2 h-fit md:sticky top-0"
         ></album-art>
         <ul
           class="flex flex-col md:w-1/2 rounded bg-white dark:text-white dark:bg-gray-700"

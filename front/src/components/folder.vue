@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <details>
       <summary
-        class="flex text-primary dark:text-white justify-between md:p-2 px-2 py-4 hover:bg-blue-200 dark:hover:text-primary rounded group"
+        class="flex justify-between md:p-2 px-2 py-4 hover:bg-blue-200 dark:hover:text-primary rounded group"
       >
         <span class="w-4/6" @click.self="listFolders(index)">
           <FontAwesomeIcon :icon="folder.directory ? 'folder' : 'music'" />
@@ -14,14 +14,14 @@
             class="sidebar-btn"
             @click="addFolder(index)"
           >
-            <font-awesome-icon icon="plus"/>
+            <font-awesome-icon icon="plus" />
           </button>
           <button
             aria-label="play"
             class="sidebar-btn"
             @click="PlayFolder(index)"
           >
-            <font-awesome-icon icon="play"/>
+            <font-awesome-icon icon="play" />
           </button>
         </span>
       </summary>

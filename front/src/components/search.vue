@@ -3,14 +3,7 @@
     <form class="p-2 w-full flex" @submit.prevent>
       <Listbox v-model="tag">
         <ListboxButton
-          class="
-            p-2
-            dark:bg-lightest
-            bg-primary
-            dark:text-primary
-            text-foreground
-            rounded-l-lg
-          "
+          class="p-2 dark:bg-lightest bg-primary dark:text-primary text-foreground rounded-l-lg"
         >
           <span class="flex items-center">
             {{ tag }}
@@ -26,17 +19,7 @@
           leave-to-class="transform scale-95 opacity-0"
         >
           <ListboxOptions
-            class="
-              fixed
-              mt-14
-              text-left
-              rounded
-              shadow-md
-              cursor-default
-              bg-white
-              focus:outline-none focus:ring-2 focus:ring-primary
-              dark:focus:ring-lightest dark:bg-gray-700 dark:text-white
-            "
+            class="fixed mt-14 text-left rounded shadow-md cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-lightest dark:bg-gray-700"
           >
             <ListboxOption
               v-for="tag in searchTags"
@@ -46,9 +29,8 @@
             >
               <li
                 :class="{
-                  'p-2 focus-within:bg-blue-200 hover:bg-blue-200 dark:hover:text-primary':
-                    !selected,
-                  'p-2 bg-lightest dark:text-primary': selected,
+                  'p-2 hover:bg-blue-200 dark:hover:text-primary': true,
+                  'bg-lightest dark:text-primary': selected,
                 }"
               >
                 {{ tag }}
@@ -63,13 +45,7 @@
         </transition>
       </Listbox>
       <input
-        class="
-          p-2
-          w-full
-          border-primary border-2
-          dark:text-primary dark:placeholder-gray-900 dark:border-lightest
-          rounded-r-lg
-        "
+        class="p-2 w-full border-primary border-2 dark:text-primary dark:placeholder-gray-900 dark:border-lightest rounded-r-lg"
         type="text"
         name="term"
         @input="search"

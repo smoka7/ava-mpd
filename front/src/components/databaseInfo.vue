@@ -24,27 +24,33 @@
       UP time : <span>{{ humanizeTime(stats["uptime"]) }}</span>
     </li>
   </ul>
-  <button
-    aria-label="update-database"
-    class="border-2 border-green-500 text-green-500 p-2 my-2 rounded hover:bg-green-500 hover:text-white"
-    @click="updateDatabase"
-  >
-    <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
-    database
-  </button>
-  <button
-    aria-label="delete-cache"
-    class="border-2 border-red-500 text-red-500 p-2 my-2 rounded hover:bg-red-500 hover:text-white"
-    @click="deleteCache"
-  >
-    <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover Art
-    cache
-  </button>
+  <div>
+    <button
+      aria-label="update-database"
+      class="border-2 border-green-500 text-green-500 p-2 my-2 rounded hover:bg-green-500 hover:text-white"
+      @click="updateDatabase"
+    >
+      <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
+      database
+    </button>
+    <button
+      aria-label="delete-cache"
+      class="border-2 border-red-500 text-red-500 p-2 my-2 rounded hover:bg-red-500 hover:text-white"
+      @click="deleteCache"
+    >
+      <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover Art
+      cache
+    </button>
+  </div>
 </template>
 <script>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand, humanizeTime } from "../helpers.js";
 export default {
   props: ["stats"],
+  components: {
+    FontAwesomeIcon,
+  },
   methods: {
     updateDatabase() {
       sendCommand("/api/setting", "updateDatabase");
