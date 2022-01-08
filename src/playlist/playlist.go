@@ -18,6 +18,9 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	config.Log(err)
 	c.Close()
+	if len(queue) == 0 {
+		return nil
+	}
 	filteredQueue := make([][]mpd.Attrs, 1)
 	filteredQueue[0] = append(filteredQueue[0], newAlbum(queue[0]))
 	for i := 1; i < len(queue); i++ {

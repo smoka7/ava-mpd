@@ -1,27 +1,18 @@
 <template>
   <div
-    class="
-      fixed
-      bottom-0
-      top-0
-      left-0
-      flex flex-col
-      bg-white
-      dark:text-white
-      w-full
-      h-full
-      rounded
-      md:static
-      overflow-hidden
-      app-height
-      dark:bg-gray-700
-    "
+    class="fixed bottom-0 top-0 left-0 flex flex-col bg-foreground w-full h-full rounded md:static overflow-hidden app-height dark:bg-gray-700"
     id="queue"
   >
     <div class="overflow-y-auto snap-y">
+      <div
+        v-if="!queue"
+        class="flex items-center justify-center p-4 w-full h-full text-9xl decoration-accent underline"
+      >
+        Queue is empty!
+      </div>
       <details v-for="(album, index) in queue" :key="index" open>
         <summary
-          class="flex px-8 md:py-2 py-4 md:mx-2 my-1 md:rounded sticky top-0 text-primary bg-lightest items-center cursor-pointer snap-both"
+          class="flex px-8 md:py-2 py-4 md:mx-2 my-1 md:rounded sticky top-0 bg-lightest items-center cursor-pointer snap-both dark:text-primary"
           @click="animate(album[0].Pos)"
         >
           <FontAwesomeIcon
@@ -39,7 +30,7 @@
           @dragstart="startMoveSong($event, song.Pos)"
           v-for="song in album"
           :key="song.Pos"
-          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 dark:hover:text-gray-800 cursor-pointer hover:bg-blue-100 group"
+          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 text-black dark:text-foreground dark:hover:text-primary cursor-pointer hover:bg-blue-100 group"
           :id="'song' + song.Pos"
         >
           <span
@@ -68,9 +59,9 @@
             <FontAwesomeIcon
               @click="showMenu(song.Pos, song.file, $event)"
               :id="'delete' + song.Pos"
-              class="text-primary mr-2 invisible group-hover:visible"
+              class="mr-2 invisible group-hover:visible"
               icon="ellipsis-h"
-            ></FontAwesomeIcon>
+            />
             {{ humanizeTime(song.duration) }}
           </span>
         </div>
@@ -79,18 +70,7 @@
     <button
       aria-label="close-playlist"
       @click="closePlaylist"
-      class="
-        fixed
-        right-4
-        bottom-4
-        bg-red-500
-        text-white
-        rounded-full
-        p-2
-        md:hidden
-        w-20
-        h-20
-      "
+      class="fixed right-4 bottom-4 bg-red-500 text-foreground rounded-full p-2 md:hidden w-20 h-20"
     >
       <font-awesome-icon icon="arrow-right" size="2x"></font-awesome-icon>
     </button>
@@ -200,6 +180,6 @@ export default {
 </script>
 <style>
 .current-song {
-  @apply bg-red-200 dark:text-primary;
+  @apply bg-red-200 dark:text-primary !important;
 }
 </style>
