@@ -141,22 +141,7 @@
       <div
         class="flex items-center space-x-2 w-full mb-2 md:m-0 md:justify-end"
       >
-        <font-awesome-icon
-          v-if="status.volume >= 50"
-          icon="volume-up"
-          size="lg"
-        />
-        <font-awesome-icon
-          v-else-if="status.volume < 50 && status.volume > 0"
-          icon="volume-down"
-          size="lg"
-        />
-        <font-awesome-icon v-else icon="volume-off" size="lg" />
-        <progressBar
-          class="md:w-32 w-full"
-          :data="{ value: status.volume, max: 100 }"
-          @seek="changeVolume"
-        ></progressBar>
+        <volume-control :volume="status.volume" />
       </div>
     </div>
     <div
@@ -191,6 +176,7 @@ import progressBar from "./progressBar.vue";
 import albumArt from "./albumArt.vue";
 import saveQueue from "./saveQueue.vue";
 import likeSong from "./likeSong.vue";
+import volumeControl from "./volumeControl.vue";
 import {
   sendCommand,
   humanizeTime,
@@ -208,6 +194,7 @@ export default {
     albumArt,
     saveQueue,
     likeSong,
+    volumeControl,
   },
   emits: ["openSetting"],
   setup() {
@@ -252,11 +239,6 @@ export default {
     },
     playbackCommand(command) {
       sendCommand("/api/playback", command);
-    },
-    changeVolume(volume) {
-      if (volume > 100) volume = 100;
-      if (volume < 0) volume = 0;
-      sendCommand("/api/playback", "changeVolume", { start: volume });
     },
     openSetting() {
       this.$emit("openSetting");
