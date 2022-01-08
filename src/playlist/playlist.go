@@ -120,6 +120,22 @@ func ListSongs(c config.Connection, playlist string) (songs []mpd.Attrs) {
 	return
 }
 
+//clears the stored playlist from server
+func ClearPlaylist(c config.Connection, playlist string) {
+	c.Connect()
+	err := c.Client.PlaylistClear(playlist)
+	config.Log(err)
+	c.Close()
+}
+
+//deletes the stored playlist from server
+func DeletePlaylist(c config.Connection, playlist string) {
+	c.Connect()
+	err := c.Client.Command("rm %s", playlist).OK()
+	config.Log(err)
+	c.Close()
+}
+
 //adds the playlist to the current queue
 func LoadPlaylist(c config.Connection, playlist string) {
 	c.Connect()

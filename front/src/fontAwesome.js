@@ -30,6 +30,7 @@ import {
   faCheck,
   faCheckCircle,
   faMinusSquare,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 let icons = [
@@ -64,6 +65,7 @@ let icons = [
   faCheck,
   faCheckCircle,
   faMinusSquare,
+  faTrash,
 ];
 
 library.add(icons);

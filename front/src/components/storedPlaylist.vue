@@ -1,9 +1,14 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col relative -m-2 pt-6">
+    <playlist-menu
+      @delete="PlCommand('delete')"
+      @clear="PlCommand('clear')"
+      @clearSelection="ClearSelection()"
+    />
     <div
       v-for="playlist in playlists"
       :key="playlist.name"
-      class="flex justify-between p-2 items-center text-primary dark:text-white hover:bg-blue-200 dark:hover:text-primary rounded group"
+      class="flex justify-between p-2 mx-2 items-center text-primary dark:text-foreground hover:bg-blue-200 dark:hover:text-primary rounded group"
     >
       <span>
         <font-awesome-icon :icon="['fas', playlist.icon]" />
@@ -28,9 +33,9 @@
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
-        class="flex justify-between items-center md:p-2 py-4 px-2 text-primary cursor-pointer border-primary dark:text-white dark:border-gray-800 hover:bg-blue-200 dark:hover:text-primary rounded group"
+        class="flex justify-between items-center md:p-2 py-4 px-2 mx-2 hover:bg-blue-200 dark:hover:text-primary rounded group"
       >
-        <span @click="getSongs(index)">
+        <span @click="getSongs(index)" class="cursor-pointer">
           <FontAwesomeIcon
             icon="angle-down"
             class="transform-gpu -rotate-90 duration-200"
@@ -46,22 +51,35 @@
           </span>
           <span class="invisible group-hover:visible">
             <button
+              aria-label="select-playlist"
+              class="sidebar-btn"
+              @click="toggleSelected(index)"
+            >
+              <font-awesome-icon
+                icon="check-circle"
+                :class="playlist.selected ? 'text-green-500 visible' : ''"
+              />
+            </button>
+            <button
               aria-label="add"
               class="sidebar-btn"
-              @click="addPlaylist(index)"
+              @click="PlCommand('load', index)"
             >
               <font-awesome-icon icon="plus" />
             </button>
-            <button aria-label="play" class="sidebar-btn"
-                                @click="PlayPlaylist(index)" 
-                            >
-              <font-awesome-icon
-                                icon="play" />
+            <button
+              aria-label="play"
+              class="sidebar-btn"
+              @click="PlCommand('play', index)"
+            >
+              <font-awesome-icon icon="play" />
             </button>
           </span>
         </span>
       </summary>
-      <div class="divide-y dark:divide-gray-400 flex flex-col">
+      <div
+        class="divide-y dark:divide-gray-400 flex flex-col ml-4 border-l-2 border-accent"
+      >
         <p
           class="px-2 dark:text-foreground"
           v-for="(song, index) in playlist.songs"
@@ -81,9 +99,11 @@
 import { humanizeTime, sendCommand } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { mapState } from "vuex";
+import PlaylistMenu from "./playlistMenu.vue";
 export default {
   components: {
     FontAwesomeIcon,
+    PlaylistMenu,
   },
   data() {
     return {
@@ -128,17 +148,28 @@ export default {
       }
       console.log(response.error);
     },
-    PlayPlaylist(index) {
-      let data = {
-        playlist: this.storedPlaylist[index].playlist,
-      };
-      sendCommand("api/stored", "play", data);
+    PlCommand(method, index) {
+      if (index) {
+        this.storedPlaylist[index].selected = true;
+      }
+      this.storedPlaylist.forEach((p) => {
+        if (p.selected) {
+          let data = {
+            playlist: p.playlist,
+          };
+          sendCommand("api/stored", method, data);
+        }
+      });
+      this.$store.dispatch("getStoredPlaylist");
     },
-    addPlaylist(index) {
-      let data = {
-        playlist: this.storedPlaylist[index].playlist,
-      };
-      sendCommand("api/stored", "load", data);
+    clearSelection() {
+      this.storedPlaylist.forEach((p) => {
+        p.selected = false;
+      });
+    },
+    toggleSelected(index) {
+      this.storedPlaylist[index].selected =
+        !this.storedPlaylist[index].selected;
     },
     animate(id) {
       let el = document.getElementById("icon-" + id);

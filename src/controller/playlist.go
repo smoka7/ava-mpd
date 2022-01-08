@@ -17,6 +17,10 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 		switch request.Command {
 		case "load":
 			playlist.LoadPlaylist(c.Client, request.Data.Playlist)
+		case "clear":
+			playlist.ClearPlaylist(c.Client, request.Data.Playlist)
+		case "delete":
+			playlist.DeletePlaylist(c.Client, request.Data.Playlist)
 		case "play":
 			playlist.PlayPlaylist(c.Client, request.Data.Playlist)
 		case "playliked":
