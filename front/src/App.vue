@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col-reverse text-lg">
+  <div
+    class="flex flex-col-reverse text-lg duration-300 text-primary dark:text-foreground"
+  >
     <main class="h-full w-full mx-auto flex">
       <sidebar id="sidebar" class="md:w-1/4 w-full fixed md:static h-full" />
       <div class="w-full md:w-3/4 md:ml-2 md:m-1">

@@ -70,23 +70,13 @@
       <album-art
         :url="albumArt"
         id="albumArt"
-        class="w-full md:w-24 md:h-24 md:mx-2"
+        class="w-full aspect-square md:w-24 md:h-24 md:mx-2 flex-shrink-0"
       ></album-art>
       <div
-        class="
-          flex flex-col
-          self-center
-          w-full
-          md:w-auto
-          my-2
-          md:m-0
-          text-xl
-          md:text-base
-          text-left
-        "
+        class="flex flex-col self-center w-full md:w-auto my-2 text-xl md:text-base text-left"
         v-if="currentSong.Title"
       >
-        <span>
+        <span class="text-ellipsis">
           {{ currentSong.Title }}
         </span>
         <span>
@@ -136,28 +126,20 @@
         <button
           aria-label="open-playlist"
           @click="openPlaylist"
-          class="bg-foreground text-primary rounded-full p-2 md:hidden"
+          class="bg-foreground rounded-full p-2 md:hidden"
         >
           <font-awesome-icon icon="list-ul" size="lg"></font-awesome-icon>
         </button>
         <button
           aria-label="open-folders"
           @click="openFolders"
-          class="bg-foreground text-primary rounded-full p-2 md:hidden"
+          class="bg-foreground rounded-full p-2 md:hidden"
         >
           <font-awesome-icon icon="folder" size="lg"></font-awesome-icon>
         </button>
       </div>
       <div
-        class="
-          flex
-          items-center
-          space-x-2
-          w-full
-          mb-2
-          md:m-0 md:justify-end
-          text-foreground
-        "
+        class="flex items-center space-x-2 w-full mb-2 md:m-0 md:justify-end"
       >
         <font-awesome-icon
           v-if="status.volume >= 50"
@@ -259,7 +241,7 @@ export default {
     ]);
     const btnClass = {
       active: "text-green-500 bg-transparent",
-      normal: "text-foreground bg-transparent",
+      normal: "bg-transparent",
       base: "p-2 md:p-0 rounded-full tooltip md:hover:text-blue-200",
     };
     return { playbackCommands, btnClass };

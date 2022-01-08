@@ -6,11 +6,13 @@
     <div
       class="flex flex-col absolute inset-0 md:w-3/4 md:left-1/4 md:top-1 app-height z-auto p-8 space-y-2 overflow-y-scroll overflow-x-hidden bg-lightest"
     >
-      <div class="flex flex-row align-baseline justify-between">
+      <div class="flex flex-row items-center justify-between">
         <h1
-          class="text-primary text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-1"
+          class="flex space-x-4 items-center text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-2"
         >
-          {{ info.Title }}
+          <span>
+            {{ info.Title }}
+          </span>
           <likeSong :pLiked="liked" :file="info['file']" />
         </h1>
         <button
@@ -22,7 +24,7 @@
             class="text-red-500"
             icon="times"
             size="2x"
-          ></font-awesome-icon>
+          />
         </button>
       </div>
       <div
@@ -32,9 +34,7 @@
           :url="albumArt"
           class="md:w-1/2 h-fit md:sticky top-0"
         ></album-art>
-        <ul
-          class="flex flex-col md:w-1/2 rounded bg-white dark:text-white dark:bg-gray-700"
-        >
+        <ul class="flex flex-col md:w-1/2 rounded bg-white dark:bg-gray-700">
           <li
             v-for="(value, index) in info"
             :key="index"
