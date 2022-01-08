@@ -3,7 +3,7 @@
     <playlist-menu
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
-      @clearSelection="ClearSelection()"
+      @clearSelection="clearSelection()"
     />
     <div
       v-for="playlist in playlists"
@@ -149,7 +149,7 @@ export default {
       console.log(response.error);
     },
     PlCommand(method, index) {
-      if (index) {
+      if (index !== null) {
         this.storedPlaylist[index].selected = true;
       }
       this.storedPlaylist.forEach((p) => {

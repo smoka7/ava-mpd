@@ -3,7 +3,7 @@
     class="absolute top-0 z-50 w-full max-w-full max-h-fit flex justify-between items-center py-1 px-4"
   >
     <Menu>
-      <MenuButton class="ml-auto">
+      <MenuButton class="ml-auto p-2">
         <FontAwesomeIcon icon="ellipsis-h" />
       </MenuButton>
       <transition
@@ -15,7 +15,7 @@
         leave-to-class="transform scale-95 opacity-0"
       >
         <MenuItems
-          class="fixed left-32 mt-12 z-50 flex flex-col text-left rounded shadow-md cursor-default bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-lightest dark:bg-gray-700"
+          class="fixed md:left-32 md:right-auto right-12 top-20 z-50 flex flex-col text-left rounded shadow-md cursor-default bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-lightest dark:bg-gray-700"
         >
           <MenuItem
             v-slot="{ active }"
@@ -37,7 +37,6 @@
       </transition>
     </Menu>
   </div>
-  <!-- <p v-show="selected.length >= 0">{{ selected.length }} selected</p> -->
 </template>
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
