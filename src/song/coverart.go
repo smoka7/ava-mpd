@@ -11,6 +11,9 @@ import (
 //returns the URL of the song
 func ServeAlbumArt(c config.Connection, songPath string) (coverUrl string) {
 	var song Song
+	if songPath == "" {
+		return "default"
+	}
 	song.GetSongInfo(c, songPath)
 	coverPath, coverUrl := song.getCoverArtPath()
 	// if cover isn't cached get it from mpd
