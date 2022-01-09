@@ -159,6 +159,14 @@ func PlayPlaylist(c config.Connection, name string) {
 	c.Close()
 }
 
+//renames the name playlist to newName
+func RenamePlaylist(c config.Connection, name, newName string) {
+	c.Connect()
+	err := c.Client.PlaylistRename(name, newName)
+	config.Log(err)
+	c.Close()
+}
+
 //returns content of the folder
 func ListFolders(c config.Connection, folder string) (folderAndFiles []mpd.Attrs) {
 	files := make([]mpd.Attrs, 0)

@@ -42,7 +42,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 export default {
-  emits: ["delete", "clearSelection", "clear"],
+  emits: ["delete", "clearSelection", "clear", "rename"],
   components: {
     FontAwesomeIcon,
     Menu,
@@ -62,6 +62,11 @@ export default {
           name: "Clear Playlists",
           icon: "eraser",
           method: "clear",
+        },
+        {
+          name: "Rename Playlists",
+          icon: "edit",
+          method: "rename",
         },
         {
           name: "Clear Selection",

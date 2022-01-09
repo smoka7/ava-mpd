@@ -23,6 +23,8 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			playlist.DeletePlaylist(c.Client, request.Data.Playlist)
 		case "play":
 			playlist.PlayPlaylist(c.Client, request.Data.Playlist)
+		case "rename":
+			playlist.RenamePlaylist(c.Client, request.Data.Playlist, request.Data.Song)
 		case "playliked":
 			songs := playlist.GetLikedSongs(c.Client)
 			playlist.PlayFolder(c.Client, songs...)

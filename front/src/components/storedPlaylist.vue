@@ -1,9 +1,11 @@
 <template>
   <div class="flex flex-col relative -m-2 pt-6">
     <playlist-menu
+      v-if="selectedCount > 0"
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
       @clearSelection="clearSelection()"
+      @rename="renameOpen = true"
     />
     <div
       v-for="playlist in playlists"
@@ -93,6 +95,7 @@
         </p>
       </div>
     </details>
+    <rename-playlist v-if="renameOpen" :rename="renamePlaylist" />
   </div>
 </template>
 <script>
@@ -100,13 +103,18 @@ import { humanizeTime, sendCommand } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { mapState } from "vuex";
 import PlaylistMenu from "./playlistMenu.vue";
+import RenamePlaylist from "./renamePlaylist.vue";
 export default {
   components: {
     FontAwesomeIcon,
     PlaylistMenu,
+    RenamePlaylist,
   },
   data() {
     return {
+      renameOpen: false,
+      renamePlaylist: "",
+      selectedCount: 0,
       playlists: [
         { name: "Liked Songs", icon: "heart", method: "liked" },
         { name: "Most Played Songs", icon: "chart-area", method: "most" },
@@ -168,6 +176,10 @@ export default {
       });
     },
     toggleSelected(index) {
+      this.storedPlaylist[index].selected
+        ? this.selectedCount--
+        : this.selectedCount++;
+      this.renamePlaylist = this.storedPlaylist[index].playlist;
       this.storedPlaylist[index].selected =
         !this.storedPlaylist[index].selected;
     },

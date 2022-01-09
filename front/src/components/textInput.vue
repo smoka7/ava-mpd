@@ -38,7 +38,6 @@
 </template>
 <script>
 import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 export default {
   props: ["isOpen"],
   emits: ["close", "finish"],
@@ -46,7 +45,6 @@ export default {
     Dialog,
     DialogOverlay,
     DialogTitle,
-    FontAwesomeIcon,
   },
   data() {
     return {
