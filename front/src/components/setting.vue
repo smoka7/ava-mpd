@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed md:static flex flex-col md:flex-row md:flex-wrap space-y-4 md:space-x-8 bottom-0 top-0 left-0 z-30 w-full app-height p-4 rounded overflow-y-auto bg-lightest dark:text-white duration-300 ease-in-out"
+    class="fixed md:static flex flex-col md:flex-row md:flex-wrap space-y-4 md:space-x-8 bottom-0 top-0 left-0 z-30 w-full app-height p-4 rounded overflow-y-auto bg-lightest/60 backdrop-blur-3xl dark:text-white"
   >
     <button
       aria-label="close-setting"

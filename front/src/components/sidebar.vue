@@ -1,7 +1,7 @@
 <template>
   <TabGroup
     as="div"
-    class="flex flex-col app-height overflow-y-auto p-2 rounded bg-white m-1 shadow-md dark:bg-gray-700 text-primary dark:text-foreground"
+    class="flex flex-col app-height overflow-y-auto p-2 rounded bg-white/60 backdrop-blur-3xl m-1 shadow-md dark:bg-gray-700/60 darK:backdrop-blur-3xl text-primary dark:text-white"
   >
     <TabList as="div" class="flex w-full justify-around p-1">
       <Tab
@@ -55,7 +55,7 @@ export default {
       tabClasses: {
         active: "bg-accent text-primary",
         normal:
-          "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-accent dark:hover:text-primary rounded",
+          "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-gray-800/70 dark:hover:text-white rounded",
       },
       tabs: {
         Playlists: {
@@ -80,6 +80,6 @@ export default {
 </script>
 <style>
 .sidebar-btn {
-  @apply p-2 hover:bg-white dark:hover:bg-gray-700 dark:hover:text-foreground rounded;
+  @apply p-2 dark:hover:bg-white/10 hover:bg-gray-700/10 rounded;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed bottom-0 top-0 left-0 flex flex-col bg-foreground w-full h-full rounded md:static overflow-hidden app-height dark:bg-gray-700"
+    class="fixed bottom-0 top-0 left-0 flex flex-col w-full h-full rounded md:static overflow-hidden app-height backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60"
     id="queue"
   >
     <div class="overflow-y-auto snap-y">
@@ -30,7 +30,7 @@
           @dragstart="startMoveSong($event, song.Pos)"
           v-for="song in album"
           :key="song.Pos"
-          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 text-black dark:text-foreground dark:hover:text-primary cursor-pointer hover:bg-blue-100 group"
+          class="md:py-1 py-2 px-4 grid grid-cols-12 md:rounded md:mx-2 text-black dark:text-white cursor-pointer group odd:bg-gray-600/10 dark:odd:bg-gray-800/50 dark:hover:odd:bg-gray-800/70 hover:bg-white/60 dark:hover:bg-gray-800/70"
           :id="'song' + song.Pos"
         >
           <span
@@ -70,7 +70,7 @@
     <button
       aria-label="close-playlist"
       @click="closePlaylist"
-      class="fixed right-4 bottom-4 bg-red-500 text-foreground rounded-full p-2 md:hidden w-20 h-20"
+      class="fixed right-4 bottom-4 bg-red-500 text-white rounded-full p-2 md:hidden w-20 h-20"
     >
       <font-awesome-icon icon="arrow-right" size="2x"></font-awesome-icon>
     </button>

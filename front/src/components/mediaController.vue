@@ -1,17 +1,6 @@
 <template>
   <div
-    class="
-      fixed
-      bottom-0
-      grid grid-rows-8 grid-cols-1
-      w-full
-      h-screen
-      p-4
-      md:h-36 md:grid-rows-3 md:grid-cols-12 md:p-4
-      bg-primary
-      text-foreground
-      z-10
-    "
+    class="fixed bottom-0 grid grid-rows-8 grid-cols-1 w-full h-screen p-4 md:h-36 md:grid-rows-3 md:grid-cols-12 md:p-4 bg-primary text-white z-10"
     id="mediaController"
   >
     <div
@@ -126,14 +115,22 @@
         <button
           aria-label="open-playlist"
           @click="openPlaylist"
-          class="bg-foreground rounded-full p-2 md:hidden"
+          :class="[
+            btnClass.noramal,
+            btnClass.base,
+            'bg-white text-primary rounded-full p-2 md:hidden',
+          ]"
         >
           <font-awesome-icon icon="list-ul" size="lg"></font-awesome-icon>
         </button>
         <button
           aria-label="open-folders"
           @click="openFolders"
-          class="bg-foreground rounded-full p-2 md:hidden"
+          :class="[
+            btnClass.noramal,
+            btnClass.base,
+            'bg-white text-primary rounded-full p-2 md:hidden',
+          ]"
         >
           <font-awesome-icon icon="folder" size="lg"></font-awesome-icon>
         </button>

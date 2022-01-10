@@ -10,7 +10,7 @@
     <div
       v-for="playlist in playlists"
       :key="playlist.name"
-      class="flex justify-between p-2 mx-2 items-center text-primary dark:text-foreground hover:bg-blue-200 dark:hover:text-primary rounded group"
+      class="flex justify-between p-2 mx-2 items-center text-primary dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 rounded group"
     >
       <span>
         <font-awesome-icon :icon="['fas', playlist.icon]" />
@@ -35,7 +35,7 @@
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
-        class="flex justify-between items-center md:p-2 py-4 px-2 mx-2 hover:bg-blue-200 dark:hover:text-primary rounded group"
+        class="flex justify-between items-center md:p-2 py-4 px-2 mx-2 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 r rounded group"
       >
         <span @click="getSongs(index)" class="cursor-pointer">
           <FontAwesomeIcon
@@ -80,10 +80,10 @@
         </span>
       </summary>
       <div
-        class="divide-y dark:divide-gray-400 flex flex-col ml-4 border-l-2 border-accent"
+        class="divide-y divide-primary dark:divide-gray-400 flex flex-col ml-4 border-l-2 border-primary"
       >
         <p
-          class="px-2 dark:text-foreground"
+          class="px-2 dark:text-white"
           v-for="(song, index) in playlist.songs"
           :key="index"
         >

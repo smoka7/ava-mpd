@@ -3,7 +3,7 @@
     <form class="p-2 w-full flex" @submit.prevent>
       <Listbox v-model="tag">
         <ListboxButton
-          class="p-2 dark:bg-lightest bg-primary dark:text-primary text-foreground rounded-l-lg"
+          class="p-2 dark:bg-lightest bg-primary dark:text-primary text-white rounded-l-lg"
         >
           <span class="flex items-center">
             {{ tag }}

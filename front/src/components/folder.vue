@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <details>
       <summary
-        class="flex justify-between md:p-2 px-2 py-4 hover:bg-blue-200 dark:hover:text-primary rounded group"
+        class="flex justify-between md:p-2 px-2 py-4 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 rounded group"
       >
         <span class="w-4/6" @click.self="listFolders(index)">
           <FontAwesomeIcon :icon="folder.directory ? 'folder' : 'music'" />
