@@ -1,7 +1,6 @@
 <template>
   <div
-    class="fixed bottom-0 top-0 left-0 flex flex-col w-full h-full rounded md:static overflow-hidden app-height backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60"
-    id="queue"
+    class="flex flex-col w-full h-full rounded overflow-hidden backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60"
   >
     <div class="overflow-y-auto snap-y">
       <div
@@ -74,12 +73,14 @@
     >
       <font-awesome-icon icon="arrow-right" size="2x"></font-awesome-icon>
     </button>
-    <queue-menu
-      :open="menu"
-      @close="hideMenu"
-      :song="selected"
-      @showInfo="songInfo = true"
-    />
+    <teleport to="#app">
+      <queue-menu
+        :open="menu"
+        @close="hideMenu"
+        :song="selected"
+        @showInfo="songInfo = true"
+      />
+    </teleport>
     <songInfo
       v-if="songInfo"
       :song="selected.file"

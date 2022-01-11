@@ -1,15 +1,22 @@
 <template>
   <div
-    class="flex flex-col-reverse text-lg duration-300 text-primary dark:text-white bg-gradian"
+    class="flex flex-col md:grid md:grid-rows-4 md:grid-cols-4 md:gap-2 md:p-1 text-lg w-screen h-screen duration-300 text-primary dark:text-white bg-gradian overflow-hidden"
   >
-    <main class="h-full w-full mx-auto flex">
-      <sidebar id="sidebar" class="md:w-1/4 w-full fixed md:static h-full" />
-      <div class="w-full md:w-3/4 md:ml-2 md:m-1">
-        <setting v-if="settingIsOpen" @close="toggleSetting()" />
-        <playlist v-else />
-      </div>
-    </main>
-    <media-controller @openSetting="toggleSetting()"> </media-controller>
+    <sidebar
+      id="sidebar"
+      class="md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-4 md:col-span-1 fixed inset-0 md:static h-full"
+    />
+    <div
+      class="md:col-start-2 md:col-end-5 md:col-span-3 md:row-start-1 md:row-end-4 fixed inset-0 md:relative"
+      id="queue"
+    >
+      <setting v-if="settingIsOpen" @close="toggleSetting()" />
+      <playlist v-else />
+    </div>
+    <media-controller
+      @openSetting="toggleSetting()"
+      class="md:col-span-4 md:col-start-1 md:col-end-5 md:row-start-4 md:row-end-4 md:row-span-1 fixed inset-0 z-10"
+    />
   </div>
 </template>
 <script>
@@ -19,6 +26,7 @@ import Sidebar from "./components/sidebar.vue";
 import Setting from "./components/setting.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { setColorScheme } from "./colors.js";
+import { toggleMediaController } from "./helpers.js";
 export default {
   components: {
     MediaController,
@@ -39,6 +47,7 @@ export default {
     },
     toggleSetting() {
       this.settingIsOpen = !this.settingIsOpen;
+      toggleMediaController();
     },
     connectToSocket() {
       let hostname = new URL(window.location.href).host;

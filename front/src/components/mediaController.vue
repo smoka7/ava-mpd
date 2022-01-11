@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed bottom-0 grid grid-rows-8 grid-cols-1 w-full h-screen p-4 md:h-36 md:grid-rows-3 md:grid-cols-12 md:p-4 bg-primary text-white z-10"
+    class="md:static grid grid-rows-8 grid-cols-1 p-4 md:grid-rows-3 md:grid-cols-12 md:rounded bg-primary text-white"
     id="mediaController"
   >
     <div
