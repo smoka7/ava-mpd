@@ -4,6 +4,7 @@
       v-if="selectedCount > 0"
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
+      @removeDuplicate="PlCommand('removeduplicate')"
       @clearSelection="clearSelection()"
       @rename="renameOpen = true"
     />
@@ -157,7 +158,7 @@ export default {
       console.log(response.error);
     },
     PlCommand(method, index) {
-      if (index !== null) {
+      if (index != null) {
         this.storedPlaylist[index].selected = true;
       }
       this.storedPlaylist.forEach((p) => {

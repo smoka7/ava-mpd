@@ -23,6 +23,8 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			playlist.DeletePlaylist(c.Client, request.Data.Playlist)
 		case "play":
 			playlist.PlayPlaylist(c.Client, request.Data.Playlist)
+		case "removeduplicate":
+			playlist.RemoveDuplicatesongs(c.Client, request.Data.Playlist)
 		case "rename":
 			playlist.RenamePlaylist(c.Client, request.Data.Playlist, request.Data.Song)
 		case "playliked":
@@ -60,7 +62,7 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		case "play":
 			playlist.PlaySong(c.Client, request.Data.Start)
 		case "removeduplicate":
-			playlist.RemoveDuplicatesongs(c.Client)
+			playlist.RemoveDuplicatesongs(c.Client, "")
 		case "save":
 			playlist.SaveQueue(c.Client, request.Data.Playlist)
 		}

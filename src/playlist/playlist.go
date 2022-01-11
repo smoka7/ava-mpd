@@ -36,22 +36,35 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 	return filteredQueue
 }
 
-//removes duplicate songs based on their file address from the queue
-func RemoveDuplicatesongs(c config.Connection) {
+//removes duplicate songs based on their file address from the playlist name
+//if name is empty then it deletes duplicate songs in current queue
+func RemoveDuplicatesongs(c config.Connection, name string) {
+	var queue []mpd.Attrs
 	c.Connect()
-	queue, err := c.Client.PlaylistInfo(-1, -1)
-	config.Log(err)
+	if name == "" {
+		queue, err = c.Client.PlaylistInfo(-1, -1)
+		config.Log(err)
+	} else {
+		queue, err = c.Client.PlaylistContents(name)
+		config.Log(err)
+	}
 	var songs = make(map[string]bool)
 	cmds := c.Client.BeginCommandList()
-	for _, song := range queue {
-		if _, ok := songs[song["file"]]; ok {
-			index, _ := strconv.Atoi(song["Pos"])
-			cmds.Delete(index, -1)
+	for i := len(queue) - 1; i >= 0; i-- {
+		if _, ok := songs[queue[i]["file"]]; ok {
+			index, _ := strconv.Atoi(queue[i]["Pos"])
+			if name == "" {
+				cmds.Delete(index, -1)
+				fmt.Println(index)
+			} else {
+				cmds.PlaylistDelete(name, index)
+			}
 			continue
 		}
-		songs[song["file"]] = true
+		songs[queue[i]["file"]] = true
 	}
-	cmds.End()
+	err := cmds.End()
+	config.Log(err)
 }
 
 //plays the id song in current Queue

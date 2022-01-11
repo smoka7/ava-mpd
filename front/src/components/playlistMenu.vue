@@ -69,6 +69,11 @@ export default {
           method: "rename",
         },
         {
+          name: "Remove Duplicate songs",
+          icon: "eraser",
+          method: "removeDuplicate",
+        },
+        {
           name: "Clear Selection",
           icon: "check-circle",
           method: "clearSelection",
