@@ -41,6 +41,7 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 func RemoveDuplicatesongs(c config.Connection, name string) {
 	var queue []mpd.Attrs
 	c.Connect()
+	defer c.Close()
 	if name == "" {
 		queue, err = c.Client.PlaylistInfo(-1, -1)
 		config.Log(err)
@@ -52,12 +53,11 @@ func RemoveDuplicatesongs(c config.Connection, name string) {
 	cmds := c.Client.BeginCommandList()
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, ok := songs[queue[i]["file"]]; ok {
-			index, _ := strconv.Atoi(queue[i]["Pos"])
 			if name == "" {
+				index, _ := strconv.Atoi(queue[i]["Pos"])
 				cmds.Delete(index, -1)
-				fmt.Println(index)
 			} else {
-				cmds.PlaylistDelete(name, index)
+				cmds.PlaylistDelete(name, i)
 			}
 			continue
 		}
