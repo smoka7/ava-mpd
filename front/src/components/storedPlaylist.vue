@@ -5,6 +5,7 @@
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
       @removeDuplicate="PlCommand('removeduplicate')"
+      @removeInvalid="PlCommand('removeinvalid')"
       @clearSelection="clearSelection()"
       @rename="renameOpen = true"
     />

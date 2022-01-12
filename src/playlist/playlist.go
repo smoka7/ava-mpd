@@ -67,6 +67,22 @@ func RemoveDuplicatesongs(c config.Connection, name string) {
 	config.Log(err)
 }
 
+//removes songs that are removed or replaced from the server
+func RemoveInvalidsongs(c config.Connection, name string) {
+	c.Connect()
+	defer c.Close()
+	queue, err := c.Client.PlaylistContents(name)
+	config.Log(err)
+	cmds := c.Client.BeginCommandList()
+	for i := len(queue) - 1; i >= 0; i-- {
+		if _, ok := queue[i]["Title"]; !ok {
+			cmds.PlaylistDelete(name, i)
+		}
+	}
+	err = cmds.End()
+	config.Log(err)
+}
+
 //plays the id song in current Queue
 func PlaySong(c config.Connection, id int) {
 	c.Connect()

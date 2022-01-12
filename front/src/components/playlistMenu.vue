@@ -42,7 +42,14 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 export default {
-  emits: ["delete", "clearSelection", "clear", "rename"],
+  emits: [
+    "delete",
+    "clearSelection",
+    "clear",
+    "rename",
+    "removeDuplicate",
+    "removeInvalid",
+  ],
   components: {
     FontAwesomeIcon,
     Menu,
@@ -72,6 +79,11 @@ export default {
           name: "Remove Duplicate songs",
           icon: "eraser",
           method: "removeDuplicate",
+        },
+        {
+          name: "Remove Invalid songs",
+          icon: "eraser",
+          method: "removeInvalid",
         },
         {
           name: "Clear Selection",
