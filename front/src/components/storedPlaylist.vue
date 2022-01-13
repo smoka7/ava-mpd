@@ -1,7 +1,8 @@
 <template>
-  <div class="flex flex-col relative -m-2 pt-6">
+  <div class="flex flex-col relative -m-2 pt-6 pb-2 overflow-x-hidden">
     <playlist-menu
       v-if="selectedCount > 0"
+      @addafter="PlCommand('addafter')"
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
       @removeDuplicate="PlCommand('removeduplicate')"
@@ -37,9 +38,12 @@
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
-        class="flex justify-between items-center md:p-2 py-4 px-2 mx-2 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 r rounded group"
+        class="flex justify-between items-start md:p-2 py-4 px-2 mx-2 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 r rounded group"
       >
-        <span @click="getSongs(index)" class="cursor-pointer">
+        <span
+          @click="getSongs(index)"
+          class="cursor-pointer overflow-x-hidden flex items-center text-ellipsis w-1/2 mr-1"
+        >
           <FontAwesomeIcon
             icon="angle-down"
             class="transform-gpu -rotate-90 duration-200"
@@ -47,23 +51,13 @@
           />
           {{ playlist.playlist }}
         </span>
-        <span class="text-sm space-x-2">
+        <span class="flex flex-col items-end text-sm space-x-2">
           <span>
             {{ playlist.songsCount }} song ({{
               humanizeTime(playlist.duration)
             }})
           </span>
-          <span class="invisible group-hover:visible">
-            <button
-              aria-label="select-playlist"
-              class="sidebar-btn"
-              @click="toggleSelected(index)"
-            >
-              <font-awesome-icon
-                icon="check-circle"
-                :class="playlist.selected ? 'text-green-500 visible' : ''"
-              />
-            </button>
+          <span class="flex invisible group-hover:visible">
             <button
               aria-label="add"
               class="sidebar-btn"
@@ -77,6 +71,16 @@
               @click="PlCommand('play', index)"
             >
               <font-awesome-icon icon="play" />
+            </button>
+            <button
+              aria-label="select-playlist"
+              class="sidebar-btn"
+              @click="toggleSelected(index)"
+            >
+              <font-awesome-icon
+                icon="check-circle"
+                :class="playlist.selected ? 'text-green-500 visible' : ''"
+              />
             </button>
           </span>
         </span>

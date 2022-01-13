@@ -36,6 +36,13 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 	return filteredQueue
 }
 
+//loads the playlist after the current song in queue
+func AddAfterCurrent(c config.Connection, name string) {
+	c.Connect()
+	err = c.Client.Command("load %s 0: +0", name).OK()
+	c.Close()
+}
+
 //removes duplicate songs based on their file address from the playlist name
 //if name is empty then it deletes duplicate songs in current queue
 func RemoveDuplicatesongs(c config.Connection, name string) {

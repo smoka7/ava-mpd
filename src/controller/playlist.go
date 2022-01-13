@@ -23,6 +23,8 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			playlist.DeletePlaylist(c.Client, request.Data.Playlist)
 		case "play":
 			playlist.PlayPlaylist(c.Client, request.Data.Playlist)
+		case "addafter":
+			playlist.AddAfterCurrent(c.Client, request.Data.Playlist)
 		case "removeduplicate":
 			playlist.RemoveDuplicatesongs(c.Client, request.Data.Playlist)
 		case "removeinvalid":
