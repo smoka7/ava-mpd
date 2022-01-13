@@ -310,6 +310,15 @@ func GetMostPlayed(c config.Connection) (mostPlayed []string) {
 	return
 }
 
+//gets the file path of the Pos in Queue
+func GetSongFile(c config.Connection, Pos int) string {
+	c.Connect()
+	song, err := c.Client.PlaylistInfo(Pos, -1)
+	config.Log(err)
+	c.Close()
+	return song[0]["file"]
+}
+
 //filter album info
 func newAlbum(song mpd.Attrs) mpd.Attrs {
 	return map[string]string{
@@ -320,7 +329,6 @@ func newAlbum(song mpd.Attrs) mpd.Attrs {
 		"Artist":   song["Artist"],
 		"duration": song["duration"],
 		"Date":     song["Date"],
-		"file":     song["file"],
 	}
 }
 
@@ -331,6 +339,5 @@ func newSong(song mpd.Attrs) mpd.Attrs {
 		"Pos":      song["Pos"],
 		"Track":    song["Track"],
 		"duration": song["duration"],
-		"file":     song["file"],
 	}
 }

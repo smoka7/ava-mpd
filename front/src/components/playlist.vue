@@ -38,15 +38,16 @@
           >
             <FontAwesomeIcon
               :id="song.Pos"
-              v-if="song.Pos !== currentSong.Pos"
-              class="invisible group-hover:visible text-green-500 mr-2"
-              icon="play"
-            ></FontAwesomeIcon>
-            <FontAwesomeIcon
-              v-else
-              class="text-red-500 mr-2"
-              icon="compact-disc"
-            ></FontAwesomeIcon>
+              :class="
+                song.Pos !== currentSong.Pos
+                  ? 'invisible group-hover:visible text-green-500 mr-2'
+                  : 'text-red-500 mr-2'
+              "
+              :icon="[
+                'fas',
+                song.Pos !== currentSong.Pos ? 'play' : 'compact-disc',
+              ]"
+            />
             {{ song.Track }}
           </span>
           <span class="col-start-3 md:col-start-2 col-end-11 self-start">
@@ -56,7 +57,7 @@
             class="col-start-11 md:col-start-12 col-end-13 justify-self-center"
           >
             <FontAwesomeIcon
-              @click="showMenu(song.Pos, song.file, $event)"
+              @click="showMenu(song.Pos, $event)"
               :id="'delete' + song.Pos"
               class="mr-2 invisible group-hover:visible"
               icon="ellipsis-h"
@@ -81,11 +82,7 @@
         @showInfo="songInfo = true"
       />
     </teleport>
-    <songInfo
-      v-if="songInfo"
-      :song="selected.file"
-      @close="songInfo = false"
-    ></songInfo>
+    <songInfo v-if="songInfo" :song="selected" @close="songInfo = false" />
   </div>
 </template>
 <script>
@@ -108,7 +105,7 @@ export default {
     return {
       menu: false,
       songInfo: false,
-      selected: { position: -1, file: "" },
+      selected: -1,
     };
   },
   async mounted() {
@@ -122,8 +119,8 @@ export default {
   methods: {
     humanizeTime: humanizeTime,
     closePlaylist: toggleMediaController,
-    showMenu(pos, uri, e) {
-      this.selected = { position: pos, file: uri };
+    showMenu(pos, e) {
+      this.selected = Number(pos);
       let el = document.getElementById("context-menu");
       el.style.top = e.pageY + "px";
       this.menu = true;
@@ -142,7 +139,6 @@ export default {
       sendCommand("/api/queue", "move", data);
     },
     hideMenu() {
-      this.selected.position = -1;
       this.menu = false;
     },
     animate(id) {

@@ -6,17 +6,7 @@
   ></div>
   <div
     v-show="open"
-    class="
-      flex flex-col
-      bg-white
-      dark:bg-gray-600
-      absolute
-      right-10
-      z-50
-      rounded
-      border-2 border-primary
-      dark:border-lightest
-    "
+    class="flex flex-col bg-white dark:bg-gray-600 absolute right-10 z-50 rounded border-2 border-primary dark:border-lightest w-48 text-lg"
     id="context-menu"
   >
     <div v-for="action in actions" :key="action.title">
@@ -24,28 +14,23 @@
         {{ action.title }}
       </button>
     </div>
-    <div>
-      <details>
-        <summary @click="getStoredPlaylist" :class="[btnClass, 'flex']">
-          add to playlist
-        </summary>
-        <div
-          class="
-            border-primary border-t-2
-            dark:border-lightest dark:hover:text-black
-          "
+    <details class="w-full">
+      <summary @click="getStoredPlaylist" :class="[btnClass, 'flex']">
+        add to playlist
+      </summary>
+      <div
+        class="border-primary border-t-2 dark:border-lightest dark:hover:text-black"
+      >
+        <button
+          @click="addSongTo(pl.playlist)"
+          :class="btnClass"
+          v-for="pl in storedPlaylist"
+          :key="pl.playlist"
         >
-          <button
-            @click="addSongTo(pl.playlist)"
-            :class="btnClass"
-            v-for="pl in storedPlaylist"
-            :key="pl.playlist"
-          >
-            {{ pl.playlist }}
-          </button>
-        </div>
-      </details>
-    </div>
+          {{ pl.playlist }}
+        </button>
+      </div>
+    </details>
   </div>
 </template>
 <script>
@@ -54,10 +39,7 @@ import { sendCommand } from "../helpers.js";
 export default {
   props: {
     open: Boolean,
-    song: {
-      position: Number,
-      file: String,
-    },
+    song: Number,
   },
   emits: ["close", "showInfo"],
   data() {
@@ -68,13 +50,13 @@ export default {
         { title: "remove duplicate songs", func: this.removeDuplicate },
       ],
       btnClass:
-        "w-full text-left p-2 hover:bg-blue-100 focus:bg-blue-100 dark:hover:text-black",
+        "w-full text-left p-2 hover:bg-blue-100 focus:bg-blue-100 dark:hover:text-black overflow-x-hidden text-ellipsis",
     };
   },
   methods: {
     deleteSong(end = -1) {
       let data = {
-        Start: Number(this.song.position),
+        Start: this.song,
         End: Number(end),
       };
       sendCommand("/api/queue", "delete", data);
@@ -82,7 +64,7 @@ export default {
     },
     addSongTo(playlist) {
       sendCommand("api/queue", "addsong", {
-        song: this.song.file,
+        Start: this.song,
         playlist: playlist,
       });
       this.$emit("close");

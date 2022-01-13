@@ -56,7 +56,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&request)
 		switch request.Command {
 		case "addsong":
-			playlist.AddSongToPlaylist(c.Client, request.Data.Playlist, request.Data.Song)
+			file := playlist.GetSongFile(c.Client, request.Data.Start)
+			playlist.AddSongToPlaylist(c.Client, request.Data.Playlist, file)
 		case "delete":
 			playlist.DeleteSong(c.Client, request.Data.Start, -1)
 		case "move":

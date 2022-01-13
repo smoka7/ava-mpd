@@ -77,7 +77,7 @@ export default {
     async getInfo() {
       let request = {
         command: "info",
-        data: { song: this.song },
+        data: { start: this.song },
       };
       let response = await fetch("/api/song", {
         method: "POST",

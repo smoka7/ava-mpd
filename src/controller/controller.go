@@ -6,6 +6,7 @@ import (
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playback"
+	"github.com/smoka7/ava/src/playlist"
 	"github.com/smoka7/ava/src/song"
 )
 
@@ -92,9 +93,10 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 			song.ToggleLike(c.Client, request.Data.Song)
 		case "info":
 			info := song.Song{}
-			info.GetSongInfo(c.Client, request.Data.Song)
-			stickers := song.GetStickers(c.Client, request.Data.Song)
-			albumArtUrl := song.ServeAlbumArt(c.Client, request.Data.Song)
+			file := playlist.GetSongFile(c.Client, request.Data.Start)
+			info.GetSongInfo(c.Client, file)
+			stickers := song.GetStickers(c.Client, file)
+			albumArtUrl := song.ServeAlbumArt(c.Client, file)
 			json.NewEncoder(w).Encode(map[string]interface{}{
 				"Info":     info.Info,
 				"Stickers": stickers,
