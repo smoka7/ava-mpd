@@ -69,6 +69,9 @@ func serveCoverArts() {
 func getHostIP() net.IP {
 	conn, err := net.Dial("udp", "192.168.1.1:80")
 	config.Log(err)
+	if err != nil {
+		return nil
+	}
 	defer conn.Close()
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 	return localAddr.IP
