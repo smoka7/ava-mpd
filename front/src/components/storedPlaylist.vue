@@ -22,16 +22,18 @@
       <span class="md:text-sm invisible group-hover:visible">
         <button
           aria-label="add-most-played-song"
-          class="sidebar-btn"
+          class="sidebar-btn tooltip"
           @click="sendCommand('api/stored', 'add' + playlist.method)"
         >
+          <span class="tooltiptext">add to queue</span>
           <font-awesome-icon icon="plus" />
         </button>
         <button
           aria-label="play-most-played-song"
-          class="sidebar-btn"
+          class="sidebar-btn tooltip"
           @click="sendCommand('api/stored', 'play' + playlist.method)"
         >
+          <span class="tooltiptext">play</span>
           <font-awesome-icon icon="play" />
         </button>
       </span>
@@ -60,23 +62,26 @@
           <span class="flex invisible group-hover:visible">
             <button
               aria-label="add"
-              class="sidebar-btn"
+              class="sidebar-btn tooltip"
               @click="PlCommand('load', index)"
             >
+              <span class="tooltiptext">add to queue</span>
               <font-awesome-icon icon="plus" />
             </button>
             <button
               aria-label="play"
-              class="sidebar-btn"
+              class="sidebar-btn tooltip"
               @click="PlCommand('play', index)"
             >
+              <span class="tooltiptext">play</span>
               <font-awesome-icon icon="play" />
             </button>
             <button
               aria-label="select-playlist"
-              class="sidebar-btn"
+              class="sidebar-btn tooltip"
               @click="toggleSelected(index)"
             >
+              <span class="tooltiptext">select</span>
               <font-awesome-icon
                 icon="check-circle"
                 :class="playlist.selected ? 'text-green-500 visible' : ''"

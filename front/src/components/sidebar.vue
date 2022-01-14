@@ -18,6 +18,7 @@
         </button>
       </Tab>
       <button
+          aria-label="close-sidebar"
         class="p-2 px-6 md:hidden dark:text-lightest"
         @click="closeFolders"
       >

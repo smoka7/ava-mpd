@@ -1,9 +1,10 @@
 <template>
   <div @click.self="zoom" class="bg-gradian rounded">
     <img
-      v-show="!defaultAlbumArt"
+      v-if="!defaultAlbumArt"
       @click="zoom"
       loading="lazy"
+      :alt="altText"
       :class="albumArtClass"
       :src="defaultAlbumArt ? '' : url"
     />
@@ -11,7 +12,7 @@
 </template>
 <script>
 export default {
-  props: ["url"],
+  props: ["url", "altText"],
   data() {
     return { isZoomed: false };
   },
@@ -35,5 +36,4 @@ export default {
   },
 };
 </script>
-<style>
-</style>
+<style></style>

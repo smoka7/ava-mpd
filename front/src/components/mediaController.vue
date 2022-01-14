@@ -9,7 +9,7 @@
       <button
         aria-label="previous-song"
         @click="playbackCommand('previous')"
-        class="scale-110 md:scale-75 hover:text-blue-200"
+        class="scale-110 md:scale-75 hover:text-accent"
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
@@ -22,33 +22,25 @@
         @click="playbackCommand('toggle')"
         :class="[
           status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-          'text-white md:py-7 md:px-7 rounded-full px-12 flex items-center',
+          'text-white hover:text-primary aspect-square rounded-full flex items-center justify-center',
         ]"
       >
         <font-awesome-icon
-          class="hover:text-green-400"
-          v-if="status.state === 'play'"
-          icon="pause"
-          size="lg"
-        />
-        <font-awesome-icon
-          v-else
-          class="hover:text-accent"
-          icon="play"
+          :icon="['fas', status.state === 'play' ? 'pause' : 'play']"
           size="lg"
         />
       </button>
       <button
         aria-label="stop-song"
         @click="playbackCommand('stop')"
-        class="scale-110 md:scale-75 hover:text-blue-200"
+        class="scale-110 md:scale-75 hover:text-accent"
       >
         <font-awesome-icon icon="stop" size="2x" />
       </button>
       <button
         aria-label="next-song"
         @click="playbackCommand('next')"
-        class="scale-110 md:scale-75 hover:text-blue-200"
+        class="scale-110 md:scale-75 hover:text-accent"
       >
         <font-awesome-icon icon="step-forward" size="2x" />
       </button>
@@ -58,6 +50,7 @@
     >
       <album-art
         :url="albumArt"
+        :altText="currentSong.Title + 'cover'"
         id="albumArt"
         class="w-full aspect-square md:w-24 md:h-24 md:mx-2 flex-shrink-0"
       ></album-art>
@@ -226,7 +219,7 @@ export default {
     const btnClass = {
       active: "text-green-500 bg-transparent",
       normal: "bg-transparent",
-      base: "p-2 md:p-0 rounded-full tooltip md:hover:text-blue-200",
+      base: "p-2 md:p-0 tooltip md:hover:text-accent",
     };
     return { playbackCommands, btnClass };
   },

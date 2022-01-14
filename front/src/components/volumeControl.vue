@@ -1,5 +1,8 @@
 <template>
-  <button @click="changeVolume()" >
+  <button
+    @click="changeVolume()"
+    :aria-label="volume > 0 ? 'mute':'max-the-volume'"
+  >
     <font-awesome-icon :icon="['fas', icon()]" size="lg" />
   </button>
   <progressBar

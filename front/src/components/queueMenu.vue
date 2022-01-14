@@ -6,7 +6,7 @@
   ></div>
   <div
     v-show="open"
-    class="flex flex-col bg-white dark:bg-gray-600 absolute right-10 z-50 rounded border-2 border-primary dark:border-lightest w-48 text-lg"
+    class="flex flex-col bg-white dark:bg-gray-600 absolute right-10 z-50 rounded border-2 border-primary dark:border-lightest w-48 text-lg dark:text-white"
     id="context-menu"
   >
     <div v-for="action in actions" :key="action.title">

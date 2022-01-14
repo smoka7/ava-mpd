@@ -1,6 +1,6 @@
 <template>
   <button aria-label="like-song" :class="btnClass" @click="likeSong">
-    <font-awesome-icon :icon="[pLiked ? 'fas' : 'far', 'heart']" size="lg" />
+    <font-awesome-icon :icon="[pLiked ? 'fas' : 'far', 'heart']" size="2x" />
   </button>
 </template>
 <script>
