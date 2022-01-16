@@ -40,27 +40,27 @@ func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&request)
 		switch request.Command {
 		case "next":
-			playback.NextSong(c.Client)
+			playback.NextSong(&c.Client)
 		case "previous":
-			playback.PrevSong(c.Client)
+			playback.PrevSong(&c.Client)
 		case "toggle":
-			playback.Toggle(c.Client)
+			playback.Toggle(&c.Client)
 		case "stop":
-			playback.Stop(c.Client)
+			playback.Stop(&c.Client)
 		case "single":
-			playback.Single(c.Client)
+			playback.Single(&c.Client)
 		case "repeat":
-			playback.Repeat(c.Client)
+			playback.Repeat(&c.Client)
 		case "random":
-			playback.Random(c.Client)
+			playback.Random(&c.Client)
 		case "consume":
-			playback.Consume(c.Client)
+			playback.Consume(&c.Client)
 		case "clear":
-			playback.ClearQueue(c.Client)
+			playback.ClearQueue(&c.Client)
 		case "seek":
-			playback.Seek(c.Client, request.Data.Start)
+			playback.Seek(&c.Client, request.Data.Start)
 		case "changeVolume":
-			playback.ChangeVolume(c.Client, request.Data.Start)
+			playback.ChangeVolume(&c.Client, request.Data.Start)
 		}
 		c.Client.Close()
 		return
@@ -70,17 +70,20 @@ func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 //writes the current mpd server status
 func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	currentSong := song.GetCurrentSong(c.Client)
+	c.Client.Connect()
 	response := Response{
-		Status:      song.GetStatus(c.Client),
+		Status:      song.GetStatus(&c.Client),
 		AlbumArt:    song.ServeAlbumArt(c.Client, currentSong["file"]),
 		CurrentSong: currentSong,
 	}
+	c.Client.Close()
 	json.NewEncoder(w).Encode(response)
 }
 
 func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		json.NewDecoder(r.Body).Decode(&request)
+		c.Client.Connect()
 		switch request.Command {
 		case "albumart":
 			albumArtUrl := song.ServeAlbumArt(c.Client, request.Data.Song)
@@ -90,12 +93,12 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 				})
 			return
 		case "like":
-			song.ToggleLike(c.Client, request.Data.Song)
+			song.ToggleLike(&c.Client, request.Data.Song)
 		case "info":
 			info := song.Song{}
-			file := playlist.GetSongFile(c.Client, request.Data.Start)
-			info.GetSongInfo(c.Client, file)
-			stickers := song.GetStickers(c.Client, file)
+			file := playlist.GetSongFile(&c.Client, request.Data.Start)
+			info.GetSongInfo(&c.Client, file)
+			stickers := song.GetStickers(&c.Client, file)
 			albumArtUrl := song.ServeAlbumArt(c.Client, file)
 			json.NewEncoder(w).Encode(map[string]interface{}{
 				"Info":     info.Info,
@@ -103,10 +106,13 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 				"AlbumArt": albumArtUrl,
 			})
 		}
+		c.Client.Close()
 	}
 }
 
 func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
+	c.Client.Connect()
+	defer c.Client.Close()
 	if r.Method == "POST" {
 		json.NewDecoder(r.Body).Decode(&request)
 		switch request.Command {

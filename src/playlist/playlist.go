@@ -12,12 +12,10 @@ import (
 var err error
 
 //returns current queue list
-func GetQueue(c config.Connection) [][]mpd.Attrs {
-	c.Connect()
+func GetQueue(c *config.Connection) [][]mpd.Attrs {
 	newIndex := 0
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	config.Log(err)
-	c.Close()
 	if len(queue) == 0 {
 		return nil
 	}
@@ -37,18 +35,14 @@ func GetQueue(c config.Connection) [][]mpd.Attrs {
 }
 
 //loads the playlist after the current song in queue
-func AddAfterCurrent(c config.Connection, name string) {
-	c.Connect()
+func AddAfterCurrent(c *config.Connection, name string) {
 	err = c.Client.Command("load %s 0: +0", name).OK()
-	c.Close()
 }
 
 //removes duplicate songs based on their file address from the playlist name
 //if name is empty then it deletes duplicate songs in current queue
-func RemoveDuplicatesongs(c config.Connection, name string) {
+func RemoveDuplicatesongs(c *config.Connection, name string) {
 	var queue []mpd.Attrs
-	c.Connect()
-	defer c.Close()
 	if name == "" {
 		queue, err = c.Client.PlaylistInfo(-1, -1)
 		config.Log(err)
@@ -75,9 +69,7 @@ func RemoveDuplicatesongs(c config.Connection, name string) {
 }
 
 //removes songs that are removed or replaced from the server
-func RemoveInvalidsongs(c config.Connection, name string) {
-	c.Connect()
-	defer c.Close()
+func RemoveInvalidsongs(c *config.Connection, name string) {
 	queue, err := c.Client.PlaylistContents(name)
 	config.Log(err)
 	cmds := c.Client.BeginCommandList()
@@ -91,35 +83,27 @@ func RemoveInvalidsongs(c config.Connection, name string) {
 }
 
 //plays the id song in current Queue
-func PlaySong(c config.Connection, id int) {
-	c.Connect()
+func PlaySong(c *config.Connection, id int) {
 	err := c.Client.Play(id)
 	config.Log(err)
-	c.Close()
 }
 
 //moves the song from position in queue to newPosition
-func MoveSong(c config.Connection, position int, newPosition int) {
-	c.Connect()
+func MoveSong(c *config.Connection, position int, newPosition int) {
 	err := c.Client.Move(position, -1, newPosition)
 	config.Log(err)
-	c.Close()
 }
 
 //deletes the song from start to end from current Queue
-func DeleteSong(c config.Connection, start, end int) {
-	c.Connect()
+func DeleteSong(c *config.Connection, start, end int) {
 	err := c.Client.Delete(start, end)
 	config.Log(err)
-	c.Close()
 }
 
 //saves the current queue as a new playlist
-func SaveQueue(c config.Connection, name string) {
-	c.Connect()
+func SaveQueue(c *config.Connection, name string) {
 	err := c.Client.PlaylistSave(name)
 	config.Log(err)
-	c.Close()
 }
 
 //return a list of playlists
@@ -128,15 +112,13 @@ func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
 	playlist, err := c.Client.ListPlaylists()
 	config.Log(err)
 	for _, v := range playlist {
-		songCount := 0
 		playlistDuration := 0.0
 		songs, _ := c.Client.PlaylistContents(v["playlist"])
 		for _, song := range songs {
 			duration, _ := strconv.ParseFloat(song["duration"], 64)
 			playlistDuration += duration
-			songCount++
 		}
-		v["songsCount"] = fmt.Sprintf("%d", songCount)
+		v["songsCount"] = fmt.Sprintf("%d", len(songs))
 		v["duration"] = fmt.Sprintf("%f", playlistDuration)
 	}
 	c.Close()
@@ -144,8 +126,7 @@ func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
 }
 
 // returns list of playlist's song
-func ListSongs(c config.Connection, playlist string) (songs []mpd.Attrs) {
-	c.Connect()
+func ListSongs(c *config.Connection, playlist string) (songs []mpd.Attrs) {
 	contents, err := c.Client.PlaylistContents(playlist)
 	config.Log(err)
 	for _, song := range contents {
@@ -155,61 +136,48 @@ func ListSongs(c config.Connection, playlist string) (songs []mpd.Attrs) {
 			"Artist": song["Artist"]}
 		songs = append(songs, m)
 	}
-	c.Close()
 	return
 }
 
 //clears the stored playlist from server
-func ClearPlaylist(c config.Connection, playlist string) {
-	c.Connect()
+func ClearPlaylist(c *config.Connection, playlist string) {
 	err := c.Client.PlaylistClear(playlist)
 	config.Log(err)
-	c.Close()
 }
 
 //deletes the stored playlist from server
-func DeletePlaylist(c config.Connection, playlist string) {
-	c.Connect()
+func DeletePlaylist(c *config.Connection, playlist string) {
 	err := c.Client.Command("rm %s", playlist).OK()
 	config.Log(err)
-	c.Close()
 }
 
 //adds the playlist to the current queue
-func LoadPlaylist(c config.Connection, playlist string) {
-	c.Connect()
+func LoadPlaylist(c *config.Connection, playlist string) {
 	err := c.Client.PlaylistLoad(playlist, -1, -1)
 	config.Log(err)
-	c.Close()
 }
 
 //clears the current queue and plays the playlist
-func PlayPlaylist(c config.Connection, name string) {
-	c.Connect()
+func PlayPlaylist(c *config.Connection, name string) {
 	cm := c.Client.BeginCommandList()
 	cm.Clear()
 	cm.PlaylistLoad(name, -1, -1)
 	cm.Play(0)
 	err := cm.End()
 	config.Log(err)
-	c.Close()
 }
 
 //renames the name playlist to newName
-func RenamePlaylist(c config.Connection, name, newName string) {
-	c.Connect()
+func RenamePlaylist(c *config.Connection, name, newName string) {
 	err := c.Client.PlaylistRename(name, newName)
 	config.Log(err)
-	c.Close()
 }
 
 //returns content of the folder
-func ListFolders(c config.Connection, folder string) (folderAndFiles []mpd.Attrs) {
+func ListFolders(c *config.Connection, folder string) (folderAndFiles []mpd.Attrs) {
 	files := make([]mpd.Attrs, 0)
-	c.Connect()
 	contents, err := c.Client.ListInfo(folder)
 	config.Log(err)
-	c.Close()
 	for _, item := range contents {
 		//ignore playlists
 		if _, ok := item["playlist"]; ok {
@@ -227,8 +195,7 @@ func ListFolders(c config.Connection, folder string) (folderAndFiles []mpd.Attrs
 }
 
 //clears the current queue and plays the folder
-func PlayFolder(c config.Connection, uris ...string) {
-	c.Connect()
+func PlayFolder(c *config.Connection, uris ...string) {
 	cm := c.Client.BeginCommandList()
 	cm.Clear()
 	for _, uri := range uris {
@@ -237,35 +204,28 @@ func PlayFolder(c config.Connection, uris ...string) {
 	cm.Play(0)
 	err := cm.End()
 	config.Log(err)
-	c.Close()
 }
 
 //adds the folder to the current queue
-func AddFolder(c config.Connection, uris ...string) {
-	c.Connect()
+func AddFolder(c *config.Connection, uris ...string) {
 	cm := c.Client.BeginCommandList()
 	for _, uri := range uris {
 		cm.Add(uri)
 	}
 	err := cm.End()
 	config.Log(err)
-	c.Close()
 }
 
 //adds the song to playlist
-func AddSongToPlaylist(c config.Connection, playlist, uri string) {
-	c.Connect()
+func AddSongToPlaylist(c *config.Connection, playlist, uri string) {
 	err := c.Client.PlaylistAdd(playlist, uri)
 	config.Log(err)
-	c.Close()
 }
 
 //search for songs in the server
-func SearchServer(c config.Connection, term ...string) (files []mpd.Attrs) {
-	c.Connect()
+func SearchServer(c *config.Connection, term ...string) (files []mpd.Attrs) {
 	files, err = c.Client.Search(term...)
 	config.Log(err)
-	c.Close()
 	if len(files) >= 100 {
 		files = files[:100]
 	}
@@ -273,11 +233,9 @@ func SearchServer(c config.Connection, term ...string) (files []mpd.Attrs) {
 }
 
 //returns a list of liked songs
-func GetLikedSongs(c config.Connection) (likedSongs []string) {
-	c.Connect()
+func GetLikedSongs(c *config.Connection) (likedSongs []string) {
 	uris, stickers, e := c.Client.StickerFind("", "liked")
 	config.Log(e)
-	c.Close()
 	likedSongs = make([]string, 0)
 	for i := 0; i < len(stickers); i++ {
 		if stickers[i].Value == "true" {
@@ -288,10 +246,8 @@ func GetLikedSongs(c config.Connection) (likedSongs []string) {
 }
 
 //returns the list of most played songs
-func GetMostPlayed(c config.Connection) (mostPlayed []string) {
-	c.Connect()
+func GetMostPlayed(c *config.Connection) (mostPlayed []string) {
 	uris, stickers, err := c.Client.StickerFind("", "playedcount")
-	c.Close()
 	config.Log(err)
 	count := len(uris)
 	unOrdered := make([]map[string]string, 0)
@@ -318,11 +274,9 @@ func GetMostPlayed(c config.Connection) (mostPlayed []string) {
 }
 
 //gets the file path of the Pos in Queue
-func GetSongFile(c config.Connection, Pos int) string {
-	c.Connect()
+func GetSongFile(c *config.Connection, Pos int) string {
 	song, err := c.Client.PlaylistInfo(Pos, -1)
 	config.Log(err)
-	c.Close()
 	return song[0]["file"]
 }
 

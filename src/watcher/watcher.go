@@ -62,19 +62,23 @@ func (m *Mpd) RecordPlayCount() {
 		}
 	}()
 	func() {
-		status := song.GetStatus(client)["state"]
+		client.Connect()
+		status := song.GetStatus(&client)["state"]
 		lastSong := song.GetCurrentSong(client)
 		if status == "play" {
-			song.IncrementPCount(client)
+			song.IncrementPCount(&client)
 		}
+		client.Close()
 		for subsystem := range watcher.Event {
 			if subsystem == "player" {
+				client.Connect()
 				currSong := song.GetCurrentSong(client)
-				currStatus := song.GetStatus(client)["state"]
+				currStatus := song.GetStatus(&client)["state"]
 				if lastSong["file"] != currSong["file"] &&
 					currStatus == "play" {
-					song.IncrementPCount(client)
+					song.IncrementPCount(&client)
 				}
+				client.Close()
 				lastSong = currSong
 			}
 		}

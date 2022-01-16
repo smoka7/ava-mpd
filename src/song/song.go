@@ -16,11 +16,9 @@ type Song struct {
 }
 
 //returns the server status
-func GetStatus(c config.Connection) (status map[string]string) {
-	c.Connect()
+func GetStatus(c *config.Connection) (status map[string]string) {
 	status, err := c.Client.Status()
 	config.Log(err)
-	c.Close()
 	return
 }
 
@@ -28,57 +26,49 @@ func GetStatus(c config.Connection) (status map[string]string) {
 func GetCurrentSong(c config.Connection) (status map[string]string) {
 	c.Connect()
 	status, err := c.Client.CurrentSong()
-	c.Close()
 	config.Log(err)
-	liked := GetSticker(c, status["file"], "liked")
+	liked := GetSticker(&c, status["file"], "liked")
 	if liked != nil {
 		status["liked"] = liked.Value
 		return
 	}
 	status["liked"] = "false"
+	c.Close()
 	return
 }
 
 //gets the song info
-func (s *Song) GetSongInfo(c config.Connection, file string) {
-	c.Connect()
+func (s *Song) GetSongInfo(c *config.Connection, file string) {
 	info, err := c.Client.ListAllInfo(file)
 	config.Log(err)
-	c.Close()
 	if len(info) > 0 {
 		s.Info = info[0]
 	}
 }
 
 //set the sticker name to value for song
-func SetSticker(c config.Connection, song, name, value string) {
-	c.Connect()
+func SetSticker(c *config.Connection, song, name, value string) {
 	err := c.Client.StickerSet(song, name, value)
 	config.Log(err)
-	c.Close()
 }
 
 //returns all the stickers of a song
-func GetStickers(c config.Connection, file string) (status []mpd.Sticker) {
-	c.Connect()
+func GetStickers(c *config.Connection, file string) (status []mpd.Sticker) {
 	status, err := c.Client.StickerList(file)
 	config.Log(err)
-	c.Close()
 	return
 }
 
 //return the sticker name of a song
-func GetSticker(c config.Connection, file, name string) (status *mpd.Sticker) {
-	c.Connect()
+func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
 	status, err := c.Client.StickerGet(file, name)
 	config.Log(err)
-	c.Close()
 	return
 }
 
 //Increments played count of current song
-func IncrementPCount(c config.Connection) {
-	song := GetCurrentSong(c)
+func IncrementPCount(c *config.Connection) {
+	song := GetCurrentSong(*c)
 	SetLastPlayed(c, song["file"])
 	playedCount := GetSticker(c, song["file"], "playedcount")
 	if playedCount == nil {
@@ -91,13 +81,13 @@ func IncrementPCount(c config.Connection) {
 }
 
 //sets last played time of song
-func SetLastPlayed(c config.Connection, uri string) {
+func SetLastPlayed(c *config.Connection, uri string) {
 	now := time.Now().Unix()
 	SetSticker(c, uri, "lastplayed", fmt.Sprintf("%d", now))
 }
 
 //toggles like state of song
-func ToggleLike(c config.Connection, uri string) {
+func ToggleLike(c *config.Connection, uri string) {
 	liked := GetSticker(c, uri, "liked")
 	if liked != nil && liked.Value == "true" {
 		SetSticker(c, uri, "liked", "false")

@@ -95,57 +95,44 @@ func Log(err error) {
 
 //updates the MPD server database
 func UpdateDatabase(c Connection) {
-	c.Connect()
 	_, err := c.Client.Update("")
 	Log(err)
-	c.Close()
 }
 
 //returns the MPD database stats
 func DatabaseStats(c Connection) (stats mpd.Attrs) {
-	c.Connect()
 	stats, err := c.Client.Stats()
 	Log(err)
-	c.Close()
 	return
 }
 
 //returns the mpd outputs
 func ListOutputs(c Connection) (stats []mpd.Attrs) {
-	c.Connect()
 	stats, err := c.Client.ListOutputs()
 	Log(err)
-	c.Close()
 	return
 }
 
 //enables the output
 func EnableOutput(c Connection, id int) {
-	c.Connect()
 	err := c.Client.EnableOutput(id)
 	Log(err)
-	c.Close()
 }
 
 //Disables the output
 func DisableOutput(c Connection, id int) {
-	c.Connect()
 	err := c.Client.DisableOutput(id)
 	Log(err)
-	c.Close()
 }
 
 //sets the crossFade
 func ChangeCrossfade(c Connection, second int) {
-	c.Connect()
 	err := c.Client.Command("crossfade %d", second).OK()
 	Log(err)
-	c.Close()
 }
 
 //sets the Gain status
 func ChangeReplayGain(c Connection, id int) {
-	c.Connect()
 	modes := map[int]string{
 		0: "off",
 		1: "track",
@@ -154,14 +141,11 @@ func ChangeReplayGain(c Connection, id int) {
 	}
 	err := c.Client.Command("replay_gain_mode %s", modes[id]).OK()
 	Log(err)
-	c.Close()
 }
 
 //returns the Gain status
 func GetReplayGain(c Connection) (status mpd.Attrs) {
-	c.Connect()
 	status, err = c.Client.Command("replay_gain_status").Attrs()
 	Log(err)
-	c.Close()
 	return
 }

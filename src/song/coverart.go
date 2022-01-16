@@ -14,11 +14,13 @@ func ServeAlbumArt(c config.Connection, songPath string) (coverUrl string) {
 	if songPath == "" {
 		return "default"
 	}
-	song.GetSongInfo(c, songPath)
+	c.Connect()
+	defer c.Close()
+	song.GetSongInfo(&c, songPath)
 	coverPath, coverUrl := song.getCoverArtPath()
 	// if cover isn't cached get it from mpd
 	if _, err := os.Stat(coverPath); os.IsNotExist(err) {
-		err := song.getAlbumArt(c)
+		err := song.getAlbumArt(&c)
 		if err != nil {
 			config.Log(err)
 			return "default"
@@ -28,9 +30,7 @@ func ServeAlbumArt(c config.Connection, songPath string) (coverUrl string) {
 }
 
 //gets the cover from mpd
-func (s *Song) getAlbumArt(c config.Connection) (err error) {
-	c.Connect()
-	defer c.Close()
+func (s *Song) getAlbumArt(c *config.Connection) (err error) {
 	coverBin, err := c.Client.AlbumArt(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
