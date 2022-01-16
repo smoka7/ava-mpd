@@ -11,13 +11,27 @@ import (
 
 var err error
 
+type Queue struct {
+	Songs    [][]mpd.Attrs
+	Length   int
+	Duration int
+}
+
 //returns current queue list
-func GetQueue(c *config.Connection) [][]mpd.Attrs {
+func GetQueue(c *config.Connection) Queue {
 	newIndex := 0
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	config.Log(err)
-	if len(queue) == 0 {
-		return nil
+	queueDuration := 0.0
+	for _, song := range queue {
+		duration, _ := strconv.ParseFloat(song["duration"], 64)
+		queueDuration += duration
+	}
+	length := len(queue)
+	if length > 500 {
+		queue = limitQueue(c, queue)
+	} else if length == 0 {
+		return Queue{Length: 0}
 	}
 	filteredQueue := make([][]mpd.Attrs, 1)
 	filteredQueue[0] = append(filteredQueue[0], newAlbum(queue[0]))
@@ -31,7 +45,11 @@ func GetQueue(c *config.Connection) [][]mpd.Attrs {
 		filteredQueue = append(filteredQueue, []mpd.Attrs{})
 		filteredQueue[newIndex] = append(filteredQueue[newIndex], newAlbum(queue[i]))
 	}
-	return filteredQueue
+	return Queue{
+		Songs:    filteredQueue,
+		Length:   length,
+		Duration: int(queueDuration),
+	}
 }
 
 //loads the playlist after the current song in queue
@@ -301,4 +319,15 @@ func newSong(song mpd.Attrs) mpd.Attrs {
 		"Track":    song["Track"],
 		"duration": song["duration"],
 	}
+}
+
+func limitQueue(c *config.Connection, queue []mpd.Attrs) []mpd.Attrs {
+	cr, err := c.Client.CurrentSong()
+	config.Log(err)
+	cu := cr["Pos"]
+	po, _ := strconv.Atoi(cu)
+	if po >= 150 {
+		return queue[po-150 : po+150]
+	}
+	return queue[:300]
 }

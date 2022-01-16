@@ -2,23 +2,31 @@
   <div
     class="flex flex-col w-full h-full rounded overflow-hidden backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60"
   >
-    <div class="overflow-y-auto snap-y">
+    <div class="overflow-y-auto">
       <div
-        v-if="!queue"
+        v-if="queue.Length == 0"
         class="flex items-center justify-center p-4 w-full h-full text-9xl decoration-accent underline"
       >
         Queue is empty!
       </div>
-      <details v-for="(album, index) in queue" :key="index" open>
+      <div
+        v-else
+        class="flex space-x-4 justify-between items-center w-full sticky top-0 h-8 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
+      >
+        <span>{{ queue.Length }} Tracks </span>
+        <span>duration: {{ humanizeTime(queue.Duration) }} </span>
+      </div>
+
+      <details v-for="(album, index) in queue.Songs" :key="index" open>
         <summary
-          class="flex px-8 md:py-2 py-4 md:mx-2 my-1 md:rounded sticky top-0 bg-lightest items-center cursor-pointer snap-both dark:text-primary"
+          class="flex px-8 py-2 md:mx-2 my-1 md:rounded sticky top-6 bg-lightest items-center cursor-pointer dark:text-primary"
           @click="animate(album[0].Pos)"
         >
           <FontAwesomeIcon
             icon="angle-down"
             class="mr-2 transform-gpu duration-200"
             :id="'icon-' + album[0].Pos"
-          ></FontAwesomeIcon>
+          />
           {{ album[0].Artist }} - {{ album[0].Album }} ({{ album[0].Date }})
         </summary>
         <div
@@ -72,7 +80,7 @@
       @click="closePlaylist"
       class="fixed right-4 bottom-4 bg-red-500 text-white rounded-full p-2 md:hidden w-20 h-20"
     >
-      <font-awesome-icon icon="arrow-right" size="2x"></font-awesome-icon>
+      <font-awesome-icon icon="arrow-right" size="2x" />
     </button>
     <teleport to="#app">
       <queue-menu
@@ -178,5 +186,16 @@ export default {
 <style>
 .current-song {
   @apply bg-red-200 dark:text-primary !important;
+}
+details[open] summary ~ * {
+  animation: sweep 0.2s ease-in-out;
+}
+@keyframes sweep {
+  0% {
+    @apply opacity-0 mt-2;
+  }
+  100% {
+    @apply opacity-100 mt-0;
+  }
 }
 </style>
