@@ -1,17 +1,25 @@
 package router
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/controller"
 	"github.com/smoka7/ava/src/watcher"
 	"golang.org/x/net/websocket"
 )
+
+type gzipResponseWriter struct {
+	io.Writer
+	http.ResponseWriter
+}
 
 var cl controller.Mpd
 var wc watcher.Mpd
@@ -46,11 +54,24 @@ func Router() {
 	)
 }
 
-//sets cache-control max-age's to 2 days
+// implements http.ResponseWriter
+func (w gzipResponseWriter) Write(b []byte) (int, error) {
+	return w.Writer.Write(b)
+}
+
+//sets cache-control max-age's to 2 days and writes response in gzip if it is supported
 func CacheControl(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=172800")
-		h.ServeHTTP(w, r)
+		if !strings.Contains(r.Header.Get("accept-Encoding"), "gzip") {
+			h.ServeHTTP(w, r)
+			return
+		}
+		w.Header().Set("Content-Encoding", "gzip")
+		gzipWriter := gzip.NewWriter(w)
+		defer gzipWriter.Close()
+		gzipResponse := gzipResponseWriter{Writer: gzipWriter, ResponseWriter: w}
+		h.ServeHTTP(gzipResponse, r)
 	}
 	return http.HandlerFunc(fn)
 }
