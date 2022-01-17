@@ -23,17 +23,17 @@
 import MediaController from "./components/mediaController.vue";
 import Playlist from "./components/playlist.vue";
 import Sidebar from "./components/sidebar.vue";
-import Setting from "./components/setting.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { setColorScheme } from "./colors.js";
 import { toggleMediaController } from "./helpers.js";
+import { defineAsyncComponent } from "vue";
 export default {
   components: {
     MediaController,
     Playlist,
     Sidebar,
     FontAwesomeIcon,
-    Setting,
+    setting: defineAsyncComponent(() => import("./components/setting.vue")),
   },
   data() {
     return {

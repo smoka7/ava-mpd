@@ -18,7 +18,7 @@
         </button>
       </Tab>
       <button
-          aria-label="close-sidebar"
+        aria-label="close-sidebar"
         class="p-2 px-6 md:hidden dark:text-lightest"
         @click="closeFolders"
       >
@@ -36,15 +36,14 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import storedPlaylist from "./storedPlaylist.vue";
-import folders from "./folders.vue";
-import search from "./search.vue";
 import { toggleFolders } from "../helpers.js";
+import { defineAsyncComponent } from "vue";
 export default {
   components: {
     FontAwesomeIcon,
     storedPlaylist,
-    folders,
-    search,
+    folders: defineAsyncComponent(() => import("./folders.vue")),
+    search: defineAsyncComponent(() => import("./search.vue")),
     Tab,
     TabList,
     TabPanel,

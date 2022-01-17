@@ -101,13 +101,12 @@ import {
   toggleMediaController,
 } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import songInfo from "./songInfo.vue";
-import queueMenu from "./queueMenu.vue";
+import { defineAsyncComponent } from "vue";
 export default {
   components: {
     FontAwesomeIcon,
-    songInfo,
-    queueMenu,
+    songInfo: defineAsyncComponent(() => import("./songInfo.vue")),
+    queueMenu: defineAsyncComponent(() => import("./queueMenu.vue")),
   },
   data() {
     return {
