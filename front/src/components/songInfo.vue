@@ -28,7 +28,12 @@
         :altText="info['Title'] + ' cover'"
         class="md:w-1/2 h-fit md:sticky top-0"
       />
-      <ul class="flex flex-col md:w-1/2 rounded bg-white dark:bg-gray-700">
+      <ul
+        :class="{
+          'flex w-full flex-col rounded bg-white dark:bg-gray-700': true,
+          'md:w-1/2': albumArt != 'default',
+        }"
+      >
         <li
           v-for="(value, index) in info"
           :key="index"

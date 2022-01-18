@@ -53,7 +53,7 @@
         :altText="currentSong.Title + 'cover'"
         id="albumArt"
         class="w-full aspect-square md:w-24 md:h-24 md:mx-2 flex-shrink-0"
-      ></album-art>
+      />
       <div
         class="flex flex-col self-center w-full md:w-auto my-2 text-xl md:text-base text-left"
         v-if="currentSong.Title"
@@ -69,18 +69,7 @@
       </div>
     </div>
     <div
-      class="
-        md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3
-        row-start-5 row-end-5
-        w-full
-        flex flex-col-reverse
-        md:flex-col
-        justify-start
-        my-2
-        md:m-0
-        p-2
-        md:p-0
-      "
+      class="md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3 row-start-5 row-end-5 w-full flex flex-col-reverse md:flex-col justify-start my-2 md:m-0 p-2 md:p-0"
     >
       <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-around">
         <save-queue />
@@ -99,11 +88,11 @@
         </button>
         <button
           aria-label="setting"
-          @click="openSetting"
+          @click="$emit('openSetting')"
           :class="[btnClass.noramal, btnClass.base]"
         >
           <span class="tooltiptext">settings</span>
-          <font-awesome-icon icon="cog" size="lg"></font-awesome-icon>
+          <font-awesome-icon icon="cog" size="lg" />
         </button>
         <button
           aria-label="open-playlist"
@@ -114,7 +103,7 @@
             'bg-white text-primary rounded-full p-2 md:hidden',
           ]"
         >
-          <font-awesome-icon icon="list-ul" size="lg"></font-awesome-icon>
+          <font-awesome-icon icon="list-ul" size="lg" />
         </button>
         <button
           aria-label="open-folders"
@@ -125,7 +114,7 @@
             'bg-white text-primary rounded-full p-2 md:hidden',
           ]"
         >
-          <font-awesome-icon icon="folder" size="lg"></font-awesome-icon>
+          <font-awesome-icon icon="folder" size="lg" />
         </button>
       </div>
       <div
@@ -135,13 +124,7 @@
       </div>
     </div>
     <div
-      class="
-        md:col-start-1 md:col-end-13 md:row-start-3 md:row-end-4
-        row-start-6 row-end-6
-        w-full
-        md:w-auto
-        flex flex-col
-      "
+      class="md:col-start-1 md:col-end-13 md:row-start-3 md:row-end-4 row-start-6 row-end-6 w-full md:w-auto flex flex-col"
       v-if="status.elapsed"
     >
       <p class="flex justify-between">
@@ -156,7 +139,7 @@
         v-if="status.elapsed"
         :data="{ value: status.elapsed, max: status.duration }"
         v-on:seek="seek"
-      ></progress-bar>
+      />
     </div>
   </div>
 </template>
@@ -230,17 +213,10 @@ export default {
     playbackCommand(command) {
       sendCommand("/api/playback", command);
     },
-    openSetting() {
-      this.$emit("openSetting");
-    },
-    clearQueue() {
-      sendCommand("/api/playback", "clear");
-    },
     openPlaylist: toggleMediaController,
     openFolders: toggleFolders,
     humanizeTime: humanizeTime,
   },
-  created() {},
   computed: {
     ...mapState(["currentSong", "albumArt", "status"]),
   },
