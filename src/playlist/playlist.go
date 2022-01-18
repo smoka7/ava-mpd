@@ -12,17 +12,26 @@ import (
 var err error
 
 type Queue struct {
-	Songs    [][]mpd.Attrs
 	Length   int
 	Duration int
+	Albums   []Album
+}
+type Album struct {
+	Songs               []Song
+	Album, Artist, Date string
+}
+type Song struct {
+	Title, Pos, Track, Duration string
 }
 
 //returns current queue list
-func GetQueue(c *config.Connection) Queue {
-	newIndex := 0
-	queue, err := c.Client.PlaylistInfo(-1, -1)
-	config.Log(err)
+func GetQueue(c config.Connection) Queue {
+	albumsCount := 0
 	queueDuration := 0.0
+	c.Connect()
+	queue, err := c.Client.PlaylistInfo(-1, -1)
+	c.Close()
+	config.Log(err)
 	for _, song := range queue {
 		duration, _ := strconv.ParseFloat(song["duration"], 64)
 		queueDuration += duration
@@ -33,20 +42,18 @@ func GetQueue(c *config.Connection) Queue {
 	} else if length == 0 {
 		return Queue{Length: 0}
 	}
-	filteredQueue := make([][]mpd.Attrs, 1)
-	filteredQueue[0] = append(filteredQueue[0], newAlbum(queue[0]))
+	Albums := make([]Album, 0)
+	Albums = append(Albums, newAlbum(queue[0]))
+	Albums[0].Songs = append(Albums[0].Songs, newSong(queue[0]))
 	for i := 1; i < len(queue); i++ {
-		if queue[i]["Album"] == queue[i-1]["Album"] {
-			filteredQueue[newIndex] = append(filteredQueue[newIndex], newSong(queue[i]))
-			continue
+		if queue[i]["Album"] != queue[i-1]["Album"] {
+			albumsCount++
+			Albums = append(Albums, newAlbum(queue[i]))
 		}
-		newIndex++
-		//increase the number of albums
-		filteredQueue = append(filteredQueue, []mpd.Attrs{})
-		filteredQueue[newIndex] = append(filteredQueue[newIndex], newAlbum(queue[i]))
+		Albums[albumsCount].Songs = append(Albums[albumsCount].Songs, newSong(queue[i]))
 	}
 	return Queue{
-		Songs:    filteredQueue,
+		Albums:   Albums,
 		Length:   length,
 		Duration: int(queueDuration),
 	}
@@ -299,30 +306,28 @@ func GetSongFile(c *config.Connection, Pos int) string {
 }
 
 //filter album info
-func newAlbum(song mpd.Attrs) mpd.Attrs {
-	return map[string]string{
-		"Title":    song["Title"],
-		"Album":    song["Album"],
-		"Pos":      song["Pos"],
-		"Track":    song["Track"],
-		"Artist":   song["Artist"],
-		"duration": song["duration"],
-		"Date":     song["Date"],
+func newAlbum(song mpd.Attrs) Album {
+	return Album{
+		Album:  song["Album"],
+		Artist: song["Artist"],
+		Date:   song["Date"],
 	}
 }
 
 //filter song info
-func newSong(song mpd.Attrs) mpd.Attrs {
-	return map[string]string{
-		"Title":    song["Title"],
-		"Pos":      song["Pos"],
-		"Track":    song["Track"],
-		"duration": song["duration"],
+func newSong(song mpd.Attrs) Song {
+	return Song{
+		Title:    song["Title"],
+		Pos:      song["Pos"],
+		Track:    song["Track"],
+		Duration: song["duration"],
 	}
 }
 
-func limitQueue(c *config.Connection, queue []mpd.Attrs) []mpd.Attrs {
+func limitQueue(c config.Connection, queue []mpd.Attrs) []mpd.Attrs {
+	c.Connect()
 	cr, err := c.Client.CurrentSong()
+	c.Close()
 	config.Log(err)
 	cu := cr["Pos"]
 	po, _ := strconv.Atoi(cu)

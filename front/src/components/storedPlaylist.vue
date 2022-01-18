@@ -47,8 +47,8 @@
           class="cursor-pointer overflow-x-hidden flex items-center text-ellipsis w-1/2 mr-1"
         >
           <FontAwesomeIcon
-            icon="angle-down"
-            class="transform-gpu -rotate-90 duration-200"
+            icon="angle-right"
+            class="transform-gpu duration-200 mr-1"
             :id="'icon-' + playlist.playlist"
           />
           {{ playlist.playlist }}
@@ -196,7 +196,7 @@ export default {
     },
     animate(id) {
       let el = document.getElementById("icon-" + id);
-      if (el) el.classList.toggle("-rotate-90");
+      if (el) el.classList.toggle("rotate-90");
     },
   },
   computed: {

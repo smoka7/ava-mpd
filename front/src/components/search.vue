@@ -7,7 +7,10 @@
         >
           <span class="flex items-center">
             {{ tag }}
-            <FontAwesomeIcon icon="angle-down" class="ml-2"></FontAwesomeIcon>
+            <FontAwesomeIcon
+              icon="angle-right"
+              class="ml-2 rotate-90"
+            />
           </span>
         </ListboxButton>
         <transition

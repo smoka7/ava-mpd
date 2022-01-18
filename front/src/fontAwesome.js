@@ -1,6 +1,6 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faAngleDown,
+  faAngleRight,
   faCog,
   faCompactDisc,
   faDiceOne,
@@ -62,7 +62,7 @@ let icons = [
   farHeart,
   faSave,
   faChartArea,
-  faAngleDown,
+  faAngleRight,
   faCheck,
   faCheckCircle,
   faMinusSquare,

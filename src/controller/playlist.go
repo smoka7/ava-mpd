@@ -77,7 +77,7 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	playlist := playlist.GetQueue(&c.Client)
+	playlist := playlist.GetQueue(c.Client)
 	json.NewEncoder(w).Encode(playlist)
 
 }
