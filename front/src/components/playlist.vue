@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col w-full h-full rounded overflow-hidden backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60"
+    class="flex flex-col w-full h-full rounded overflow-hidden backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60 fbg"
   >
     <div
       v-if="queue.Length == 0"
@@ -9,13 +9,20 @@
       Queue is empty!
     </div>
     <div
-      v-else
-      class="flex space-x-4 justify-between items-center w-full sticky top-0 h-8 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
+      v-if="!songInfo"
+      class="flex space-x-4 justify-between items-center w-full sticky top-0 h-10 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
+      <button
+        aria-label="close-playlist"
+        @click="closePlaylist"
+        class="px-2 md:hidden"
+      >
+        <font-awesome-icon icon="times" size="2x" />
+      </button>
     </div>
-    <div class="overflow-y-auto space-y-1 px-2">
+    <div class="overflow-y-auto space-y-1 md:px-2">
       <album
         v-for="(album, index) in queue.Albums"
         :key="index"
@@ -24,13 +31,6 @@
         @showMenu="showMenu"
       />
     </div>
-    <button
-      aria-label="close-playlist"
-      @click="closePlaylist"
-      class="fixed right-4 bottom-4 bg-red-500 text-white rounded-full p-2 md:hidden w-20 h-20"
-    >
-      <font-awesome-icon icon="arrow-right" size="2x" />
-    </button>
     <teleport to="#app">
       <queue-menu
         :open="menu"
@@ -44,11 +44,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import {
-  sendCommand,
-  humanizeTime,
-  toggleMediaController,
-} from "../helpers.js";
+import { humanizeTime, toggleMediaController } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { defineAsyncComponent } from "vue";
 import album from "./album.vue";

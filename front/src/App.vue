@@ -97,4 +97,9 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-secondary rounded-xl;
 }
+@supports (-moz-appearance: none) {
+  .fbg {
+    @apply bg-white dark:bg-gray-700 !important;
+  }
+}
 </style>

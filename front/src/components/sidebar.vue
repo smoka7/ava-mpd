@@ -1,7 +1,7 @@
 <template>
   <TabGroup
     as="div"
-    class="flex flex-col overflow-y-auto p-2 rounded bg-white/60 backdrop-blur-3xl shadow-md dark:bg-gray-700/60 darK:backdrop-blur-3xl text-primary dark:text-white"
+    class="flex flex-col overflow-y-auto p-2 rounded bg-white/60 backdrop-blur-3xl shadow-md dark:bg-gray-700/60 darK:backdrop-blur-3xl text-primary dark:text-white fbg"
   >
     <TabList as="div" class="flex w-full justify-around p-1">
       <Tab

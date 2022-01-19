@@ -46,7 +46,7 @@
       </button>
     </div>
     <div
-      class="md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 row-start-1 row-end-5 w-full md:w-auto flex flex-col-reverse md:flex-row justify-start"
+      class="md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 row-start-1 row-end-3 flex flex-col-reverse md:flex-row justify-around md:justify-start"
     >
       <album-art
         :url="albumArt"
@@ -55,7 +55,7 @@
         class="w-full aspect-square md:w-24 md:h-24 md:mx-2 flex-shrink-0"
       />
       <div
-        class="flex flex-col self-center w-full md:w-auto my-2 text-xl md:text-base text-left"
+        class="flex flex-col self-center w-full md:w-auto my-2 text-2xl md:text-base text-left"
         v-if="currentSong.Title"
       >
         <span class="text-ellipsis">
@@ -69,7 +69,7 @@
       </div>
     </div>
     <div
-      class="md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3 row-start-5 row-end-5 w-full flex flex-col-reverse md:flex-col justify-start my-2 md:m-0 p-2 md:p-0"
+      class="md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3 row-start-3 row-end-5 w-full flex flex-col-reverse md:flex-col justify-start"
     >
       <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-around">
         <save-queue />
