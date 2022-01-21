@@ -27,6 +27,7 @@
         v-for="(album, index) in queue.Albums"
         :key="index"
         :album="album"
+        :currentAlbum="currentAlbum(album)"
         :currentSongPos="currentSongPos"
         @showMenu="showMenu"
       />
@@ -46,7 +47,7 @@
 import { mapState } from "vuex";
 import { humanizeTime, toggleMediaController } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent,shallowReactive } from "vue";
 import album from "./album.vue";
 export default {
   components: {
@@ -85,22 +86,28 @@ export default {
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
     },
+    currentAlbum(album) {
+      return (
+        Number(this.currentSongPos) >= Number(album.Songs[0].Pos) &&
+        Number(this.currentSongPos) <=
+          Number(album.Songs[album.Songs.length - 1].Pos)
+      );
+    },
   },
   computed: {
     ...mapState({
-      queue: (state) => state.queue,
+      queue: (state) => shallowReactive(state.queue),
       currentSongPos: (state) => state.currentSong.Pos,
     }),
   },
   watch: {
     currentSongPos: function (newSong, oldSong) {
       let oldId = "song" + oldSong;
-      let newId = "song" + newSong;
       let el = document.getElementById(oldId);
       if (el) {
         el.classList.remove("current-song");
       }
-      this.ChangeCurrentSongTo(newId);
+      this.ChangeCurrentSongTo(newSong);
     },
   },
 };
