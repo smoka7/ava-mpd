@@ -13,7 +13,7 @@ var err error
 
 type Queue struct {
 	Length   int
-	Duration int
+	Duration float64
 	Albums   []Album
 }
 type Album struct {
@@ -25,38 +25,27 @@ type Song struct {
 }
 
 //returns current queue list
-func GetQueue(c config.Connection) Queue {
-	albumsCount := 0
-	queueDuration := 0.0
+func GetQueue(c config.Connection) (q Queue) {
 	c.Connect()
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	c.Close()
 	config.Log(err)
-	for _, song := range queue {
-		duration, _ := strconv.ParseFloat(song["duration"], 64)
-		queueDuration += duration
-	}
-	length := len(queue)
-	if length > 500 {
+	q.Duration = getDurationSum(queue)
+	q.Length = len(queue)
+	if q.Length == 0 {
+		return
+	} else if q.Length > 500 {
 		queue = limitQueue(c, queue)
-	} else if length == 0 {
-		return Queue{Length: 0}
 	}
-	Albums := make([]Album, 0)
-	Albums = append(Albums, newAlbum(queue[0]))
-	Albums[0].Songs = append(Albums[0].Songs, newSong(queue[0]))
+	q.newAlbum(queue[0])
+	q.Albums[0].newSong(queue[0])
 	for i := 1; i < len(queue); i++ {
 		if queue[i]["Album"] != queue[i-1]["Album"] {
-			albumsCount++
-			Albums = append(Albums, newAlbum(queue[i]))
+			q.newAlbum(queue[i])
 		}
-		Albums[albumsCount].Songs = append(Albums[albumsCount].Songs, newSong(queue[i]))
+		q.Albums[len(q.Albums)-1].newSong(queue[i])
 	}
-	return Queue{
-		Albums:   Albums,
-		Length:   length,
-		Duration: int(queueDuration),
-	}
+	return
 }
 
 //loads the playlist after the current song in queue
@@ -137,14 +126,9 @@ func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
 	playlist, err := c.Client.ListPlaylists()
 	config.Log(err)
 	for _, v := range playlist {
-		playlistDuration := 0.0
 		songs, _ := c.Client.PlaylistContents(v["playlist"])
-		for _, song := range songs {
-			duration, _ := strconv.ParseFloat(song["duration"], 64)
-			playlistDuration += duration
-		}
 		v["songsCount"] = fmt.Sprintf("%d", len(songs))
-		v["duration"] = fmt.Sprintf("%f", playlistDuration)
+		v["duration"] = fmt.Sprintf("%f", getDurationSum(songs))
 	}
 	c.Close()
 	return
@@ -306,22 +290,22 @@ func GetSongFile(c *config.Connection, Pos int) string {
 }
 
 //filter album info
-func newAlbum(song mpd.Attrs) Album {
-	return Album{
+func (q *Queue) newAlbum(song mpd.Attrs) {
+	q.Albums = append(q.Albums, Album{
 		Album:  song["Album"],
 		Artist: song["Artist"],
 		Date:   song["Date"],
-	}
+	})
 }
 
 //filter song info
-func newSong(song mpd.Attrs) Song {
-	return Song{
+func (a *Album) newSong(song mpd.Attrs) {
+	a.Songs = append(a.Songs, Song{
 		Title:    song["Title"],
 		Pos:      song["Pos"],
 		Track:    song["Track"],
 		Duration: song["duration"],
-	}
+	})
 }
 
 func limitQueue(c config.Connection, queue []mpd.Attrs) []mpd.Attrs {
@@ -335,4 +319,13 @@ func limitQueue(c config.Connection, queue []mpd.Attrs) []mpd.Attrs {
 		return queue[po-150 : po+150]
 	}
 	return queue[:300]
+}
+
+//returns the duration of a list of songs
+func getDurationSum(songs []mpd.Attrs) (sum float64) {
+	for _, song := range songs {
+		duration, _ := strconv.ParseFloat(song["duration"], 64)
+		sum += duration
+	}
+	return
 }
