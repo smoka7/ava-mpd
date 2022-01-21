@@ -15,6 +15,28 @@ export async function sendCommand(url, command, data) {
   }
   console.log(response.error);
 }
+export async function getFolders(directory) {
+      let request = {
+        command: "list",
+        data: {
+          playlist: directory,
+        },
+      };
+      let response = await fetch("/api/folders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(request),
+      });
+      if (response.ok) {
+        let json = await response.json();
+        return [...json.Folders, ...json.Files];
+      }
+      console.log(response.error);
+      return [];
+    }
+
 //returns time in h:m:s format
 export function humanizeTime(time) {
   function spanZero(time) {

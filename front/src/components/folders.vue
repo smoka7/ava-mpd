@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col cursor-pointer">
-    <Folder v-for="(folder, index) in folders" :key="index" :data="folder">
-    </Folder>
+    <Folder v-for="(folder, index) in folders" :key="index" :data="folder" />
   </div>
 </template>
 <script>
+import { getFolders } from "../helpers";
+import { shallowReactive } from "vue";
 import Folder from "./folder.vue";
 export default {
   components: {
@@ -12,22 +13,11 @@ export default {
   },
   data() {
     return {
-      folders: Array,
+      folders: shallowReactive([]),
     };
   },
-  created() {
-    this.getFolders();
-  },
-  methods: {
-    async getFolders() {
-      let response = await fetch("/api/folders");
-      if (response.ok) {
-        let json = await response.json();
-        this.folders = json;
-        return;
-      }
-      console.log(response.error);
-    },
+  async created() {
+    this.folders = await getFolders("");
   },
 };
 </script>

@@ -99,7 +99,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 details[open] > summary > svg {
   @apply rotate-90;
 }

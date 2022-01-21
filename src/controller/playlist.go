@@ -83,8 +83,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
-	c.Client.Connect()
 	if r.Method == "POST" {
+		c.Client.Connect()
 		json.NewDecoder(r.Body).Decode(&request)
 		switch request.Command {
 		case "add":
@@ -95,11 +95,9 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 			folders := playlist.ListFolders(&c.Client, request.Data.Playlist)
 			json.NewEncoder(w).Encode(folders)
 		}
+		c.Client.Close()
 		return
 	}
-	folders := playlist.ListFolders(&c.Client, "")
-	c.Client.Close()
-	json.NewEncoder(w).Encode(folders)
 }
 
 func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {

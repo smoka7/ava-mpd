@@ -182,49 +182,6 @@ func RenamePlaylist(c *config.Connection, name, newName string) {
 	config.Log(err)
 }
 
-//returns content of the folder
-func ListFolders(c *config.Connection, folder string) (folderAndFiles []mpd.Attrs) {
-	files := make([]mpd.Attrs, 0)
-	contents, err := c.Client.ListInfo(folder)
-	config.Log(err)
-	for _, item := range contents {
-		//ignore playlists
-		if _, ok := item["playlist"]; ok {
-			continue
-		}
-		//append files to the end of list
-		if _, ok := item["file"]; ok {
-			files = append(files, item)
-			continue
-		}
-		folderAndFiles = append(folderAndFiles, item)
-	}
-	folderAndFiles = append(folderAndFiles, files...)
-	return
-}
-
-//clears the current queue and plays the folder
-func PlayFolder(c *config.Connection, uris ...string) {
-	cm := c.Client.BeginCommandList()
-	cm.Clear()
-	for _, uri := range uris {
-		cm.Add(uri)
-	}
-	cm.Play(0)
-	err := cm.End()
-	config.Log(err)
-}
-
-//adds the folder to the current queue
-func AddFolder(c *config.Connection, uris ...string) {
-	cm := c.Client.BeginCommandList()
-	for _, uri := range uris {
-		cm.Add(uri)
-	}
-	err := cm.End()
-	config.Log(err)
-}
-
 //adds the song to playlist
 func AddSongToPlaylist(c *config.Connection, playlist, uri string) {
 	err := c.Client.PlaylistAdd(playlist, uri)
