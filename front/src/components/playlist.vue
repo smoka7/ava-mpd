@@ -15,9 +15,17 @@
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
+        aria-label="goto-current-song"
+        @click="ScrollToCurrentSong()"
+        class="px-2 hover:text-secondary hover:bg-primary"
+      >
+        <font-awesome-icon icon="compact-disc" size="md" />
+        Current Song
+      </button>
+      <button
         aria-label="close-playlist"
         @click="closePlaylist"
-        class="px-2 md:hidden"
+        class="px-2 md:hidden hover:text-secondary hover:bg-primary"
       >
         <font-awesome-icon icon="times" size="2x" />
       </button>
@@ -47,7 +55,7 @@
 import { mapState } from "vuex";
 import { humanizeTime, toggleMediaController } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { defineAsyncComponent,shallowReactive } from "vue";
+import { defineAsyncComponent, shallowReactive } from "vue";
 import album from "./album.vue";
 export default {
   components: {
@@ -82,9 +90,12 @@ export default {
     ChangeCurrentSongTo(id) {
       let el = document.getElementById("song" + id);
       if (el !== null) {
-        el.classList.add("current-song");
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
+        el.id = "currentSong";
       }
+    },
+    ScrollToCurrentSong() {
+      let el = document.getElementById("currentSong");
+      if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
     },
     currentAlbum(album) {
       return (
@@ -103,17 +114,16 @@ export default {
   watch: {
     currentSongPos: function (newSong, oldSong) {
       let oldId = "song" + oldSong;
-      let el = document.getElementById(oldId);
-      if (el) {
-        el.classList.remove("current-song");
-      }
+      let el = document.getElementById("currentSong");
+      if (el) el.id = oldId;
       this.ChangeCurrentSongTo(newSong);
+      this.ScrollToCurrentSong();
     },
   },
 };
 </script>
 <style>
-.current-song {
+#currentSong {
   @apply bg-red-300 dark:text-primary !important;
 }
 </style>
