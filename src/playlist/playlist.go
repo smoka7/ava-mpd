@@ -188,16 +188,6 @@ func AddSongToPlaylist(c *config.Connection, playlist, uri string) {
 	config.Log(err)
 }
 
-//search for songs in the server
-func SearchServer(c *config.Connection, term ...string) (files []mpd.Attrs) {
-	files, err = c.Client.Search(term...)
-	config.Log(err)
-	if len(files) >= 100 {
-		files = files[:100]
-	}
-	return files
-}
-
 //returns a list of liked songs
 func GetLikedSongs(c *config.Connection) (likedSongs []string) {
 	uris, stickers, e := c.Client.StickerFind("", "liked")
