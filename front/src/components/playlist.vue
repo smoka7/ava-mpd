@@ -9,8 +9,8 @@
       Queue is empty!
     </div>
     <div
-      v-if="!songInfo"
-      class="flex space-x-4 justify-between items-center w-full sticky top-0 h-10 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
+      v-if="!songInfo && queue.Length != 0"
+      class="flex space-x-4 justify-between items-center w-full absolute bottom-0 h-10 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
@@ -19,7 +19,7 @@
         @click="ScrollToCurrentSong()"
         class="px-2 hover:text-secondary hover:bg-primary"
       >
-        <font-awesome-icon icon="compact-disc" size="md" />
+        <font-awesome-icon icon="compact-disc" />
         Current Song
       </button>
       <button
@@ -30,7 +30,7 @@
         <font-awesome-icon icon="times" size="2x" />
       </button>
     </div>
-    <div class="overflow-y-auto space-y-1 md:px-2">
+    <div class="overflow-y-auto space-y-1 md:px-2 mb-10 md:mb-6">
       <album
         v-for="(album, index) in queue.Albums"
         :key="index"
@@ -74,6 +74,7 @@ export default {
   async mounted() {
     await this.$store.dispatch("getQueue");
     this.ChangeCurrentSongTo(this.currentSongPos);
+    this.ScrollToCurrentSong();
   },
   methods: {
     humanizeTime: humanizeTime,

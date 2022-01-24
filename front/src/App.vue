@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col md:grid md:grid-rows-4 md:grid-cols-4 md:gap-2 md:p-1 text-lg w-screen h-screen duration-300 text-primary dark:text-white bg-gradian overflow-hidden"
+    class="text-primary bg-gradian flex h-screen w-screen flex-col overflow-hidden text-lg duration-300 dark:text-white md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 md:p-1"
   >
     <sidebar
       id="sidebar"
