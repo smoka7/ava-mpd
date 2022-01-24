@@ -5,8 +5,8 @@ const store = createStore({
     durationInterval: Number,
     status: Object,
     albumArt: "default",
-    storedPlaylist: Array,
-    queue: Array,
+    storedPlaylist: [],
+    queue: [],
   },
   mutations: {
     setCurrentSong(state, song) {
@@ -63,7 +63,7 @@ const store = createStore({
       }
       console.log(response.error);
     },
-    startCounter() {
+        startCounter() {
       store.commit("setCounter");
     },
   },
