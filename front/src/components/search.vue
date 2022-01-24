@@ -8,9 +8,9 @@
           {{ tag }}
           <FontAwesomeIcon icon="angle-right" class="ml-2 rotate-90" />
         </ListboxButton>
-        <transition>
+        <transition name="fade">
           <ListboxOptions
-            class="fixed mt-14 text-left rounded cursor-pointer bg-white dark:bg-gray-700/60 backdrop-blur-3xl"
+            class="fixed mt-14 text-left rounded cursor-pointer bg-white/60 dark:bg-gray-700/60 backdrop-blur-3xl"
           >
             <ListboxOption
               v-for="tag in searchTags"

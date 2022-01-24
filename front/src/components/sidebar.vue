@@ -82,4 +82,13 @@ export default {
 .sidebar-btn {
   @apply p-2 dark:hover:bg-white/10 hover:bg-gray-700/10 rounded;
 }
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  @apply opacity-0 -translate-y-2;
+}
 </style>

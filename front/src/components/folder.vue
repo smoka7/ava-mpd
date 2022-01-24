@@ -27,17 +27,19 @@
         </button>
       </span>
     </summary>
-    <div
-      class="flex flex-col border-2 border-primary rounded-lg m-1 dark:border-lightest"
-      v-if="opened"
-    >
-      <Folder
-        class="m-1"
-        v-for="(folder, index) in folders"
-        :key="index"
-        :data="folder"
-      />
-    </div>
+    <transition name="fade">
+      <div
+        class="flex flex-col border-l-2 border-primary m-1 dark:border-lightest"
+        v-if="opened"
+      >
+        <Folder
+          class="m-1"
+          v-for="(folder, index) in folders"
+          :key="index"
+          :data="folder"
+        />
+      </div>
+    </transition>
   </details>
 </template>
 <script>

@@ -6,16 +6,9 @@
       <MenuButton class="ml-auto p-2">
         <FontAwesomeIcon icon="ellipsis-h" />
       </MenuButton>
-      <transition
-        enter-active-class="transition duration-100 ease-out"
-        enter-from-class="transform scale-95 opacity-0"
-        enter-to-class="transform scale-100 opacity-100"
-        leave-active-class="transition duration-100 ease-out"
-        leave-from-class="transform scale-100 opacity-100"
-        leave-to-class="transform scale-95 opacity-0"
-      >
+      <transition name="fade">
         <MenuItems
-          class="absolute md:left-32 md:right-2 right-12 top-10 z-50 flex flex-col text-left rounded shadow-md cursor-default bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-lightest dark:bg-gray-700"
+          class="absolute md:left-32 md:right-2 right-12 top-10 z-50 flex flex-col text-left rounded shadow-md cursor-default bg-white/60 focus:outline-none dark:bg-gray-700/60 backdrop-blur-3xl"
         >
           <MenuItem
             v-slot="{ active }"
