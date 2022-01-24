@@ -3,7 +3,10 @@
     <summary
       class="flex justify-between md:p-2 px-2 py-4 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 rounded group"
     >
-      <span class="w-4/6" @click.self="listFolders()">
+      <span
+        class="w-4/6 overflow-x-hidden text-ellipsis"
+        @click.self="listFolders()"
+      >
         <FontAwesomeIcon :icon="data.Directory ? 'folder' : 'music'" />
         {{ folderName }}
       </span>

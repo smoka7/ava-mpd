@@ -1,31 +1,20 @@
 <template>
   <div class="flex flex-col">
-    <form class="p-2 w-full flex" @submit.prevent>
+    <form class="p-2 w-full flex" @submit.prevent="search">
       <Listbox v-model="tag">
         <ListboxButton
-          class="p-2 dark:bg-lightest bg-primary dark:text-primary text-white rounded-l-lg"
+          class="flex items-center p-2 dark:bg-lightest bg-primary dark:text-primary text-white rounded-l-lg"
         >
-          <span class="flex items-center">
-            {{ tag }}
-            <FontAwesomeIcon
-              icon="angle-right"
-              class="ml-2 rotate-90"
-            />
-          </span>
+          {{ tag }}
+          <FontAwesomeIcon icon="angle-right" class="ml-2 rotate-90" />
         </ListboxButton>
-        <transition
-          enter-active-class="transition duration-100 ease-out"
-          enter-from-class="transform scale-95 opacity-0"
-          enter-to-class="transform scale-100 opacity-100"
-          leave-active-class="transition duration-75 ease-out"
-          leave-from-class="transform scale-100 opacity-100"
-          leave-to-class="transform scale-95 opacity-0"
-        >
+        <transition>
           <ListboxOptions
-            class="fixed mt-14 text-left rounded shadow-md cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-lightest dark:bg-gray-700"
+            class="fixed mt-14 text-left rounded cursor-pointer bg-white dark:bg-gray-700/60 backdrop-blur-3xl"
           >
             <ListboxOption
               v-for="tag in searchTags"
+              as="template"
               :key="tag"
               :value="tag"
               v-slot="{ selected }"
@@ -37,29 +26,40 @@
                 }"
               >
                 {{ tag }}
-                <FontAwesomeIcon
-                  v-show="selected"
-                  icon="check"
-                  class="ml-2 transform-gpu duration-200"
-                ></FontAwesomeIcon>
+                <FontAwesomeIcon class="ml-2" v-show="selected" icon="check" />
               </li>
             </ListboxOption>
           </ListboxOptions>
         </transition>
       </Listbox>
       <input
-        class="p-2 w-full border-primary border-2 dark:text-primary dark:placeholder-gray-900 dark:border-lightest rounded-r-lg"
+        class="p-2 w-full border-primary border-2 border-l-0 outline-none focus:border-lightest dark:text-white rounded-r-lg bg-white/70 dark:bg-gray-700/60 backdrop-blur-3xl"
         type="text"
         name="term"
-        @input="search"
         v-model.trim="term"
         placeholder="write to search"
       />
     </form>
-    <div class="flex flex-col divide-y dark:divide-gray-800">
-      <Folder v-for="(file, index) in files" :key="index" :data="file">
-      </Folder>
-    </div>
+    <details
+      v-for="(term, index) in files"
+      :key="index"
+      :data="term"
+      class="m-1 dark:bg-gray-700/50 bg-white/50 space-y-2 rounded"
+    >
+      <summary
+        class="flex p-2 rounded bg-lightest items-center cursor-pointer dark:text-primary overflow-x-hidden text-ellipsis"
+      >
+        {{ index }}
+      </summary>
+      <div>
+        <Folder
+          v-for="(file, index) in term"
+          :key="index"
+          :data="file"
+          class="last:rounde-b odd:bg-gray-600/10 dark:odd:bg-gray-800/50 dark:hover:odd:bg-gray-800/70"
+        />
+      </div>
+    </details>
   </div>
 </template>
 <script>
@@ -82,7 +82,7 @@ export default {
   },
   data() {
     return {
-      searchTags: ["file", "artist", "album", "genre", "date", "title"],
+      searchTags: ["file", "Artist", "Album", "Genre", "Date", "Title"],
       tag: "file",
       term: "",
       files: [],
