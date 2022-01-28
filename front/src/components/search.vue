@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-col">
-    <form class="p-2 w-full flex" @submit.prevent="search">
+    <form class="flex w-full p-2" @submit.prevent="search">
       <Listbox v-model="tag">
         <ListboxButton
-          class="flex items-center p-2 dark:bg-lightest bg-primary dark:text-primary text-white rounded-l-lg"
+          class="dark:bg-lightest bg-primary dark:text-primary flex items-center rounded-l-lg p-2 text-white"
         >
           {{ tag }}
           <FontAwesomeIcon icon="angle-right" class="ml-2 rotate-90" />
         </ListboxButton>
         <transition name="fade">
           <ListboxOptions
-            class="fixed mt-14 text-left rounded cursor-pointer bg-white/60 dark:bg-gray-700/60 backdrop-blur-3xl"
+            class="fixed mt-14 cursor-pointer rounded bg-white/60 text-left backdrop-blur-3xl dark:bg-gray-700/60"
           >
             <ListboxOption
               v-for="tag in searchTags"
@@ -21,7 +21,7 @@
             >
               <li
                 :class="{
-                  'p-2 hover:bg-blue-200 dark:hover:text-primary': true,
+                  'dark:hover:text-primary p-2 hover:bg-blue-200': true,
                   'bg-lightest dark:text-primary': selected,
                 }"
               >
@@ -33,7 +33,7 @@
         </transition>
       </Listbox>
       <input
-        class="p-2 w-full border-primary border-2 border-l-0 outline-none focus:border-lightest dark:text-white rounded-r-lg bg-white/70 dark:bg-gray-700/60 backdrop-blur-3xl"
+        class="border-primary focus:border-lightest w-full rounded-r-lg border-2 border-l-0 bg-white/70 p-2 outline-none backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
         type="text"
         name="term"
         v-model.trim="term"
@@ -44,10 +44,10 @@
       v-for="(term, index) in files"
       :key="index"
       :data="term"
-      class="m-1 dark:bg-gray-700/50 bg-white/50 space-y-2 rounded"
+      class="m-1 space-y-2 rounded bg-white/50 dark:bg-gray-700/50"
     >
       <summary
-        class="flex p-2 rounded bg-lightest items-center cursor-pointer dark:text-primary overflow-x-hidden text-ellipsis"
+        class="bg-lightest dark:text-primary flex cursor-pointer items-center overflow-x-hidden text-ellipsis rounded p-2"
       >
         {{ index }}
       </summary>

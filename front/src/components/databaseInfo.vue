@@ -1,33 +1,33 @@
 <template>
-  <h2 class="text-3xl text-center">Database stats</h2>
+  <h2 class="text-center text-3xl">Database stats</h2>
   <ul class="-mx-4 mt-2">
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       songs : <span>{{ stats["songs"] }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       albums : <span>{{ stats["albums"] }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       artists : <span>{{ stats["artists"] }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       Database play time:
       <span>{{ humanizeTime(stats["db_playtime"]) }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       <span>{{ new Date(stats["db_update"] * 1000).toString() }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       Play time : <span>{{ humanizeTime(stats["playtime"]) }}</span>
     </li>
-    <li class="odd:bg-blue-100 dark:odd:bg-gray-800 p-2">
+    <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       UP time : <span>{{ humanizeTime(stats["uptime"]) }}</span>
     </li>
   </ul>
   <div>
     <button
       aria-label="update-database"
-      class="border-2 border-green-500 text-green-500 p-2 my-2 rounded hover:bg-green-500 hover:text-white"
+      class="my-2 rounded border-2 border-green-500 p-2 text-green-500 hover:bg-green-500 hover:text-white"
       @click="updateDatabase"
     >
       <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
@@ -35,7 +35,7 @@
     </button>
     <button
       aria-label="delete-cache"
-      class="border-2 border-red-500 text-red-500 p-2 my-2 rounded hover:bg-red-500 hover:text-white"
+      class="my-2 rounded border-2 border-red-500 p-2 text-red-500 hover:bg-red-500 hover:text-white"
       @click="deleteCache"
     >
       <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover Art

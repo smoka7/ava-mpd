@@ -4,10 +4,10 @@
   >
     <sidebar
       id="sidebar"
-      class="md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-4 md:col-span-1 fixed inset-0 md:static h-full"
+      class="fixed inset-0 h-full md:static md:col-span-1 md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-4"
     />
     <div
-      class="md:col-start-2 md:col-end-5 md:col-span-3 md:row-start-1 md:row-end-4 fixed inset-0 md:relative"
+      class="fixed inset-0 md:relative md:col-span-3 md:col-start-2 md:col-end-5 md:row-start-1 md:row-end-4"
       id="queue"
     >
       <setting v-if="settingIsOpen" @close="toggleSetting()" />
@@ -15,7 +15,7 @@
     </div>
     <media-controller
       @openSetting="toggleSetting()"
-      class="md:col-span-4 md:col-start-1 md:col-end-5 md:row-start-4 md:row-end-4 md:row-span-1 fixed inset-0 z-10"
+      class="fixed inset-0 z-10 md:col-span-4 md:col-start-1 md:col-end-5 md:row-span-1 md:row-start-4 md:row-end-4"
     />
   </div>
 </template>
@@ -80,7 +80,7 @@ export default {
   @apply relative inline-block;
 }
 .tooltip .tooltiptext {
-  @apply invisible bg-lightest/90 text-primary w-auto text-center p-2 rounded bottom-full left-1/2 -ml-10 absolute z-10 inline;
+  @apply bg-lightest/90 text-primary invisible absolute bottom-full left-1/2 z-10 -ml-10 inline w-auto rounded p-2 text-center;
 }
 .tooltip:hover .tooltiptext {
   @apply visible;

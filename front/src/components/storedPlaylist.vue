@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col relative -m-2 pt-6 pb-2 overflow-x-hidden">
+  <div class="relative -m-2 flex flex-col overflow-x-hidden pt-6 pb-2">
     <playlist-menu
       v-if="selectedCount > 0"
       @addafter="PlCommand('addafter')"
@@ -13,13 +13,13 @@
     <div
       v-for="playlist in playlists"
       :key="playlist.name"
-      class="flex justify-between p-2 mx-2 items-center text-primary dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 rounded group"
+      class="text-primary group mx-2 flex items-center justify-between rounded p-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
     >
       <span>
         <font-awesome-icon :icon="['fas', playlist.icon]" />
         {{ playlist.name }}
       </span>
-      <span class="md:text-sm invisible group-hover:visible">
+      <span class="invisible group-hover:visible md:text-sm">
         <button
           aria-label="add-most-played-song"
           class="sidebar-btn tooltip"
@@ -40,26 +40,26 @@
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
-        class="flex justify-between items-start md:p-2 py-4 px-2 mx-2 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 r rounded group"
+        class="r group mx-2 flex items-start justify-between rounded py-4 px-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
       >
         <span
           @click="getSongs(index)"
-          class="cursor-pointer overflow-x-hidden flex items-center text-ellipsis w-1/2 mr-1"
+          class="mr-1 flex w-1/2 cursor-pointer items-center overflow-x-hidden text-ellipsis"
         >
           <FontAwesomeIcon
             icon="angle-right"
-            class="transform-gpu duration-200 mr-1"
+            class="mr-1 transform-gpu duration-200"
             :id="'icon-' + playlist.playlist"
           />
           {{ playlist.playlist }}
         </span>
-        <span class="flex flex-col items-end text-sm space-x-2">
+        <span class="flex flex-col items-end space-x-2 text-sm">
           <span>
             {{ playlist.songsCount }} song ({{
               humanizeTime(playlist.duration)
             }})
           </span>
-          <span class="flex invisible group-hover:visible">
+          <span class="invisible flex group-hover:visible">
             <button
               aria-label="add"
               class="sidebar-btn tooltip"
@@ -84,14 +84,14 @@
               <span class="tooltiptext">select</span>
               <font-awesome-icon
                 icon="check-circle"
-                :class="playlist.selected ? 'text-green-500 visible' : ''"
+                :class="playlist.selected ? 'visible text-green-500' : ''"
               />
             </button>
           </span>
         </span>
       </summary>
       <div
-        class="divide-y divide-primary dark:divide-gray-400 flex flex-col ml-4 border-l-2 border-primary"
+        class="divide-primary border-primary ml-4 flex flex-col divide-y border-l-2 dark:divide-gray-400"
       >
         <p
           class="px-2 dark:text-white"

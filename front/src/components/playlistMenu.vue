@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute top-0 z-50 w-full max-w-full max-h-fit flex justify-between items-center py-1 px-4"
+    class="absolute top-0 z-50 flex max-h-fit w-full max-w-full items-center justify-between py-1 px-4"
   >
     <Menu>
       <MenuButton class="ml-auto p-2">
@@ -8,7 +8,7 @@
       </MenuButton>
       <transition name="fade">
         <MenuItems
-          class="absolute md:left-32 md:right-2 right-12 top-10 z-50 flex flex-col text-left rounded shadow-md cursor-default bg-white/60 focus:outline-none dark:bg-gray-700/60 backdrop-blur-3xl"
+          class="absolute right-12 top-10 z-50 flex cursor-default flex-col rounded bg-white/60 text-left shadow-md backdrop-blur-3xl focus:outline-none dark:bg-gray-700/60 md:left-32 md:right-2"
         >
           <MenuItem
             v-slot="{ active }"
@@ -18,8 +18,8 @@
           >
             <div
               :class="{
-                'bg-blue-100 text-primary': active,
-                'p-2 first:rounded-t last:rounded-b flex items-center space-x-2': true,
+                'text-primary bg-blue-100': active,
+                'flex items-center space-x-2 p-2 first:rounded-t last:rounded-b': true,
               }"
             >
               <FontAwesomeIcon :icon="['fas', action.icon]" />

@@ -1,10 +1,10 @@
 <template>
-  <h2 class="text-2xl mb-2">Playback Options</h2>
+  <h2 class="mb-2 text-2xl">Playback Options</h2>
   <div class="flex flex-col space-y-2">
     <div class="space-x-2">
       <label for="crossfade"> Crossfade </label>
       <input
-        class="border border-blue-500 p-2 rounded dark:bg-gray-700"
+        class="rounded border border-blue-500 p-2 dark:bg-gray-700"
         name="crossfade"
         type="number"
         min="0"
@@ -18,7 +18,7 @@
       <select
         name="replaygain"
         aria-label="replayGain"
-        class="border border-blue-500 p-2 rounded bg-white dark:bg-gray-700 mt-2"
+        class="mt-2 rounded border border-blue-500 bg-white p-2 dark:bg-gray-700"
         @change="setReplayGain"
         v-model.lazy="Gain"
       >

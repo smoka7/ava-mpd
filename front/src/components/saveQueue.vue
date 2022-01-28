@@ -2,12 +2,16 @@
   <button
     aria-label="save-queue"
     @click="InputIsOpen = true"
-    class="p-2 px-3 text-white rounded-full md:p-0 tooltip md:hover:text-blue-200"
+    class="tooltip rounded-full p-2 px-3 text-white md:p-0 md:hover:text-blue-200"
   >
     <font-awesome-icon icon="save" size="lg"></font-awesome-icon>
     <span class="tooltiptext">save current queue</span>
   </button>
-  <text-input :isOpen="InputIsOpen" @close="InputIsOpen = false" @finish="saveQueue">
+  <text-input
+    :isOpen="InputIsOpen"
+    @close="InputIsOpen = false"
+    @finish="saveQueue"
+  >
     <template #title> Enter the name of playlist </template>
     <template #btn>Save</template>
   </text-input>

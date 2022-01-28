@@ -1,13 +1,13 @@
 <template>
   <progress
-    class="w-full bg-lightest rounded h-4 cursor-pointer"
+    class="bg-lightest h-4 w-full cursor-pointer rounded"
     max="100"
     ref="progress"
     @click="seek"
     @mousedown.prevent="MouseDown"
     @mouseup.prevent="MouseUp"
     :value="progressedPercentage"
-  ></progress>
+  />
 </template>
 <script>
 export default {
@@ -40,12 +40,12 @@ progress {
   -webkit-appearance: none;
 }
 ::-webkit-progress-value {
-  @apply bg-gradient-to-r from-lighter via-accent to-secondary rounded;
+  @apply from-lighter via-accent to-secondary rounded bg-gradient-to-r;
 }
 ::-webkit-progress-bar {
-  @apply bg-lightest rounded h-4;
+  @apply bg-lightest h-4 rounded;
 }
 ::-moz-progress-bar {
-  @apply bg-gradient-to-r from-lighter via-accent to-secondary rounded;
+  @apply from-lighter via-accent to-secondary rounded bg-gradient-to-r;
 }
 </style>

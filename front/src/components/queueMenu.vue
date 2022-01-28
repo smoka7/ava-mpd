@@ -1,12 +1,12 @@
 <template>
   <div
     v-show="open"
-    class="bg-white bg-opacity-30 absolute top-0 bottom-0 left-0 right-0 z-50"
+    class="absolute top-0 bottom-0 left-0 right-0 z-50 bg-white bg-opacity-30"
     @click.self="$emit('close')"
   ></div>
   <div
     v-show="open"
-    class="flex flex-col bg-white dark:bg-gray-600 absolute right-10 z-50 rounded border-2 border-primary dark:border-lightest w-48 text-lg dark:text-white"
+    class="border-primary dark:border-lightest absolute right-10 z-50 flex w-48 flex-col rounded border-2 bg-white text-lg dark:bg-gray-600 dark:text-white"
     id="context-menu"
   >
     <div v-for="action in actions" :key="action.title">
@@ -19,7 +19,7 @@
         add to playlist
       </summary>
       <div
-        class="border-primary border-t-2 dark:border-lightest dark:hover:text-black"
+        class="border-primary dark:border-lightest border-t-2 dark:hover:text-black"
       >
         <button
           @click="addSongTo(pl.playlist)"

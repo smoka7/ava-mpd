@@ -1,9 +1,9 @@
 <template>
-  <h2 class="text-2xl mb-2">List of Outputs</h2>
+  <h2 class="mb-2 text-2xl">List of Outputs</h2>
   <div
     v-for="(output, index) in outputs"
     :key="index"
-    class="flex items-center space-x-2 cursor-pointer p-1"
+    class="flex cursor-pointer items-center space-x-2 p-1"
     @click="toggleOutput(index)"
   >
     <input

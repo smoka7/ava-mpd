@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col space-y-4">
-    <SwitchGroup as="div" class="flex p-2 items-center">
-      <SwitchLabel class="mr-4 md:mr-2 text-lg">Dark Mode</SwitchLabel>
+    <SwitchGroup as="div" class="flex items-center p-2">
+      <SwitchLabel class="mr-4 text-lg md:mr-2">Dark Mode</SwitchLabel>
       <Switch
         isDark
         v-model="isDark"
-        class="relative bg-lightest inline-flex items-center rounded h-10 w-16 md:h-7 md:w-14 shadow-inner"
+        class="bg-lightest relative inline-flex h-10 w-16 items-center rounded shadow-inner md:h-7 md:w-14"
       >
         <span class="sr-only">Enable Dark Mode</span>
         <span
-          class="inline-block w-8 h-8 md:w-6 md:h-5 transform bg-primary rounded duration-300 translate-x-1 dark:translate-x-7" 
+          class="bg-primary inline-block h-8 w-8 translate-x-1 transform rounded duration-300 dark:translate-x-7 md:h-5 md:w-6"
           isDark
         />
       </Switch>
@@ -20,11 +20,11 @@
         <RadioGroupOption v-slot="{ checked }" :value="index">
           <div
             :class="[
-              { 'bg-blue-200 text-primary rounded': checked },
-              'p-2 cursor-pointer flex flex-col space-y-2 duration-200',
+              { 'text-primary rounded bg-blue-200': checked },
+              'flex cursor-pointer flex-col space-y-2 p-2 duration-200',
             ]"
           >
-            <div class="flex justify-between items-center">
+            <div class="flex items-center justify-between">
               <RadioGroupLabel>{{ index }}</RadioGroupLabel>
               <font-awesome-icon
                 v-show="checked"
@@ -34,7 +34,7 @@
             </div>
             <div
               :style="renderScheme(scheme)"
-              class="h-10 md:h-8 w-full rounded shadow"
+              class="h-10 w-full rounded shadow md:h-8"
             ></div>
           </div>
         </RadioGroupOption>

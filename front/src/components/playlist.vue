@@ -1,23 +1,23 @@
 <template>
   <div
-    class="flex flex-col w-full h-full rounded overflow-hidden backdrop-blur-3xl bg-white/60 dark:bg-gray-700/60 fbg"
+    class="fbg flex h-full w-full flex-col overflow-hidden rounded bg-white/60 backdrop-blur-3xl dark:bg-gray-700/60"
   >
     <div
       v-if="queue.Length == 0"
-      class="flex items-center justify-center p-4 w-full h-full text-9xl decoration-accent underline"
+      class="decoration-accent flex h-full w-full items-center justify-center p-4 text-9xl underline"
     >
       Queue is empty!
     </div>
     <div
       v-if="!songInfo && queue.Length != 0"
-      class="flex space-x-4 justify-between items-center w-full absolute bottom-0 h-10 md:h-6 text-base md:text-sm text-primary px-4 bg-secondary z-10"
+      class="text-primary bg-secondary absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
         aria-label="goto-current-song"
         @click="ScrollToCurrentSong()"
-        class="px-2 hover:text-secondary hover:bg-primary"
+        class="hover:text-secondary hover:bg-primary px-2"
       >
         <font-awesome-icon icon="compact-disc" />
         Current Song
@@ -25,12 +25,12 @@
       <button
         aria-label="close-playlist"
         @click="closePlaylist"
-        class="px-2 md:hidden hover:text-secondary hover:bg-primary"
+        class="hover:text-secondary hover:bg-primary px-2 md:hidden"
       >
         <font-awesome-icon icon="times" size="2x" />
       </button>
     </div>
-    <div class="overflow-y-auto space-y-1 md:px-2 mb-10 md:mb-6">
+    <div class="mb-10 space-y-1 overflow-y-auto md:mb-6 md:px-2">
       <album
         v-for="(album, index) in queue.Albums"
         :key="index"
@@ -125,6 +125,6 @@ export default {
 </script>
 <style>
 #currentSong {
-  @apply bg-red-300 dark:text-primary !important;
+  @apply dark:text-primary bg-red-300 !important;
 }
 </style>

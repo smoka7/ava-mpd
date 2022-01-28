@@ -1,7 +1,7 @@
 <template>
   <details :open="currentAlbum" @click="loadSongs()">
     <summary
-      class="flex px-8 py-2 md:rounded sticky top-0 bg-lightest items-center cursor-pointer dark:text-primary"
+      class="bg-lightest dark:text-primary sticky top-0 flex cursor-pointer items-center px-8 py-2 md:rounded"
     >
       <FontAwesomeIcon
         :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
@@ -19,19 +19,19 @@
         @dragenter.prevent
         @drop="moveSong($event, song.Pos)"
         @dragstart="startMoveSong($event, song.Pos)"
-        class="md:py-1 py-2 px-4 grid grid-cols-12 items-center md:rounded md:m-1 text-black dark:text-white odd:bg-gray-600/10 dark:odd:bg-gray-800/50 dark:hover:odd:bg-gray-800/70 hover:bg-white/60 dark:hover:bg-gray-800/70 group"
+        class="group grid grid-cols-12 items-center py-2 px-4 text-black odd:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:odd:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:odd:bg-gray-800/70 md:m-1 md:rounded md:py-1"
         :id="'song' + song.Pos"
       >
         <span
-          class="col-start-1 col-end-3 md:col-end-2 px-2 cursor-pointer"
+          class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
           @click.stop="play(song.Pos)"
         >
           <FontAwesomeIcon
             :id="song.Pos"
             :class="
               song.Pos !== currentSongPos
-                ? 'invisible group-hover:visible text-green-500 mr-2'
-                : 'text-red-500 mr-2'
+                ? 'invisible mr-2 text-green-500 group-hover:visible'
+                : 'mr-2 text-red-500'
             "
             :icon="[
               'fas',
@@ -41,17 +41,17 @@
           {{ song.Track }}
         </span>
         <span
-          class="col-start-3 md:col-start-2 col-end-11 overflow-x-hidden text-ellipsis"
+          class="col-start-3 col-end-11 overflow-x-hidden text-ellipsis md:col-start-2"
         >
           {{ song.Title }}
         </span>
         <span
-          class="col-start-11 md:col-start-12 col-end-13 cursor-pointer"
+          class="col-start-11 col-end-13 cursor-pointer md:col-start-12"
           @click="$emit('showMenu', song.Pos, $event)"
         >
           <FontAwesomeIcon
             :id="'delete' + song.Pos"
-            class="mr-2 invisible group-hover:visible"
+            class="invisible mr-2 group-hover:visible"
             icon="ellipsis-h"
           />
           {{ humanizeTime(song.Duration) }}
@@ -108,10 +108,10 @@ details[open] summary ~ * {
 }
 @keyframes sweep {
   0% {
-    @apply opacity-0 mt-2;
+    @apply mt-2 opacity-0;
   }
   100% {
-    @apply opacity-100 mt-0;
+    @apply mt-0 opacity-100;
   }
 }
 </style>

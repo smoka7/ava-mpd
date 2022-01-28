@@ -1,7 +1,7 @@
 <template>
   <TabGroup
     as="div"
-    class="flex flex-col overflow-y-auto p-2 rounded bg-white/60 backdrop-blur-3xl shadow-md dark:bg-gray-700/60 darK:backdrop-blur-3xl text-primary dark:text-white fbg"
+    class="darK:backdrop-blur-3xl text-primary fbg flex flex-col overflow-y-auto rounded bg-white/60 p-2 shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
   >
     <TabList as="div" class="flex w-full justify-around p-1">
       <Tab
@@ -19,7 +19,7 @@
       </Tab>
       <button
         aria-label="close-sidebar"
-        class="p-2 px-6 md:hidden dark:text-lightest"
+        class="dark:text-lightest p-2 px-6 md:hidden"
         @click="closeFolders"
       >
         <font-awesome-icon icon="times" size="2x"></font-awesome-icon>
@@ -80,7 +80,7 @@ export default {
 </script>
 <style>
 .sidebar-btn {
-  @apply p-2 dark:hover:bg-white/10 hover:bg-gray-700/10 rounded;
+  @apply rounded p-2 hover:bg-gray-700/10 dark:hover:bg-white/10;
 }
 .fade-enter-active,
 .fade-leave-active {
@@ -89,6 +89,6 @@ export default {
 
 .fade-enter-from,
 .fade-leave-to {
-  @apply opacity-0 -translate-y-2;
+  @apply -translate-y-2 opacity-0;
 }
 </style>

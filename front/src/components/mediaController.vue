@@ -1,15 +1,15 @@
 <template>
   <div
-    class="md:static grid grid-rows-8 grid-cols-1 p-4 md:grid-rows-3 md:grid-cols-12 md:rounded bg-primary text-white"
+    class="grid-rows-8 bg-primary grid grid-cols-1 p-4 text-white md:static md:grid-cols-12 md:grid-rows-3 md:rounded"
     id="mediaController"
   >
     <div
-      class="md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 row-start-7 row-end-9 w-full h-28 md:h-auto md:w-auto flex justify-center md:space-x-6 space-x-10 text-lightest"
+      class="row-end-9 text-lightest row-start-7 flex h-28 w-full justify-center space-x-10 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 md:h-auto md:w-auto md:space-x-6"
     >
       <button
         aria-label="previous-song"
         @click="playbackCommand('previous')"
-        class="scale-110 md:scale-75 hover:text-accent"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
@@ -22,7 +22,7 @@
         @click="playbackCommand('toggle')"
         :class="[
           status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-          'text-white hover:text-primary aspect-square rounded-full flex items-center justify-center',
+          'hover:text-primary flex aspect-square items-center justify-center rounded-full text-white',
         ]"
       >
         <font-awesome-icon
@@ -33,29 +33,29 @@
       <button
         aria-label="stop-song"
         @click="playbackCommand('stop')"
-        class="scale-110 md:scale-75 hover:text-accent"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="stop" size="2x" />
       </button>
       <button
         aria-label="next-song"
         @click="playbackCommand('next')"
-        class="scale-110 md:scale-75 hover:text-accent"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="step-forward" size="2x" />
       </button>
     </div>
     <div
-      class="md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 row-start-1 row-end-3 flex flex-col-reverse md:flex-row justify-around md:justify-start"
+      class="row-start-1 row-end-3 flex flex-col-reverse justify-around md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 md:flex-row md:justify-start"
     >
       <album-art
         :url="albumArt"
         :altText="currentSong.Title + 'cover'"
         id="albumArt"
-        class="w-full aspect-square md:w-24 md:h-24 md:mx-2 flex-shrink-0"
+        class="aspect-square w-full flex-shrink-0 md:mx-2 md:h-24 md:w-24"
       />
       <div
-        class="flex flex-col self-center w-full md:w-auto my-2 text-2xl md:text-base text-left"
+        class="my-2 flex w-full flex-col self-center text-left text-2xl md:w-auto md:text-base"
         v-if="currentSong.Title"
       >
         <span class="text-ellipsis">
@@ -69,9 +69,9 @@
       </div>
     </div>
     <div
-      class="md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3 row-start-3 row-end-5 w-full flex flex-col-reverse md:flex-col justify-start"
+      class="row-start-3 row-end-5 flex w-full flex-col-reverse justify-start md:col-start-11 md:col-end-13 md:row-start-1 md:row-end-3 md:flex-col"
     >
-      <div class="flex space-x-2 h-10 md:mb-1 md:justify-end justify-around">
+      <div class="flex h-10 justify-around space-x-2 md:mb-1 md:justify-end">
         <save-queue />
         <button
           v-for="command in playbackCommands"
@@ -100,7 +100,7 @@
           :class="[
             btnClass.noramal,
             btnClass.base,
-            'bg-white text-primary rounded-full p-2 md:hidden',
+            'text-primary rounded-full bg-white p-2 md:hidden',
           ]"
         >
           <font-awesome-icon icon="list-ul" size="lg" />
@@ -111,20 +111,20 @@
           :class="[
             btnClass.noramal,
             btnClass.base,
-            'bg-white text-primary rounded-full p-2 md:hidden',
+            'text-primary rounded-full bg-white p-2 md:hidden',
           ]"
         >
           <font-awesome-icon icon="folder" size="lg" />
         </button>
       </div>
       <div
-        class="flex items-center space-x-2 w-full mb-2 md:m-0 md:justify-end"
+        class="mb-2 flex w-full items-center space-x-2 md:m-0 md:justify-end"
       >
         <volume-control :volume="status.volume" />
       </div>
     </div>
     <div
-      class="md:col-start-1 md:col-end-13 md:row-start-3 md:row-end-4 row-start-6 row-end-6 w-full md:w-auto flex flex-col"
+      class="row-start-6 row-end-6 flex w-full flex-col md:col-start-1 md:col-end-13 md:row-start-3 md:row-end-4 md:w-auto"
       v-if="status.elapsed"
     >
       <p class="flex justify-between">

@@ -1,10 +1,10 @@
 <template>
   <div
-    class="flex flex-col absolute inset-0 z-auto p-8 space-y-2 overflow-y-scroll overflow-x-hidden bg-lightest"
+    class="bg-lightest absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll p-8"
   >
     <div class="flex flex-row items-center justify-between">
       <h1
-        class="flex space-x-4 items-center text-bold underline decoration-2 text-4xl text-ellipsis font-bold mr-2"
+        class="text-bold mr-2 flex items-center space-x-4 text-ellipsis text-4xl font-bold underline decoration-2"
       >
         <span>
           {{ info.Title }}
@@ -14,19 +14,19 @@
       <button
         aria-label="close-info"
         @click="$emit('close')"
-        class="px-4 py-2 rounded-full"
+        class="rounded-full px-4 py-2"
       >
         <font-awesome-icon class="text-red-500" icon="times" size="2x" />
       </button>
     </div>
     <div
-      class="flex flex-col md:flex-row justify-around md:space-x-2 md:space-y-0 space-y-2"
+      class="flex flex-col justify-around space-y-2 md:flex-row md:space-x-2 md:space-y-0"
     >
       <album-art
         v-if="albumArt != 'default'"
         :url="albumArt"
         :altText="info['Title'] + ' cover'"
-        class="md:w-1/2 h-fit md:sticky top-0"
+        class="top-0 h-fit md:sticky md:w-1/2"
       />
       <ul
         :class="{
@@ -37,14 +37,14 @@
         <li
           v-for="(value, index) in info"
           :key="index"
-          class="even:bg-blue-50 dark:even:bg-gray-800 last:rounded-b first:rounded-t p-2"
+          class="p-2 first:rounded-t last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
         >
           {{ index }} : {{ value }}
         </li>
         <li
           v-for="(sticker, index) in stickers"
           :key="index"
-          class="even:bg-blue-50 dark:even:bg-gray-800 last:rounded-b p-2"
+          class="p-2 last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
         >
           {{ sticker.Name }} : {{ sticker.Value }}
         </li>

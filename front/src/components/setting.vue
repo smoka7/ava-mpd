@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex flex-col md:flex-row md:flex-wrap space-y-4 md:space-x-8 w-full h-full p-4 rounded overflow-y-auto bg-lightest/60 backdrop-blur-3xl dark:text-white z-30"
+    class="bg-lightest/60 z-30 flex h-full w-full flex-col space-y-4 overflow-y-auto rounded p-4 backdrop-blur-3xl dark:text-white md:flex-row md:flex-wrap md:space-x-8"
   >
     <button
       aria-label="close-setting"
       @click="$emit('close')"
-      class="fixed top-4 right-6 p-4 bg-red-50 rounded md:bg-transparent text-red-500"
+      class="fixed top-4 right-6 rounded bg-red-50 p-4 text-red-500 md:bg-transparent"
     >
       <font-awesome-icon icon="times" size="2x"></font-awesome-icon>
     </button>
@@ -71,6 +71,6 @@ export default {
 </script>
 <style>
 .card-class {
-  @apply w-full md:w-2/5 md:m-2 p-4 shadow-md bg-white dark:bg-gray-700 rounded;
+  @apply w-full rounded bg-white p-4 shadow-md dark:bg-gray-700 md:m-2 md:w-2/5;
 }
 </style>

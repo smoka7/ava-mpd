@@ -1,7 +1,7 @@
 <template>
   <details>
     <summary
-      class="flex justify-between md:p-2 px-2 py-4 dark:text-white hover:bg-white/60 dark:hover:bg-gray-800/70 rounded group"
+      class="group flex justify-between rounded px-2 py-4 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
     >
       <span
         class="w-4/6 overflow-x-hidden text-ellipsis"
@@ -10,7 +10,7 @@
         <FontAwesomeIcon :icon="data.Directory ? 'folder' : 'music'" />
         {{ folderName }}
       </span>
-      <span class="text-sm space-x-2 invisible group-hover:visible">
+      <span class="invisible space-x-2 text-sm group-hover:visible">
         <button
           aria-label="add"
           class="sidebar-btn"
@@ -29,7 +29,7 @@
     </summary>
     <transition name="fade">
       <div
-        class="flex flex-col border-l-2 border-primary m-1 dark:border-lightest"
+        class="border-primary dark:border-lightest m-1 flex flex-col border-l-2"
         v-if="opened"
       >
         <Folder

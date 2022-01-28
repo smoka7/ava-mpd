@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col cursor-pointer">
+  <div class="flex cursor-pointer flex-col">
     <Folder v-for="(folder, index) in folders" :key="index" :data="folder" />
   </div>
 </template>
