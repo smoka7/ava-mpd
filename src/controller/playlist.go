@@ -8,7 +8,13 @@ import (
 )
 
 type SearchRequest struct {
-	Terms []string `json:"terms"`
+	Terms   []string `json:"terms"`
+	Command string   `json:"command"`
+}
+
+type SearchResponse struct {
+	Songs playlist.SearchResult
+	Error error
 }
 
 func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
@@ -103,11 +109,23 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	var request SearchRequest
+	var files playlist.SearchResult
+	var err error
 	defer c.Client.Close()
 	if r.Method == "POST" {
 		json.NewDecoder(r.Body).Decode(&request)
-		files := playlist.SearchServer(&c.Client, request.Terms...)
-		json.NewEncoder(w).Encode(files)
+		switch request.Command {
+		case "search":
+			files, err = playlist.SearchServer(&c.Client, request.Terms...)
+		case "searchadd":
+			err = playlist.SearchAdd(&c.Client, request.Terms...)
+		case "searchplay":
+			err = playlist.SearchPlay(&c.Client, request.Terms...)
+		}
+		json.NewEncoder(w).Encode(SearchResponse{
+			Songs: files,
+			Error: err,
+		})
 		return
 	}
 }
