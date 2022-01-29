@@ -79,9 +79,6 @@ export default {
 };
 </script>
 <style>
-.sidebar-btn {
-  @apply rounded p-2 hover:bg-gray-700/10 dark:hover:bg-white/10;
-}
 .fade-enter-active,
 .fade-leave-active {
   @apply transition-all duration-200 ease-in-out;

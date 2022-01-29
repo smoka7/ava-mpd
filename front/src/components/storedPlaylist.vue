@@ -20,22 +20,16 @@
         {{ playlist.name }}
       </span>
       <span class="invisible group-hover:visible md:text-sm">
-        <button
-          aria-label="add-most-played-song"
-          class="sidebar-btn tooltip"
+        <sidebar-button
+          :label="'add ' + playlist.name"
+          icon="plus"
           @click="sendCommand('api/stored', 'add' + playlist.method)"
-        >
-          <span class="tooltiptext">add to queue</span>
-          <font-awesome-icon icon="plus" />
-        </button>
-        <button
-          aria-label="play-most-played-song"
-          class="sidebar-btn tooltip"
+        />
+        <sidebar-button
+          icon="play"
+          :label="'play ' + playlist.name"
           @click="sendCommand('api/stored', 'play' + playlist.method)"
-        >
-          <span class="tooltiptext">play</span>
-          <font-awesome-icon icon="play" />
-        </button>
+        />
       </span>
     </div>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
@@ -60,33 +54,22 @@
             }})
           </span>
           <span class="invisible flex group-hover:visible">
-            <button
-              aria-label="add"
-              class="sidebar-btn tooltip"
+            <sidebar-button
+              label="add"
+              icon="plus"
               @click="PlCommand('load', index)"
-            >
-              <span class="tooltiptext">add to queue</span>
-              <font-awesome-icon icon="plus" />
-            </button>
-            <button
-              aria-label="play"
-              class="sidebar-btn tooltip"
+            />
+            <sidebar-button
+              label="play"
+              icon="play"
               @click="PlCommand('play', index)"
-            >
-              <span class="tooltiptext">play</span>
-              <font-awesome-icon icon="play" />
-            </button>
-            <button
-              aria-label="select-playlist"
-              class="sidebar-btn tooltip"
+            />
+            <sidebar-button
+              label="select playlist"
+              icon="check-circle"
+              :class="playlist.selected ? 'visible text-green-500' : ''"
               @click="toggleSelected(index)"
-            >
-              <span class="tooltiptext">select</span>
-              <font-awesome-icon
-                icon="check-circle"
-                :class="playlist.selected ? 'visible text-green-500' : ''"
-              />
-            </button>
+            />
           </span>
         </span>
       </summary>
@@ -115,11 +98,13 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { mapState } from "vuex";
 import PlaylistMenu from "./playlistMenu.vue";
 import RenamePlaylist from "./renamePlaylist.vue";
+import SidebarButton from "./sidebarButton.vue";
 export default {
   components: {
     FontAwesomeIcon,
     PlaylistMenu,
     RenamePlaylist,
+    SidebarButton,
   },
   data() {
     return {

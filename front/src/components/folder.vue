@@ -11,20 +11,12 @@
         {{ folderName }}
       </span>
       <span class="invisible space-x-2 text-sm group-hover:visible">
-        <button
-          aria-label="add"
-          class="sidebar-btn"
-          @click="FolderCommand('add')"
-        >
-          <font-awesome-icon icon="plus" />
-        </button>
-        <button
-          aria-label="play"
-          class="sidebar-btn"
+        <sidebar-button label="add" icon="plus" @click="FolderCommand('add')" />
+        <sidebar-button
+          label="play"
+          icon="play"
           @click="FolderCommand('play')"
-        >
-          <font-awesome-icon icon="play" />
-        </button>
+        />
       </span>
     </summary>
     <transition name="fade">
@@ -46,9 +38,11 @@
 import { shallowReactive } from "vue";
 import { sendCommand, getFolders } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import SidebarButton from "./sidebarButton.vue";
 export default {
   components: {
     FontAwesomeIcon,
+    SidebarButton,
   },
   props: {
     data: Object,
