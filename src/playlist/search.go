@@ -21,8 +21,8 @@ func SearchServer(c *config.Connection, term ...string) (result SearchResult, er
 	if err != nil {
 		return nil, err
 	}
-	if len(query) >= 400 {
-		query = query[:400]
+	if len(query) >= 100 {
+		query = query[:100]
 	}
 	for i := 0; i < len(query); i++ {
 		if _, ok := result[query[i][term[0]]]; !ok {
@@ -39,26 +39,18 @@ func SearchAdd(c *config.Connection, term ...string) error {
 	if err != nil {
 		return err
 	}
-	config.Log(err)
-	err = c.Client.Command("searchadd %s %s", term[0], term[1]).OK()
-	config.Log(err)
-	if err != nil {
-		return err
-	}
-	return nil
+	err = searchAdd(c, term...)
+	return err
 }
 
 //clears the queue then adds the founded songs to queue and plays it
 func SearchPlay(c *config.Connection, term ...string) error {
 	err := validFilter(term...)
-	config.Log(err)
 	if err != nil {
 		return err
 	}
 	err = c.Client.Clear()
-	config.Log(err)
-	err = c.Client.Command("searchadd %s %s", term[0], term[1]).OK()
-	config.Log(err)
+	err = searchAdd(c, term...)
 	if err != nil {
 		return err
 	}
@@ -66,10 +58,18 @@ func SearchPlay(c *config.Connection, term ...string) error {
 	return nil
 }
 
+func searchAdd(c *config.Connection, term ...string) error {
+	err = c.Client.Command("searchadd %s %s", term[0], term[1]).OK()
+	return err
+}
+
 func validFilter(filter ...string) error {
 	v := map[string]bool{
 		"file": true, "Artist": true, "Album": true,
 		"Genre": true, "Date": true, "Title": true,
+	}
+	if len(filter) < 2 {
+		return errors.New("you have to enter a term")
 	}
 	if _, ok := v[filter[0]]; !ok {
 		return errors.New("valid filters are : File,Artist,Album,Genre,Date and Title")

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/smoka7/ava/src/playlist"
@@ -121,6 +122,8 @@ func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 			err = playlist.SearchAdd(&c.Client, request.Terms...)
 		case "searchplay":
 			err = playlist.SearchPlay(&c.Client, request.Terms...)
+		default:
+			err = errors.New("chose a command")
 		}
 		json.NewEncoder(w).Encode(SearchResponse{
 			Songs: files,
