@@ -47,9 +47,23 @@
       class="m-1 space-y-2 rounded bg-white/50 dark:bg-gray-700/50"
     >
       <summary
-        class="bg-lightest dark:text-primary flex cursor-pointer items-center overflow-x-hidden text-ellipsis rounded p-2"
+        class="group flex cursor-pointer items-center justify-between overflow-x-hidden text-ellipsis rounded p-2 dark:text-white"
       >
-        {{ index }}
+        <span>
+          {{ index }}
+        </span>
+        <span class="invisible space-x-2 text-sm group-hover:visible">
+          <sidebar-button
+            label="add"
+            icon="plus"
+            @click="command('searchadd', index)"
+          />
+          <sidebar-button
+            label="play"
+            icon="play"
+            @click="command('searchplay', index)"
+          />
+        </span>
       </summary>
       <div>
         <Folder
@@ -65,6 +79,7 @@
 <script>
 import Folder from "./folder.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import SidebarButton from "./sidebarButton.vue";
 import {
   Listbox,
   ListboxButton,
@@ -79,6 +94,7 @@ export default {
     ListboxOptions,
     ListboxOption,
     FontAwesomeIcon,
+    SidebarButton,
   },
   data() {
     return {
@@ -94,22 +110,26 @@ export default {
         this.files = [];
         return;
       }
+      let response = await this.command("search", this.term);
+      if (response.ok) {
+        let json = await response.json();
+        if (this.files.length) this.files = [];
+        this.files = json.Songs;
+        return;
+      }
+    },
+    async command(cm, title) {
       let request = {
-        terms: [this.tag, this.term],
+        terms: [this.tag, title],
+        command: cm,
       };
-      let response = await fetch("/api/search", {
+      return await fetch("/api/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
         body: JSON.stringify(request),
       });
-      if (response.ok) {
-        let json = await response.json();
-        if (this.files.length) this.files = [];
-        this.files = json;
-        return;
-      }
     },
   },
 };
