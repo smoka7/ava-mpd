@@ -9,21 +9,6 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-var err error
-
-type Queue struct {
-	Length   int
-	Duration float64
-	Albums   []Album
-}
-type Album struct {
-	Songs               []Song
-	Album, Artist, Date string
-}
-type Song struct {
-	Title, Pos, Track, Duration string
-}
-
 // returns current queue list
 func GetQueue(c config.Connection) (q Queue) {
 	c.Connect()
@@ -64,7 +49,7 @@ func RemoveDuplicatesongs(c *config.Connection, name string) {
 		queue, err = c.Client.PlaylistContents(name)
 		config.Log(err)
 	}
-	var songs = make(map[string]bool)
+	songs := make(map[string]bool)
 	cmds := c.Client.BeginCommandList()
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, ok := songs[queue[i]["file"]]; ok {
@@ -142,7 +127,8 @@ func ListSongs(c *config.Connection, playlist string) (songs []mpd.Attrs) {
 		m := map[string]string{
 			"Title":  song["Title"],
 			"Album":  song["Album"],
-			"Artist": song["Artist"]}
+			"Artist": song["Artist"],
+		}
 		songs = append(songs, m)
 	}
 	return

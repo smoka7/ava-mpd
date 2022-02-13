@@ -22,8 +22,10 @@ type gzipResponseWriter struct {
 	http.ResponseWriter
 }
 
-var cl controller.Mpd
-var wc watcher.Mpd
+var (
+	cl controller.Mpd
+	wc watcher.Mpd
+)
 
 func init() {
 	cl = controller.NewClient()

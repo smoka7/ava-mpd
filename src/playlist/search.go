@@ -6,8 +6,6 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-type SearchResult map[string][]File
-
 // search for songs in the server
 func SearchServer(c *config.Connection, term ...string) (result SearchResult, err error) {
 	err = validFilter(term...)

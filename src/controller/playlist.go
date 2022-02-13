@@ -82,7 +82,6 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 	playlist := playlist.GetQueue(c.Client)
 	err = json.NewEncoder(w).Encode(playlist)
 	config.Log(err)
-
 }
 
 func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {

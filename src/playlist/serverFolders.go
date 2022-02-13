@@ -5,17 +5,6 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-type ServerList struct {
-	Folders []Folder
-	Files   []File
-}
-type Folder struct {
-	Directory string
-}
-type File struct {
-	File string
-}
-
 // returns content of the folder
 func ListFolders(c *config.Connection, folder string) (list ServerList) {
 	contents, err := c.Client.ListInfo(folder)
@@ -58,11 +47,13 @@ func AddFolder(c *config.Connection, uris ...string) {
 	err := cm.End()
 	config.Log(err)
 }
+
 func newFolder(item mpd.Attrs) Folder {
 	return Folder{
 		Directory: item["directory"],
 	}
 }
+
 func newFile(item mpd.Attrs) File {
 	return File{
 		File: item["file"],
