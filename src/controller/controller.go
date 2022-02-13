@@ -2,7 +2,9 @@ package controller
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playback"
@@ -11,6 +13,16 @@ import (
 )
 
 var request Request
+
+func NewClient() (cl Mpd) {
+	cl.Client.ReadEnv()
+	cl.Client.ReadFromFlags()
+	if cl.Client.Address == "" {
+		log.Println("mpd server address is empty")
+		os.Exit(1)
+	}
+	return
+}
 
 func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
@@ -69,9 +81,8 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 			song.ToggleLike(&c.Client, request.Data.Song)
 		case "info":
 			file := playlist.GetSongFile(&c.Client, request.Data.Start)
-			info := song.NewSong().GetSongInfo(&c.Client, file)
 			response := SongInfoResponse{
-				Info:     info.Info,
+				Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
 				Stickers: song.GetStickers(&c.Client, file),
 				AlbumArt: song.ServeAlbumArt(c.Client, file),
 			}
@@ -90,24 +101,24 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 		config.Log(err)
 		switch request.Command {
 		case "crossfade":
-			config.ChangeCrossfade(c.Client, request.Data.Start)
+			c.Client.ChangeCrossfade(request.Data.Start)
 		case "enableOutput":
-			config.EnableOutput(c.Client, request.Data.Start)
+			c.Client.EnableOutput(request.Data.Start)
 		case "disableOutput":
-			config.DisableOutput(c.Client, request.Data.Start)
+			c.Client.DisableOutput(request.Data.Start)
 		case "deleteCache":
 			config.DeleteCache()
 		case "setGain":
-			config.ChangeReplayGain(c.Client, request.Data.Start)
+			c.Client.ChangeReplayGain(request.Data.Start)
 		case "updateDatabase":
-			config.UpdateDatabase(c.Client)
+			c.Client.UpdateDatabase()
 		}
 		return
 	}
 	response := SettingsResponse{
-		DatabaseStats: config.DatabaseStats(c.Client),
-		ReplayGain:    config.GetReplayGain(c.Client),
-		Outputs:       config.ListOutputs(c.Client),
+		DatabaseStats: c.Client.DatabaseStats(),
+		ReplayGain:    c.Client.GetReplayGain(),
+		Outputs:       c.Client.ListOutputs(),
 	}
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)

@@ -18,6 +18,10 @@ type eventMessage struct {
 	Subsystem string
 }
 
+func NewClient(c config.Connection) Mpd {
+	return Mpd{Client: c}
+}
+
 //sends the mpd events to client's Socket
 func (m *Mpd) Serve(ws *websocket.Conn) {
 	event := make(chan string, 4)

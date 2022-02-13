@@ -21,7 +21,7 @@ func NewSong() *Song {
 
 //returns the server status
 func GetStatus(c *config.Connection) (status map[string]string) {
-	status, err := c.Client.Status()
+	status, err = c.Client.Status()
 	config.Log(err)
 	return
 }
@@ -29,7 +29,7 @@ func GetStatus(c *config.Connection) (status map[string]string) {
 //returns the currentsong info
 func GetCurrentSong(c config.Connection) (status map[string]string) {
 	c.Connect()
-	status, err := c.Client.CurrentSong()
+	status, err = c.Client.CurrentSong()
 	config.Log(err)
 	liked := GetSticker(&c, status["file"], "liked")
 	if liked != nil {
@@ -53,20 +53,20 @@ func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
 
 //set the sticker name to value for song
 func SetSticker(c *config.Connection, song, name, value string) {
-	err := c.Client.StickerSet(song, name, value)
+	err = c.Client.StickerSet(song, name, value)
 	config.Log(err)
 }
 
 //returns all the stickers of a song
 func GetStickers(c *config.Connection, file string) (status []mpd.Sticker) {
-	status, err := c.Client.StickerList(file)
+	status, err = c.Client.StickerList(file)
 	config.Log(err)
 	return
 }
 
 //return the sticker name of a song
 func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
-	status, err := c.Client.StickerGet(file, name)
+	status, err = c.Client.StickerGet(file, name)
 	config.Log(err)
 	return
 }

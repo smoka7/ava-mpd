@@ -28,7 +28,6 @@ func (c *Connection) ReadEnv() {
 	port := os.Getenv("MPD_PORT")
 	if host != "" && port != "" {
 		c.Address = host + ":" + port
-		c.Password = os.Getenv("MPD_PASSWORD")
 	}
 }
 
@@ -37,7 +36,7 @@ func (c *Connection) ReadFromFlags() {
 	var address string
 	flag.StringVar(&address, "address", "", "address of mpd server host:port")
 	flag.StringVar(&c.Password, "password", c.Password, "password of mpd server")
-	flag.StringVar(&c.AppPort, "port", "3001", "The port to run this app on it")
+	flag.StringVar(&c.AppPort, "port", "3001", "The port to run this app on it defaults to 3001")
 	flag.Parse()
 	if address != "" {
 		c.Address = address
@@ -94,57 +93,60 @@ func Log(err error) {
 }
 
 //updates the MPD server database
-func UpdateDatabase(c Connection) {
+func (c *Connection) UpdateDatabase() {
 	_, err := c.Client.Update("")
 	Log(err)
 }
 
 //returns the MPD database stats
-func DatabaseStats(c Connection) (stats mpd.Attrs) {
+func (c *Connection) DatabaseStats() (stats mpd.Attrs) {
 	stats, err := c.Client.Stats()
 	Log(err)
+
 	return
 }
 
 //returns the mpd outputs
-func ListOutputs(c Connection) (stats []mpd.Attrs) {
+func (c *Connection) ListOutputs() (stats []mpd.Attrs) {
 	stats, err := c.Client.ListOutputs()
 	Log(err)
 	return
 }
 
 //enables the output
-func EnableOutput(c Connection, id int) {
+func (c *Connection) EnableOutput(id int) {
 	err := c.Client.EnableOutput(id)
 	Log(err)
 }
 
 //Disables the output
-func DisableOutput(c Connection, id int) {
+func (c *Connection) DisableOutput(id int) {
 	err := c.Client.DisableOutput(id)
 	Log(err)
 }
 
 //sets the crossFade
-func ChangeCrossfade(c Connection, second int) {
+func (c *Connection) ChangeCrossfade(second int) {
 	err := c.Client.Command("crossfade %d", second).OK()
 	Log(err)
 }
 
 //sets the Gain status
-func ChangeReplayGain(c Connection, id int) {
+func (c *Connection) ChangeReplayGain(id int) {
 	modes := map[int]string{
 		0: "off",
 		1: "track",
 		2: "album",
 		3: "auto",
 	}
-	err := c.Client.Command("replay_gain_mode %s", modes[id]).OK()
-	Log(err)
+	if mode, ok := modes[id]; ok {
+		err := c.Client.Command("replay_gain_mode %s", mode).OK()
+		Log(err)
+	}
 }
 
 //returns the Gain status
-func GetReplayGain(c Connection) (status mpd.Attrs) {
+func (c *Connection) GetReplayGain() (status mpd.Attrs) {
 	status, err = c.Client.Command("replay_gain_status").Attrs()
 	Log(err)
 	return

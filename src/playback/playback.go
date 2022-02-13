@@ -98,6 +98,6 @@ func ChangeVolume(c *config.Connection, volume int) {
 
 //clears the current queue
 func ClearQueue(c *config.Connection) {
-	err := c.Client.Clear()
+	err = c.Client.Clear()
 	config.Log(err)
 }

@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -25,21 +26,18 @@ var cl controller.Mpd
 var wc watcher.Mpd
 
 func init() {
-	cl.Client.ReadEnv()
-	cl.Client.ReadFromFlags()
-	if cl.Client.Address == "" {
-		log.Println("mpd server address is empty")
-		os.Exit(1)
-	}
-	wc.Client.Address = cl.Client.Address
-	wc.Client.Password = cl.Client.Password
+	cl = controller.NewClient()
+	wc = watcher.NewClient(cl.Client)
 	ip := getHostIP()
 	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.Client.AppPort)
-	serveCoverArts()
-	go wc.RecordPlayCount()
 }
 
-func Router() {
+func Router(frontDist *fs.FS) {
+	frontEnd := http.FileServer(http.FS(*frontDist))
+	serveCoverArts()
+	go wc.RecordPlayCount()
+
+	http.Handle("/", cacheControl(frontEnd))
 	http.Handle("/update", websocket.Handler(wc.Serve))
 	http.HandleFunc("/api/playback", cl.Playback)
 	http.HandleFunc("/api/status", cl.Status)
@@ -60,7 +58,7 @@ func (w gzipResponseWriter) Write(b []byte) (int, error) {
 }
 
 //sets cache-control max-age's to 2 days and writes response in gzip if it is supported
-func CacheControl(h http.Handler) http.Handler {
+func cacheControl(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=172800")
 		if !strings.Contains(r.Header.Get("accept-Encoding"), "gzip") {
@@ -83,7 +81,7 @@ func serveCoverArts() {
 	coverArtDir := cache + "/ava-mpd"
 	err = os.MkdirAll(coverArtDir, 0777)
 	config.Log(err)
-	http.Handle("/coverart/", CacheControl(http.FileServer(http.Dir(coverArtDir))))
+	http.Handle("/coverart/", cacheControl(http.FileServer(http.Dir(coverArtDir))))
 }
 
 //returns current host IP in LAN
