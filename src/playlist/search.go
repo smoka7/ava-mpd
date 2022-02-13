@@ -50,6 +50,9 @@ func SearchPlay(c *config.Connection, term ...string) error {
 		return err
 	}
 	err = c.Client.Clear()
+	if err != nil {
+		return err
+	}
 	err = searchAdd(c, term...)
 	if err != nil {
 		return err

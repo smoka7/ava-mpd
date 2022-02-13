@@ -15,6 +15,10 @@ type Song struct {
 	Info mpd.Attrs
 }
 
+func NewSong() *Song {
+	return &Song{}
+}
+
 //returns the server status
 func GetStatus(c *config.Connection) (status map[string]string) {
 	status, err := c.Client.Status()
@@ -38,12 +42,13 @@ func GetCurrentSong(c config.Connection) (status map[string]string) {
 }
 
 //gets the song info
-func (s *Song) GetSongInfo(c *config.Connection, file string) {
+func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
 	info, err := c.Client.ListAllInfo(file)
 	config.Log(err)
 	if len(info) > 0 {
 		s.Info = info[0]
 	}
+	return s
 }
 
 //set the sticker name to value for song

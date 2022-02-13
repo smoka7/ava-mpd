@@ -55,9 +55,9 @@ export default {
       let response = await fetch("/api/setting");
       if (response.ok) {
         let json = await response.json();
-        this.outputs = json.outputs;
-        this.databaseStats = json.databaseStats;
-        this.replayGain = json.replayGain.replay_gain_mode;
+        this.outputs = json.Outputs;
+        this.databaseStats = json.DatabaseStats;
+        this.replayGain = json.ReplayGain.replay_gain_mode;
         return;
       }
       console.log(response.error);

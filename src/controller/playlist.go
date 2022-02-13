@@ -5,23 +5,15 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playlist"
 )
-
-type SearchRequest struct {
-	Terms   []string `json:"terms"`
-	Command string   `json:"command"`
-}
-
-type SearchResponse struct {
-	Songs playlist.SearchResult
-	Error error
-}
 
 func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		c.Client.Connect()
-		json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
+		config.Log(err)
 		switch request.Command {
 		case "load":
 			playlist.LoadPlaylist(&c.Client, request.Data.Playlist)
@@ -66,7 +58,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	defer c.Client.Close()
 	if r.Method == "POST" {
-		json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
+		config.Log(err)
 		switch request.Command {
 		case "addsong":
 			file := playlist.GetSongFile(&c.Client, request.Data.Start)
@@ -92,7 +85,8 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		c.Client.Connect()
-		json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
+		config.Log(err)
 		switch request.Command {
 		case "add":
 			playlist.AddFolder(&c.Client, request.Data.Playlist)
@@ -109,12 +103,12 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 
 func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
-	var request SearchRequest
-	var files playlist.SearchResult
-	var err error
 	defer c.Client.Close()
 	if r.Method == "POST" {
-		json.NewDecoder(r.Body).Decode(&request)
+		var request SearchRequest
+		var files playlist.SearchResult
+		err := json.NewDecoder(r.Body).Decode(&request)
+		config.Log(err)
 		switch request.Command {
 		case "search":
 			files, err = playlist.SearchServer(&c.Client, request.Terms...)
