@@ -109,7 +109,7 @@ export default {
   computed: {
     ...mapState({
       queue: (state) => shallowReactive(state.queue),
-      currentSongPos: (state) => state.currentSong.Pos,
+      currentSongPos: (state) => state.currentSong.Info.Pos,
     }),
   },
   watch: {

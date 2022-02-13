@@ -12,7 +12,8 @@ import (
 var err error
 
 type Song struct {
-	Info mpd.Attrs
+	Info  mpd.Attrs
+	Liked bool
 }
 
 func NewSong() *Song {
@@ -20,24 +21,24 @@ func NewSong() *Song {
 }
 
 // returns the server status
-func GetStatus(c *config.Connection) (status map[string]string) {
+func GetStatus(c *config.Connection) (status mpd.Attrs) {
 	status, err = c.Client.Status()
 	config.Log(err)
 	return
 }
 
 // returns the currentsong info
-func GetCurrentSong(c config.Connection) (status map[string]string) {
+func GetCurrentSong(c config.Connection) (song Song) {
 	c.Connect()
-	status, err = c.Client.CurrentSong()
+	defer c.Close()
+	song.Info, err = c.Client.CurrentSong()
 	config.Log(err)
-	liked := GetSticker(&c, status["file"], "liked")
-	if liked != nil {
-		status["liked"] = liked.Value
+	liked := GetSticker(&c, song.Info["file"], "liked")
+	if liked != nil && liked.Value != "false" {
+		song.Liked = true
 		return
 	}
-	status["liked"] = "false"
-	c.Close()
+	song.Liked = false
 	return
 }
 
@@ -72,16 +73,15 @@ func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
 }
 
 // Increments played count of current song
-func IncrementPCount(c *config.Connection) {
-	song := GetCurrentSong(*c)
-	SetLastPlayed(c, song["file"])
-	playedCount := GetSticker(c, song["file"], "playedcount")
+func IncrementPCount(c *config.Connection, filepath string) {
+	SetLastPlayed(c, filepath)
+	playedCount := GetSticker(c, filepath, "playedcount")
 	if playedCount == nil {
-		SetSticker(c, song["file"], "playedcount", "1")
+		SetSticker(c, filepath, "playedcount", "1")
 		return
 	}
 	if value, err := strconv.Atoi(playedCount.Value); err == nil {
-		SetSticker(c, song["file"], "playedcount", fmt.Sprintf("%d", value+1))
+		SetSticker(c, filepath, "playedcount", fmt.Sprintf("%d", value+1))
 	}
 }
 

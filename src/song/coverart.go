@@ -10,7 +10,7 @@ import (
 
 // returns the URL of the song
 func ServeAlbumArt(c config.Connection, songPath string) (coverURL string) {
-	var song Song
+	song := NewSong()
 	if songPath == "" {
 		return "default"
 	}

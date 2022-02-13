@@ -4,6 +4,7 @@ import (
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playlist"
+	"github.com/smoka7/ava/src/song"
 )
 
 type Mpd struct {
@@ -23,8 +24,8 @@ type Data struct {
 }
 
 type StatusResponse struct {
-	Status      map[string]string
-	CurrentSong map[string]string
+	Status      mpd.Attrs
+	CurrentSong song.Song
 	AlbumArt    string
 }
 

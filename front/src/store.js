@@ -1,15 +1,18 @@
 import { createStore } from "vuex";
 const store = createStore({
   state: {
-    currentSong: Object,
+    currentSong: {
+      Info: {},
+      Liked: false,
+    },
     durationInterval: Number,
-    status: Object,
+    status: {},
     albumArt: "default",
     storedPlaylist: [],
     queue: {
-            Albums: [],
+      Albums: [],
       Length: 0,
-            Duration:0,
+      Duration: 0,
     },
   },
   mutations: {

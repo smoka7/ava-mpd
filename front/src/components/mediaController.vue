@@ -13,10 +13,7 @@
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
-      <like-song
-        :pLiked="currentSong.liked == 'true'"
-        :file="currentSong.file"
-      />
+      <like-song :pLiked="liked == 'true'" :file="currentSong.file" />
       <button
         aria-label="toggle-playback"
         @click="playbackCommand('toggle')"
@@ -150,6 +147,7 @@ import albumArt from "./albumArt.vue";
 import saveQueue from "./saveQueue.vue";
 import likeSong from "./likeSong.vue";
 import volumeControl from "./volumeControl.vue";
+import { shallowReactive } from "vue";
 import {
   sendCommand,
   humanizeTime,
@@ -218,7 +216,12 @@ export default {
     humanizeTime: humanizeTime,
   },
   computed: {
-    ...mapState(["currentSong", "albumArt", "status"]),
+    ...mapState({
+            albumArt: (state) => state.albumArt,
+            liked: (state) => state.currentSong.Liked,
+      currentSong: (state) => shallowReactive(state.currentSong.Info),
+      status: (state) => shallowReactive(state.status),
+    }),
   },
 };
 </script>
