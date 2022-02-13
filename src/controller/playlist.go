@@ -10,9 +10,9 @@ import (
 )
 
 func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		c.Client.Connect()
-		err := json.NewDecoder(r.Body).Decode(&request)
+		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {
 		case "load":
@@ -45,20 +45,22 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			playlist.AddFolder(&c.Client, songs...)
 		case "list":
 			songs := playlist.ListSongs(&c.Client, request.Data.Playlist)
-			json.NewEncoder(w).Encode(songs)
+			err = json.NewEncoder(w).Encode(songs)
+			config.Log(err)
 		}
 		c.Client.Close()
 		return
 	}
 	playlist := playlist.ListStoredPlaylist(c.Client)
-	json.NewEncoder(w).Encode(playlist)
+	err = json.NewEncoder(w).Encode(playlist)
+	config.Log(err)
 }
 
 func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	defer c.Client.Close()
-	if r.Method == "POST" {
-		err := json.NewDecoder(r.Body).Decode(&request)
+	if r.Method == http.MethodPost {
+		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {
 		case "addsong":
@@ -78,14 +80,15 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	playlist := playlist.GetQueue(c.Client)
-	json.NewEncoder(w).Encode(playlist)
+	err = json.NewEncoder(w).Encode(playlist)
+	config.Log(err)
 
 }
 
 func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		c.Client.Connect()
-		err := json.NewDecoder(r.Body).Decode(&request)
+		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {
 		case "add":
@@ -94,7 +97,8 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 			playlist.PlayFolder(&c.Client, request.Data.Playlist)
 		case "list":
 			folders := playlist.ListFolders(&c.Client, request.Data.Playlist)
-			json.NewEncoder(w).Encode(folders)
+			err = json.NewEncoder(w).Encode(folders)
+			config.Log(err)
 		}
 		c.Client.Close()
 		return
@@ -104,10 +108,10 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	defer c.Client.Close()
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		var request SearchRequest
 		var files playlist.SearchResult
-		err := json.NewDecoder(r.Body).Decode(&request)
+		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {
 		case "search":
@@ -119,10 +123,11 @@ func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 		default:
 			err = errors.New("chose a command")
 		}
-		json.NewEncoder(w).Encode(SearchResponse{
+		err = json.NewEncoder(w).Encode(SearchResponse{
 			Songs: files,
 			Error: err,
 		})
+		config.Log(err)
 		return
 	}
 }

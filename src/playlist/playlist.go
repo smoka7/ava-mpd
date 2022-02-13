@@ -24,7 +24,7 @@ type Song struct {
 	Title, Pos, Track, Duration string
 }
 
-//returns current queue list
+// returns current queue list
 func GetQueue(c config.Connection) (q Queue) {
 	c.Connect()
 	queue, err := c.Client.PlaylistInfo(-1, -1)
@@ -38,23 +38,23 @@ func GetQueue(c config.Connection) (q Queue) {
 		queue = limitQueue(c, queue)
 	}
 	q.newAlbum(queue[0])
-	q.Albums[0].newSong(queue[0])
 	for i := 1; i < len(queue); i++ {
 		if queue[i]["Album"] != queue[i-1]["Album"] {
 			q.newAlbum(queue[i])
+			continue
 		}
 		q.Albums[len(q.Albums)-1].newSong(queue[i])
 	}
 	return
 }
 
-//loads the playlist after the current song in queue
+// loads the playlist after the current song in queue
 func AddAfterCurrent(c *config.Connection, name string) {
 	err = c.Client.Command("load %s 0: +0", name).OK()
 }
 
-//removes duplicate songs based on their file address from the playlist name
-//if name is empty then it deletes duplicate songs in current queue
+// removes duplicate songs based on their file address from the playlist name
+// if name is empty then it deletes duplicate songs in current queue
 func RemoveDuplicatesongs(c *config.Connection, name string) {
 	var queue []mpd.Attrs
 	if name == "" {
@@ -82,7 +82,7 @@ func RemoveDuplicatesongs(c *config.Connection, name string) {
 	config.Log(err)
 }
 
-//removes songs that are removed or replaced from the server
+// removes songs that are removed or replaced from the server
 func RemoveInvalidsongs(c *config.Connection, name string) {
 	queue, err := c.Client.PlaylistContents(name)
 	config.Log(err)
@@ -96,31 +96,31 @@ func RemoveInvalidsongs(c *config.Connection, name string) {
 	config.Log(err)
 }
 
-//plays the id song in current Queue
+// plays the id song in current Queue
 func PlaySong(c *config.Connection, id int) {
 	err := c.Client.Play(id)
 	config.Log(err)
 }
 
-//moves the song from position in queue to newPosition
+// moves the song from position in queue to newPosition
 func MoveSong(c *config.Connection, position int, newPosition int) {
 	err := c.Client.Move(position, -1, newPosition)
 	config.Log(err)
 }
 
-//deletes the song from start to end from current Queue
+// deletes the song from start to end from current Queue
 func DeleteSong(c *config.Connection, start, end int) {
 	err := c.Client.Delete(start, end)
 	config.Log(err)
 }
 
-//saves the current queue as a new playlist
+// saves the current queue as a new playlist
 func SaveQueue(c *config.Connection, name string) {
 	err := c.Client.PlaylistSave(name)
 	config.Log(err)
 }
 
-//return a list of playlists
+// return a list of playlists
 func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
 	c.Connect()
 	playlist, err := c.Client.ListPlaylists()
@@ -134,7 +134,7 @@ func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
 	return
 }
 
-// returns list of playlist's song
+//  returns list of playlist's song
 func ListSongs(c *config.Connection, playlist string) (songs []mpd.Attrs) {
 	contents, err := c.Client.PlaylistContents(playlist)
 	config.Log(err)
@@ -148,25 +148,25 @@ func ListSongs(c *config.Connection, playlist string) (songs []mpd.Attrs) {
 	return
 }
 
-//clears the stored playlist from server
+// clears the stored playlist from server
 func ClearPlaylist(c *config.Connection, playlist string) {
 	err := c.Client.PlaylistClear(playlist)
 	config.Log(err)
 }
 
-//deletes the stored playlist from server
+// deletes the stored playlist from server
 func DeletePlaylist(c *config.Connection, playlist string) {
 	err := c.Client.Command("rm %s", playlist).OK()
 	config.Log(err)
 }
 
-//adds the playlist to the current queue
+// adds the playlist to the current queue
 func LoadPlaylist(c *config.Connection, playlist string) {
 	err := c.Client.PlaylistLoad(playlist, -1, -1)
 	config.Log(err)
 }
 
-//clears the current queue and plays the playlist
+// clears the current queue and plays the playlist
 func PlayPlaylist(c *config.Connection, name string) {
 	cm := c.Client.BeginCommandList()
 	cm.Clear()
@@ -176,19 +176,19 @@ func PlayPlaylist(c *config.Connection, name string) {
 	config.Log(err)
 }
 
-//renames the name playlist to newName
+// renames the name playlist to newName
 func RenamePlaylist(c *config.Connection, name, newName string) {
 	err := c.Client.PlaylistRename(name, newName)
 	config.Log(err)
 }
 
-//adds the song to playlist
+// adds the song to playlist
 func AddSongToPlaylist(c *config.Connection, playlist, uri string) {
 	err := c.Client.PlaylistAdd(playlist, uri)
 	config.Log(err)
 }
 
-//returns a list of liked songs
+// returns a list of liked songs
 func GetLikedSongs(c *config.Connection) (likedSongs []string) {
 	uris, stickers, e := c.Client.StickerFind("", "liked")
 	config.Log(e)
@@ -201,7 +201,7 @@ func GetLikedSongs(c *config.Connection) (likedSongs []string) {
 	return likedSongs
 }
 
-//returns the list of most played songs
+// returns the list of most played songs
 func GetMostPlayed(c *config.Connection) (mostPlayed []string) {
 	uris, stickers, err := c.Client.StickerFind("", "playedcount")
 	config.Log(err)
@@ -212,7 +212,7 @@ func GetMostPlayed(c *config.Connection) (mostPlayed []string) {
 		m := map[string]string{"uri": uris[i], "count": stickers[i].Value}
 		unOrdered = append(unOrdered, m)
 	}
-	//sort songs based on played time
+	// sort songs based on played time
 	sort.Slice(unOrdered, func(i, j int) bool {
 		a, err := strconv.Atoi(unOrdered[i]["count"])
 		config.Log(err)
@@ -229,23 +229,25 @@ func GetMostPlayed(c *config.Connection) (mostPlayed []string) {
 	return
 }
 
-//gets the file path of the Pos in Queue
-func GetSongFile(c *config.Connection, Pos int) string {
-	song, err := c.Client.PlaylistInfo(Pos, -1)
+// gets the file path of the Pos in Queue
+func GetSongFile(c *config.Connection, pos int) string {
+	song, err := c.Client.PlaylistInfo(pos, -1)
 	config.Log(err)
 	return song[0]["file"]
 }
 
-//filter album info
+// filter album info
 func (q *Queue) newAlbum(song mpd.Attrs) {
-	q.Albums = append(q.Albums, Album{
+	album := Album{
 		Album:  song["Album"],
 		Artist: song["Artist"],
 		Date:   song["Date"],
-	})
+	}
+	album.newSong(song)
+	q.Albums = append(q.Albums, album)
 }
 
-//filter song info
+// filter song info
 func (a *Album) newSong(song mpd.Attrs) {
 	a.Songs = append(a.Songs, Song{
 		Title:    song["Title"],
@@ -257,18 +259,17 @@ func (a *Album) newSong(song mpd.Attrs) {
 
 func limitQueue(c config.Connection, queue []mpd.Attrs) []mpd.Attrs {
 	c.Connect()
-	cr, err := c.Client.CurrentSong()
+	currentSong, err := c.Client.CurrentSong()
 	c.Close()
 	config.Log(err)
-	cu := cr["Pos"]
-	po, _ := strconv.Atoi(cu)
-	if po >= 150 {
-		return queue[po-150 : po+150]
+	queuePosition := currentSong["Pos"]
+	if p, _ := strconv.Atoi(queuePosition); p >= 150 {
+		return queue[p-150 : p+150]
 	}
 	return queue[:300]
 }
 
-//returns the duration of a list of songs
+// returns the duration of a list of songs
 func getDurationSum(songs []mpd.Attrs) (sum float64) {
 	for _, song := range songs {
 		duration, _ := strconv.ParseFloat(song["duration"], 64)

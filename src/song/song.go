@@ -19,14 +19,14 @@ func NewSong() *Song {
 	return &Song{}
 }
 
-//returns the server status
+// returns the server status
 func GetStatus(c *config.Connection) (status map[string]string) {
 	status, err = c.Client.Status()
 	config.Log(err)
 	return
 }
 
-//returns the currentsong info
+// returns the currentsong info
 func GetCurrentSong(c config.Connection) (status map[string]string) {
 	c.Connect()
 	status, err = c.Client.CurrentSong()
@@ -41,7 +41,7 @@ func GetCurrentSong(c config.Connection) (status map[string]string) {
 	return
 }
 
-//gets the song info
+// gets the song info
 func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
 	info, err := c.Client.ListAllInfo(file)
 	config.Log(err)
@@ -51,27 +51,27 @@ func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
 	return s
 }
 
-//set the sticker name to value for song
+// set the sticker name to value for song
 func SetSticker(c *config.Connection, song, name, value string) {
 	err = c.Client.StickerSet(song, name, value)
 	config.Log(err)
 }
 
-//returns all the stickers of a song
+// returns all the stickers of a song
 func GetStickers(c *config.Connection, file string) (status []mpd.Sticker) {
 	status, err = c.Client.StickerList(file)
 	config.Log(err)
 	return
 }
 
-//return the sticker name of a song
+// return the sticker name of a song
 func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
 	status, err = c.Client.StickerGet(file, name)
 	config.Log(err)
 	return
 }
 
-//Increments played count of current song
+// Increments played count of current song
 func IncrementPCount(c *config.Connection) {
 	song := GetCurrentSong(*c)
 	SetLastPlayed(c, song["file"])
@@ -85,13 +85,13 @@ func IncrementPCount(c *config.Connection) {
 	}
 }
 
-//sets last played time of song
+// sets last played time of song
 func SetLastPlayed(c *config.Connection, uri string) {
 	now := time.Now().Unix()
 	SetSticker(c, uri, "lastplayed", fmt.Sprintf("%d", now))
 }
 
-//toggles like state of song
+// toggles like state of song
 func ToggleLike(c *config.Connection, uri string) {
 	liked := GetSticker(c, uri, "liked")
 	if liked != nil && liked.Value == "true" {

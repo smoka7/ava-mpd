@@ -8,7 +8,7 @@ import (
 
 type SearchResult map[string][]File
 
-//search for songs in the server
+// search for songs in the server
 func SearchServer(c *config.Connection, term ...string) (result SearchResult, err error) {
 	err = validFilter(term...)
 	config.Log(err)
@@ -33,7 +33,7 @@ func SearchServer(c *config.Connection, term ...string) (result SearchResult, er
 	return
 }
 
-//searchs for the term in server and adds them to current queue
+// searchs for the term in server and adds them to current queue
 func SearchAdd(c *config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {
@@ -43,7 +43,7 @@ func SearchAdd(c *config.Connection, term ...string) error {
 	return err
 }
 
-//clears the queue then adds the founded songs to queue and plays it
+// clears the queue then adds the founded songs to queue and plays it
 func SearchPlay(c *config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {

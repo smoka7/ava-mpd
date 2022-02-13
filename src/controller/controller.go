@@ -25,39 +25,14 @@ func NewClient() (cl Mpd) {
 }
 
 func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		c.Client.Connect()
+	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		switch request.Command {
-		case "next":
-			playback.NextSong(&c.Client)
-		case "previous":
-			playback.PrevSong(&c.Client)
-		case "toggle":
-			playback.Toggle(&c.Client)
-		case "stop":
-			playback.Stop(&c.Client)
-		case "single":
-			playback.Single(&c.Client)
-		case "repeat":
-			playback.Repeat(&c.Client)
-		case "random":
-			playback.Random(&c.Client)
-		case "consume":
-			playback.Consume(&c.Client)
-		case "clear":
-			playback.ClearQueue(&c.Client)
-		case "seek":
-			playback.Seek(&c.Client, request.Data.Start)
-		case "changeVolume":
-			playback.ChangeVolume(&c.Client, request.Data.Start)
-		}
-		c.Client.Close()
+		playback.Command(c.Client, request.Command, request.Data.Start)
 	}
 }
 
-//writes the current mpd server status
+// writes the current mpd server status
 func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	currentSong := song.GetCurrentSong(c.Client)
 	c.Client.Connect()
@@ -72,7 +47,7 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		c.Client.Connect()
@@ -96,7 +71,7 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	defer c.Client.Close()
-	if r.Method == "POST" {
+	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {

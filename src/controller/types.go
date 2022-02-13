@@ -49,3 +49,5 @@ type SettingsResponse struct {
 	DatabaseStats mpd.Attrs
 	ReplayGain    mpd.Attrs
 }
+
+var err error

@@ -5,7 +5,7 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-type serverList struct {
+type ServerList struct {
 	Folders []Folder
 	Files   []File
 }
@@ -16,18 +16,18 @@ type File struct {
 	File string
 }
 
-//returns content of the folder
-func ListFolders(c *config.Connection, folder string) (list serverList) {
+// returns content of the folder
+func ListFolders(c *config.Connection, folder string) (list ServerList) {
 	contents, err := c.Client.ListInfo(folder)
 	config.Log(err)
 	list.Files = make([]File, 0)
 	list.Folders = make([]Folder, 0)
 	for _, item := range contents {
-		//ignore playlists
+		// ignore playlists
 		if _, ok := item["playlist"]; ok {
 			continue
 		}
-		//append files to the end of list
+		// append files to the end of list
 		if _, ok := item["file"]; ok {
 			list.Files = append(list.Files, newFile(item))
 			continue
@@ -37,7 +37,7 @@ func ListFolders(c *config.Connection, folder string) (list serverList) {
 	return
 }
 
-//clears the current queue and plays the folder
+// clears the current queue and plays the folder
 func PlayFolder(c *config.Connection, uris ...string) {
 	cm := c.Client.BeginCommandList()
 	cm.Clear()
@@ -49,7 +49,7 @@ func PlayFolder(c *config.Connection, uris ...string) {
 	config.Log(err)
 }
 
-//adds the folder to the current queue
+// adds the folder to the current queue
 func AddFolder(c *config.Connection, uris ...string) {
 	cm := c.Client.BeginCommandList()
 	for _, uri := range uris {
