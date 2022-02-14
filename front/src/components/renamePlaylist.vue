@@ -12,6 +12,7 @@
 import TextInput from "./textInput.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand } from "../helpers";
+import endpoints from "../endpoints.js";
 export default {
   props: ["rename"],
   components: {
@@ -25,7 +26,7 @@ export default {
   },
   methods: {
     renamePlaylist(name) {
-      sendCommand("/api/stored", "rename", {
+      sendCommand(endpoints.storedPlaylist, "rename", {
         playlist: this.rename,
         song: name,
       });

@@ -148,6 +148,7 @@ import saveQueue from "./saveQueue.vue";
 import likeSong from "./likeSong.vue";
 import volumeControl from "./volumeControl.vue";
 import { shallowReactive } from "vue";
+import endpoints from "../endpoints.js";
 import {
   sendCommand,
   humanizeTime,
@@ -206,10 +207,10 @@ export default {
   },
   methods: {
     seek(time) {
-      sendCommand("/api/playback", "seek", { start: Number(time) });
+      sendCommand(endpoints.playback, "seek", { start: Number(time) });
     },
     playbackCommand(command) {
-      sendCommand("/api/playback", command);
+      sendCommand(endpoints.playback, command);
     },
     openPlaylist: toggleMediaController,
     openFolders: toggleFolders,

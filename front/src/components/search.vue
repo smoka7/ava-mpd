@@ -80,6 +80,7 @@
 import Folder from "./folder.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
+import endpoints from "../endpoints.js";
 import {
   Listbox,
   ListboxButton,
@@ -123,7 +124,7 @@ export default {
         terms: [this.tag, title],
         command: cm,
       };
-      return await fetch("/api/search", {
+      return await fetch(endpoints.search, {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",

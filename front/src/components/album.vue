@@ -61,6 +61,7 @@
   </details>
 </template>
 <script>
+import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 export default {
@@ -78,7 +79,7 @@ export default {
       let data = {
         Start: Number(id),
       };
-      sendCommand("/api/queue", "play", data);
+      sendCommand(endpoints.queue, "play", data);
     },
     loadSongs() {
       this.open = true;
@@ -94,7 +95,7 @@ export default {
         Start: Number(start),
         Finish: Number(position),
       };
-      sendCommand("/api/queue", "move", data);
+      sendCommand(endpoints.queue, "move", data);
     },
   },
 };

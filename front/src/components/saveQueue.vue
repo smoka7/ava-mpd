@@ -20,6 +20,7 @@
 import TextInput from "./textInput.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand } from "../helpers";
+import endpoints from "../endpoints.js";
 export default {
   components: {
     FontAwesomeIcon,
@@ -32,7 +33,7 @@ export default {
   },
   methods: {
     saveQueue(name) {
-      sendCommand("/api/queue", "save", { playlist: name });
+      sendCommand(endpoints.queue, "save", { playlist: name });
       this.$store.dispatch("getStoredPlaylist");
     },
   },

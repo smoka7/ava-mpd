@@ -36,6 +36,7 @@
 <script>
 import { mapState } from "vuex";
 import { sendCommand } from "../helpers.js";
+import endpoints from "../endpoints.js";
 export default {
   props: {
     open: Boolean,
@@ -59,11 +60,11 @@ export default {
         Start: this.song,
         End: Number(end),
       };
-      sendCommand("/api/queue", "delete", data);
+      sendCommand(endpoints.queue, "delete", data);
       this.$emit("close");
     },
     addSongTo(playlist) {
-      sendCommand("api/queue", "addsong", {
+      sendCommand(endpoints.queue, "addsong", {
         Start: this.song,
         playlist: playlist,
       });
@@ -74,7 +75,7 @@ export default {
       this.$emit("close");
     },
     removeDuplicate() {
-      sendCommand("api/queue", "removeduplicate");
+      sendCommand(endpoints.queue, "removeduplicate");
       this.$emit("close");
     },
     getStoredPlaylist() {

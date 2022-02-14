@@ -5,6 +5,7 @@
 </template>
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import endpoints from "../endpoints.js";
 import { sendCommand } from "../helpers";
 export default {
   props: {
@@ -29,7 +30,7 @@ export default {
         right: "rotate-45",
         left: "-rotate-45",
       };
-      sendCommand("/api/song", "like", { song: this.file });
+      sendCommand(endpoints.song, "like", { song: this.file });
       this.btnClass = [classes.normal, classes.scale, classes.right];
       setTimeout(() => {
         this.btnClass = [classes.normal, classes.scale, classes.left];

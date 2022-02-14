@@ -46,6 +46,7 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand, humanizeTime } from "../helpers.js";
+import endpoints from "../endpoints.js";
 export default {
   props: ["stats"],
   components: {
@@ -53,10 +54,10 @@ export default {
   },
   methods: {
     updateDatabase() {
-      sendCommand("/api/setting", "updateDatabase");
+      sendCommand(endpoints.setting, "updateDatabase");
     },
     deleteCache() {
-      sendCommand("/api/setting", "deleteCache");
+      sendCommand(endpoints.setting, "deleteCache");
     },
     humanizeTime: humanizeTime,
   },

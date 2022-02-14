@@ -15,6 +15,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import progressBar from "./progressBar.vue";
 import { sendCommand } from "../helpers";
+import endpoints from "../endpoints";
 export default {
   components: {
     FontAwesomeIcon,
@@ -26,7 +27,7 @@ export default {
       if (volume > 100) volume = 100;
       if (volume < 0) volume = 0;
       if (volume === undefined) volume = this.volume > 0 ? 0 : 100;
-      sendCommand("/api/playback", "changeVolume", { start: volume });
+      sendCommand(endpoints.playback, "changeVolume", { start: volume });
     },
     icon() {
       if (this.volume >= 50) return "volume-up";

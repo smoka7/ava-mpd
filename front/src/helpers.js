@@ -1,4 +1,23 @@
+import endpoints from "./endpoints"
+/**
+ * @param {string} url
+ */
+export async function fetchOrFail(url) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+  let response = await fetch(url, { signal: controller.signal });
+  if (response.ok) {
+    clearTimeout(timeoutId);
+    return await response.json();
+  }
+
+  console.log(response.error);
+}
+
 export async function sendCommand(url, command, data) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
   let request = {
     command: command,
     data: data,
@@ -11,33 +30,34 @@ export async function sendCommand(url, command, data) {
     body: JSON.stringify(request),
   });
   if (response.ok) {
+    clearTimeout(timeoutId);
     return;
   }
   console.log(response.error);
 }
 export async function getFolders(directory) {
-      let request = {
-        command: "list",
-        data: {
-          playlist: directory,
-        },
-      };
-      let response = await fetch("/api/folders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify(request),
-      });
-      if (response.ok) {
-        let json = await response.json();
-        return [...json.Folders, ...json.Files];
-      }
-      console.log(response.error);
-      return [];
-    }
+  let request = {
+    command: "list",
+    data: {
+      playlist: directory,
+    },
+  };
+  let response = await fetch(endpoints.folders, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(request),
+  });
+  if (response.ok) {
+    let json = await response.json();
+    return [...json.Folders, ...json.Files];
+  }
+  console.log(response.error);
+  return [];
+}
 
-//returns time in h:m:s format
+// returns time in h:m:s format
 export function humanizeTime(time) {
   function spanZero(time) {
     return time < 10 ? "0" + time : time;
@@ -54,14 +74,14 @@ export function humanizeTime(time) {
   minute = spanZero(minute);
   return hour + ":" + minute + ":" + second;
 }
-//toggles media controller visibility in mobile
+// toggles media controller visibility in mobile
 export function toggleMediaController() {
-  document.getElementById('mediaController').classList.toggle('z-10');
+  document.getElementById("mediaController").classList.toggle("z-10");
   document.getElementById("queue").classList.toggle("z-10");
 }
-//toggles media controller visibility in mobile
+// toggles media controller visibility in mobile
 export function toggleFolders() {
-  document.getElementById('mediaController').classList.toggle('z-10');
+  document.getElementById("mediaController").classList.toggle("z-10");
   document.getElementById("sidebar").classList.toggle("z-10");
 }
 

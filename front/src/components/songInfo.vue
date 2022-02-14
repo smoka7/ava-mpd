@@ -57,6 +57,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import likeSong from "./likeSong.vue";
 import albumArt from "./albumArt.vue";
+import endpoints from "../endpoints.js";
 export default {
   components: {
     FontAwesomeIcon,
@@ -86,7 +87,7 @@ export default {
         command: "info",
         data: { start: this.song },
       };
-      let response = await fetch("/api/song", {
+      let response = await fetch(endpoints.song, {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",

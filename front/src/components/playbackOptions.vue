@@ -35,6 +35,7 @@
 </template>
 <script>
 import { sendCommand } from "../helpers.js";
+import endpoints from "../endpoints.js";
 export default {
   emits: ["updatesetting"],
   props: ["crossfade", "replayGain"],
@@ -51,12 +52,12 @@ export default {
         second = 0;
         this.crossfade = 0;
       }
-      sendCommand("/api/setting", "crossfade", { Start: second });
+      sendCommand(endpoints.setting, "crossfade", { Start: second });
       this.$emit("updatesetting");
     },
     setReplayGain() {
       let index = this.replayGainMods.indexOf(this.Gain);
-      sendCommand("/api/setting", "setGain", { Start: Number(index) });
+      sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
       this.$emit("updatesetting");
     },
   },

@@ -20,6 +20,7 @@
 </template>
 <script>
 import { sendCommand } from "../helpers.js";
+import endpoints from "../endpoints.js";
 export default {
   props: ["outputs"],
   emits: ["updatesetting"],
@@ -27,10 +28,10 @@ export default {
     toggleOutput(index) {
       let id = Number(this.outputs[index]["outputid"]);
       if (this.outputs[index]["outputenabled"] == 1) {
-        sendCommand("/api/setting", "disableOutput", { Start: id });
+        sendCommand(endpoints.setting, "disableOutput", { Start: id });
         return;
       }
-      sendCommand("/api/setting", "enableOutput", { Start: id });
+      sendCommand(endpoints.setting, "enableOutput", { Start: id });
       this.$emit("updatesetting");
     },
   },

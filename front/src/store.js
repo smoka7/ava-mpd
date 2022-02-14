@@ -1,4 +1,6 @@
 import { createStore } from "vuex";
+import { fetchOrFail } from "./helpers";
+import endpoints from "./endpoints";
 const store = createStore({
   state: {
     currentSong: {
@@ -42,33 +44,18 @@ const store = createStore({
   },
   actions: {
     async getCurrentSong(store) {
-      let response = await fetch("/api/status");
-      if (response.ok) {
-        let json = await response.json();
-        store.commit("setCurrentSong", json.CurrentSong);
-        store.commit("setStatus", json.Status);
-        store.commit("setAlbumArt", json.AlbumArt);
-        return;
-      }
-      console.log(response.error);
+      let response = await fetchOrFail(endpoints.status);
+      store.commit("setCurrentSong", response.CurrentSong);
+      store.commit("setStatus", response.Status);
+      store.commit("setAlbumArt", response.AlbumArt);
     },
     async getStoredPlaylist() {
-      let response = await fetch("/api/stored");
-      if (response.ok) {
-        let json = await response.json();
-        store.commit("setStoredPlaylist", json);
-        return;
-      }
-      console.log(response.error);
+      let response = await fetchOrFail(endpoints.storedPlaylists);
+      store.commit("setStoredPlaylist", response);
     },
     async getQueue() {
-      let response = await fetch("/api/queue");
-      if (response.ok) {
-        let json = await response.json();
-        store.commit("setQueue", json);
-        return;
-      }
-      console.log(response.error);
+      let response = await fetchOrFail(endpoints.queue);
+      store.commit("setQueue", response);
     },
     startCounter() {
       store.commit("setCounter");

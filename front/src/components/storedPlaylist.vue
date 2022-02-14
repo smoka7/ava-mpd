@@ -23,12 +23,16 @@
         <sidebar-button
           :label="'add ' + playlist.name"
           icon="plus"
-          @click="sendCommand('api/stored', 'add' + playlist.method)"
+          @click="
+            sendCommand(endpoints.storedPlaylists, 'add' + playlist.method)
+          "
         />
         <sidebar-button
           icon="play"
           :label="'play ' + playlist.name"
-          @click="sendCommand('api/stored', 'play' + playlist.method)"
+          @click="
+            sendCommand(endpoints.storedPlaylists, 'play' + playlist.method)
+          "
         />
       </span>
     </div>
@@ -95,6 +99,8 @@
 <script>
 import { humanizeTime, sendCommand } from "../helpers.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import endpoints from "../endpoints";
+import { shallowReactive } from "vue";
 import { mapState } from "vuex";
 import PlaylistMenu from "./playlistMenu.vue";
 import RenamePlaylist from "./renamePlaylist.vue";
@@ -138,7 +144,7 @@ export default {
           playlist: this.storedPlaylist[index].playlist,
         },
       };
-      let response = await fetch("/api/stored", {
+      let response = await fetch(endpoints.storedPlaylists, {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -161,7 +167,7 @@ export default {
           let data = {
             playlist: p.playlist,
           };
-          sendCommand("api/stored", method, data);
+          sendCommand(endpoints.storedPlaylists, method, data);
         }
       });
       this.$store.dispatch("getStoredPlaylist");
@@ -186,7 +192,7 @@ export default {
   },
   computed: {
     ...mapState({
-      storedPlaylist: (state) => state.storedPlaylist,
+      storedPlaylist: (state) => shallowReactive(state.storedPlaylist),
     }),
   },
 };

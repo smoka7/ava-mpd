@@ -37,6 +37,7 @@
 <script>
 import { shallowReactive } from "vue";
 import { sendCommand, getFolders } from "../helpers.js";
+import endpoints from "../endpoints.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
 export default {
@@ -69,7 +70,7 @@ export default {
       let data = {
         playlist: this.data.Directory || this.data.File,
       };
-      sendCommand("api/folders", command, data);
+      sendCommand(endpoints.folders, command, data);
     },
   },
   computed: {

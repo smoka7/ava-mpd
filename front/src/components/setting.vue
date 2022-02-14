@@ -33,6 +33,7 @@ import DatabaseInfo from "./databaseInfo.vue";
 import Outputs from "./outputs.vue";
 import PlaybackOptions from "./playbackOptions.vue";
 import ThemeSettings from "./themeSettings.vue";
+import endpoints from "../endpoints.js";
 export default {
   components: {
     FontAwesomeIcon,
@@ -52,7 +53,7 @@ export default {
   },
   methods: {
     async getSettings() {
-      let response = await fetch("/api/setting");
+      let response = await fetch(endpoints.setting);
       if (response.ok) {
         let json = await response.json();
         this.outputs = json.Outputs;
