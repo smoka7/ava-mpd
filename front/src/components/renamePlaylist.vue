@@ -10,13 +10,11 @@
 </template>
 <script>
 import TextInput from "./textInput.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
 export default {
   props: ["rename"],
   components: {
-    FontAwesomeIcon,
     TextInput,
   },
   data() {
@@ -26,7 +24,7 @@ export default {
   },
   methods: {
     renamePlaylist(name) {
-      sendCommand(endpoints.storedPlaylist, "rename", {
+      sendCommand(endpoints.storedPlaylists, "rename", {
         playlist: this.rename,
         song: name,
       });

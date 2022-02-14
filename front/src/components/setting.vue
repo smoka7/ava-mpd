@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-lightest/60 z-30 flex h-full w-full flex-col space-y-4 overflow-y-auto rounded p-4 backdrop-blur-3xl dark:text-white md:flex-row md:flex-wrap md:space-x-8"
+    class="z-30 flex h-full w-full flex-col space-y-4 overflow-y-auto rounded bg-lightest/60 p-4 backdrop-blur-3xl dark:text-white md:flex-row md:flex-wrap md:space-x-8"
   >
     <button
       aria-label="close-setting"
@@ -34,6 +34,7 @@ import Outputs from "./outputs.vue";
 import PlaybackOptions from "./playbackOptions.vue";
 import ThemeSettings from "./themeSettings.vue";
 import endpoints from "../endpoints.js";
+import { fetchOrFail } from "../helpers.js";
 export default {
   components: {
     FontAwesomeIcon,
@@ -53,15 +54,10 @@ export default {
   },
   methods: {
     async getSettings() {
-      let response = await fetch(endpoints.setting);
-      if (response.ok) {
-        let json = await response.json();
-        this.outputs = json.Outputs;
-        this.databaseStats = json.DatabaseStats;
-        this.replayGain = json.ReplayGain.replay_gain_mode;
-        return;
-      }
-      console.log(response.error);
+      const response = await fetchOrFail(endpoints.setting);
+        this.outputs = response.Outputs;
+        this.databaseStats = response.DatabaseStats;
+        this.replayGain = response.ReplayGain.replay_gain_mode;
     },
   },
   async created() {

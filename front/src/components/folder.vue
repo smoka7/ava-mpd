@@ -67,7 +67,7 @@ export default {
       this.folders = await getFolders(this.data.Directory);
     },
     FolderCommand(command) {
-      let data = {
+      const data = {
         playlist: this.data.Directory || this.data.File,
       };
       sendCommand(endpoints.folders, command, data);
@@ -75,8 +75,8 @@ export default {
   },
   computed: {
     folderName() {
-      let name = this.data.Directory || this.data.File;
-      let index = name.lastIndexOf("/");
+      const name = this.data.Directory || this.data.File;
+      const index = name.lastIndexOf("/");
       if (index > -1) return name.substring(index + 1);
       return name;
     },

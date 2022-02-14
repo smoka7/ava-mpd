@@ -1,15 +1,15 @@
 <template>
   <div
-    class="grid-rows-8 bg-primary grid grid-cols-1 p-4 text-white md:static md:grid-cols-12 md:grid-rows-3 md:rounded"
+    class="grid-rows-8 grid grid-cols-1 bg-primary p-4 text-white md:static md:grid-cols-12 md:grid-rows-3 md:rounded"
     id="mediaController"
   >
     <div
-      class="row-end-9 text-lightest row-start-7 flex h-28 w-full justify-center space-x-10 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 md:h-auto md:w-auto md:space-x-6"
+      class="row-end-9 row-start-7 flex h-28 w-full justify-center space-x-10 text-lightest md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 md:h-auto md:w-auto md:space-x-6"
     >
       <button
         aria-label="previous-song"
         @click="playbackCommand('previous')"
-        class="hover:text-accent scale-110 md:scale-75"
+        class="scale-110 hover:text-accent md:scale-75"
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
@@ -19,7 +19,7 @@
         @click="playbackCommand('toggle')"
         :class="[
           status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-          'hover:text-primary flex aspect-square items-center justify-center rounded-full text-white',
+          'flex aspect-square items-center justify-center rounded-full text-white hover:text-primary',
         ]"
       >
         <font-awesome-icon
@@ -30,14 +30,14 @@
       <button
         aria-label="stop-song"
         @click="playbackCommand('stop')"
-        class="hover:text-accent scale-110 md:scale-75"
+        class="scale-110 hover:text-accent md:scale-75"
       >
         <font-awesome-icon icon="stop" size="2x" />
       </button>
       <button
         aria-label="next-song"
         @click="playbackCommand('next')"
-        class="hover:text-accent scale-110 md:scale-75"
+        class="scale-110 hover:text-accent md:scale-75"
       >
         <font-awesome-icon icon="step-forward" size="2x" />
       </button>
@@ -97,7 +97,7 @@
           :class="[
             btnClass.noramal,
             btnClass.base,
-            'text-primary rounded-full bg-white p-2 md:hidden',
+            'rounded-full bg-white p-2 text-primary md:hidden',
           ]"
         >
           <font-awesome-icon icon="list-ul" size="lg" />
@@ -108,7 +108,7 @@
           :class="[
             btnClass.noramal,
             btnClass.base,
-            'text-primary rounded-full bg-white p-2 md:hidden',
+            'rounded-full bg-white p-2 text-primary md:hidden',
           ]"
         >
           <font-awesome-icon icon="folder" size="lg" />
@@ -171,7 +171,7 @@ export default {
   emits: ["openSetting"],
   setup() {
     const store = useStore();
-    let playbackCommands = reactive([
+    const playbackCommands = reactive([
       {
         command: "consume",
         icon: "minus-square",
@@ -218,8 +218,8 @@ export default {
   },
   computed: {
     ...mapState({
-            albumArt: (state) => state.albumArt,
-            liked: (state) => state.currentSong.Liked,
+      albumArt: (state) => state.albumArt,
+      liked: (state) => state.currentSong.Liked,
       currentSong: (state) => shallowReactive(state.currentSong.Info),
       status: (state) => shallowReactive(state.status),
     }),

@@ -4,20 +4,20 @@
   >
     <div
       v-if="queue.Length == 0"
-      class="decoration-accent flex h-full w-full items-center justify-center p-4 text-9xl underline"
+      class="flex h-full w-full items-center justify-center p-4 text-9xl underline decoration-accent"
     >
       Queue is empty!
     </div>
     <div
       v-if="!songInfo && queue.Length != 0"
-      class="text-primary bg-secondary absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
+      class="absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 bg-secondary px-4 text-base text-primary md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
         aria-label="goto-current-song"
         @click="ScrollToCurrentSong()"
-        class="hover:text-secondary hover:bg-primary px-2"
+        class="px-2 hover:bg-primary hover:text-secondary"
       >
         <font-awesome-icon icon="compact-disc" />
         Current Song
@@ -25,7 +25,7 @@
       <button
         aria-label="close-playlist"
         @click="closePlaylist"
-        class="hover:text-secondary hover:bg-primary px-2 md:hidden"
+        class="px-2 hover:bg-primary hover:text-secondary md:hidden"
       >
         <font-awesome-icon icon="times" size="2x" />
       </button>
@@ -81,7 +81,7 @@ export default {
     closePlaylist: toggleMediaController,
     showMenu(pos, e) {
       this.selected = Number(pos);
-      let el = document.getElementById("context-menu");
+      const el = document.getElementById("context-menu");
       el.style.top = e.pageY + "px";
       this.menu = true;
     },
@@ -89,13 +89,13 @@ export default {
       this.menu = false;
     },
     ChangeCurrentSongTo(id) {
-      let el = document.getElementById("song" + id);
+      const el = document.getElementById("song" + id);
       if (el !== null) {
         el.id = "currentSong";
       }
     },
     ScrollToCurrentSong() {
-      let el = document.getElementById("currentSong");
+      const el = document.getElementById("currentSong");
       if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
     },
     currentAlbum(album) {
@@ -114,8 +114,8 @@ export default {
   },
   watch: {
     currentSongPos: function (newSong, oldSong) {
-      let oldId = "song" + oldSong;
-      let el = document.getElementById("currentSong");
+      const oldId = "song" + oldSong;
+      const el = document.getElementById("currentSong");
       if (el) el.id = oldId;
       this.ChangeCurrentSongTo(newSong);
       this.ScrollToCurrentSong();
@@ -125,6 +125,6 @@ export default {
 </script>
 <style>
 #currentSong {
-  @apply dark:text-primary bg-red-300 !important;
+  @apply bg-red-300 dark:text-primary !important;
 }
 </style>

@@ -5,11 +5,11 @@
       <Switch
         isDark
         v-model="isDark"
-        class="bg-lightest relative inline-flex h-10 w-16 items-center rounded shadow-inner md:h-7 md:w-14"
+        class="relative inline-flex h-10 w-16 items-center rounded bg-lightest shadow-inner md:h-7 md:w-14"
       >
         <span class="sr-only">Enable Dark Mode</span>
         <span
-          class="bg-primary inline-block h-8 w-8 translate-x-1 transform rounded duration-300 dark:translate-x-7 md:h-5 md:w-6"
+          class="inline-block h-8 w-8 translate-x-1 transform rounded bg-primary duration-300 dark:translate-x-7 md:h-5 md:w-6"
           isDark
         />
       </Switch>
@@ -20,7 +20,7 @@
         <RadioGroupOption v-slot="{ checked }" :value="index">
           <div
             :class="[
-              { 'text-primary rounded bg-blue-200': checked },
+              { 'rounded bg-blue-200 text-primary': checked },
               'flex cursor-pointer flex-col space-y-2 p-2 duration-200',
             ]"
           >
@@ -28,7 +28,7 @@
               <RadioGroupLabel>{{ index }}</RadioGroupLabel>
               <font-awesome-icon
                 v-show="checked"
-                class="text-primary ml-auto"
+                class="ml-auto text-primary"
                 icon="check-circle"
               ></font-awesome-icon>
             </div>

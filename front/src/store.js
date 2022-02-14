@@ -44,17 +44,17 @@ const store = createStore({
   },
   actions: {
     async getCurrentSong(store) {
-      let response = await fetchOrFail(endpoints.status);
+      const response = await fetchOrFail(endpoints.status);
       store.commit("setCurrentSong", response.CurrentSong);
       store.commit("setStatus", response.Status);
       store.commit("setAlbumArt", response.AlbumArt);
     },
     async getStoredPlaylist() {
-      let response = await fetchOrFail(endpoints.storedPlaylists);
+      const response = await fetchOrFail(endpoints.storedPlaylists);
       store.commit("setStoredPlaylist", response);
     },
     async getQueue() {
-      let response = await fetchOrFail(endpoints.queue);
+      const response = await fetchOrFail(endpoints.queue);
       store.commit("setQueue", response);
     },
     startCounter() {

@@ -111,16 +111,16 @@ export default {
         this.files = [];
         return;
       }
-      let response = await this.command("search", this.term);
+      const response = await this.command("search", this.term);
       if (response.ok) {
-        let json = await response.json();
+        const json = await response.json();
         if (this.files.length) this.files = [];
         this.files = json.Songs;
         return;
       }
     },
     async command(cm, title) {
-      let request = {
+      const request = {
         terms: [this.tag, title],
         command: cm,
       };

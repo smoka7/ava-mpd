@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     deleteSong(end = -1) {
-      let data = {
+      const data = {
         Start: this.song,
         End: Number(end),
       };

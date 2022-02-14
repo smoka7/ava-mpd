@@ -23,8 +23,8 @@ export default {
       this.$refs.progress.removeEventListener("mousemove", this.seek);
     },
     seek(e) {
-      let percent = e.offsetX / this.$refs.progress.offsetWidth;
-      let seek = Math.floor(percent * this.data.max);
+      const percent = e.offsetX / this.$refs.progress.offsetWidth;
+      const seek = Math.floor(percent * this.data.max);
       this.$emit("seek", seek);
     },
   },

@@ -36,7 +36,7 @@ export function writeColors(colors = colorSchemes.first) {
 }
 
 export function setColorScheme() {
-  let scheme = localStorage.getItem("colorScheme");
+  const scheme = localStorage.getItem("colorScheme");
   switch (scheme) {
     case "second":
       writeColors(colorSchemes.second);

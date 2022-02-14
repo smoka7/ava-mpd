@@ -56,7 +56,7 @@ export default {
       this.$emit("updatesetting");
     },
     setReplayGain() {
-      let index = this.replayGainMods.indexOf(this.Gain);
+      const index = this.replayGainMods.indexOf(this.Gain);
       sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
       this.$emit("updatesetting");
     },

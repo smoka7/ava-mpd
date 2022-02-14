@@ -76,7 +76,7 @@ export default {
   methods: {
     humanizeTime: humanizeTime,
     play(id) {
-      let data = {
+      const data = {
         Start: Number(id),
       };
       sendCommand(endpoints.queue, "play", data);
@@ -91,7 +91,7 @@ export default {
     },
     moveSong(event, position) {
       const start = event.dataTransfer.getData("position");
-      let data = {
+      const data = {
         Start: Number(start),
         Finish: Number(position),
       };

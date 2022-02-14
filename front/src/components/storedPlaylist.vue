@@ -13,7 +13,7 @@
     <div
       v-for="playlist in playlists"
       :key="playlist.name"
-      class="text-primary group mx-2 flex items-center justify-between rounded p-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
+      class="group mx-2 flex items-center justify-between rounded p-2 text-primary hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
     >
       <span>
         <font-awesome-icon :icon="['fas', playlist.icon]" />
@@ -78,7 +78,7 @@
         </span>
       </summary>
       <div
-        class="divide-primary border-primary ml-4 flex flex-col divide-y border-l-2 dark:divide-gray-400"
+        class="ml-4 flex flex-col divide-y divide-primary border-l-2 border-primary dark:divide-gray-400"
       >
         <p
           class="px-2 dark:text-white"
@@ -138,13 +138,13 @@ export default {
         this.storedPlaylist[index].songs = [];
         return;
       }
-      let request = {
+      const request = {
         command: "list",
         data: {
           playlist: this.storedPlaylist[index].playlist,
         },
       };
-      let response = await fetch(endpoints.storedPlaylists, {
+      const response = await fetch(endpoints.storedPlaylists, {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -152,7 +152,7 @@ export default {
         body: JSON.stringify(request),
       });
       if (response.ok) {
-        let json = await response.json();
+        const json = await response.json();
         this.storedPlaylist[index].songs = json;
         return;
       }
@@ -164,7 +164,7 @@ export default {
       }
       this.storedPlaylist.forEach((p) => {
         if (p.selected) {
-          let data = {
+          const data = {
             playlist: p.playlist,
           };
           sendCommand(endpoints.storedPlaylists, method, data);
@@ -186,7 +186,7 @@ export default {
         !this.storedPlaylist[index].selected;
     },
     animate(id) {
-      let el = document.getElementById("icon-" + id);
+      const el = document.getElementById("icon-" + id);
       if (el) el.classList.toggle("rotate-90");
     },
   },

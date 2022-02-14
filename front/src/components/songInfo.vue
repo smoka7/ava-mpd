@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     isItLiked() {
-      let index = this.stickers.findIndex((stick) => {
+      const index = this.stickers.findIndex((stick) => {
         if (stick.Name == "liked" && stick.Value == "true") return true;
       });
       if (index > -1) {
@@ -83,11 +83,11 @@ export default {
       }
     },
     async getInfo() {
-      let request = {
+      const request = {
         command: "info",
         data: { start: this.song },
       };
-      let response = await fetch(endpoints.song, {
+      const response = await fetch(endpoints.song, {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -95,7 +95,7 @@ export default {
         body: JSON.stringify(request),
       });
       if (response.ok) {
-        let song = await response.json();
+        const song = await response.json();
         this.info = song.Info;
         this.stickers = song.Stickers;
         this.albumArt = song.AlbumArt;
