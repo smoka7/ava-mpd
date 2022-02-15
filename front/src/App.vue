@@ -48,10 +48,14 @@ export default {
       toggleMediaController();
     },
     connectToSocket() {
-      let hostname = new URL(window.location.href).host;
-      let socket = new WebSocket("ws://" + hostname + "/update");
+      const hostname = new URL(window.location.href).host;
+      const socket = new WebSocket("ws://" + hostname + "/update");
       socket.onmessage = () => {
         this.updatePlayer();
+      };
+      socket.onerror = (err) => {
+        alert("connection to server failed");
+        console.log(err);
       };
     },
   },
