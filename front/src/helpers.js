@@ -1,4 +1,3 @@
-import endpoints from "./endpoints";
 /**
  * @param {string} url
  */
@@ -37,34 +36,14 @@ export async function sendCommand(url, command, data) {
   });
   if (response.ok) {
     clearTimeout(timeoutId);
-    return;
+    try {
+      const res = await response.json();
+      return res;
+    } catch (error) {
+      return;
+    }
   }
   console.log(response.error);
-}
-/**
- * @param {string} directory
- * @return {object}
- */
-export async function getFolders(directory) {
-  const request = {
-    command: "list",
-    data: {
-      playlist: directory,
-    },
-  };
-  const response = await fetch(endpoints.folders, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify(request),
-  });
-  if (response.ok) {
-    const json = await response.json();
-    return [...json.Folders, ...json.Files];
-  }
-  console.log(response.error);
-  return [];
 }
 
 /**

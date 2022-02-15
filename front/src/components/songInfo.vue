@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-lightest absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll p-8"
+    class="absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll bg-lightest p-8"
   >
     <div class="flex flex-row items-center justify-between">
       <h1
@@ -58,6 +58,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import likeSong from "./likeSong.vue";
 import albumArt from "./albumArt.vue";
 import endpoints from "../endpoints.js";
+import { sendCommand } from "../helpers";
 export default {
   components: {
     FontAwesomeIcon,
@@ -83,24 +84,14 @@ export default {
       }
     },
     async getInfo() {
-      const request = {
-        command: "info",
-        data: { start: this.song },
-      };
-      const response = await fetch(endpoints.song, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify(request),
+      
+      const song = await sendCommand(endpoints.song, "info", {
+        start: this.song,
       });
-      if (response.ok) {
-        const song = await response.json();
-        this.info = song.Info;
-        this.stickers = song.Stickers;
-        this.albumArt = song.AlbumArt;
-        this.isItLiked();
-      }
+      this.info = song.Info;
+      this.stickers = song.Stickers;
+      this.albumArt = song.AlbumArt;
+      this.isItLiked();
     },
   },
   async mounted() {

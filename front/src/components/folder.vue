@@ -21,7 +21,7 @@
     </summary>
     <transition name="fade">
       <div
-        class="border-primary dark:border-lightest m-1 flex flex-col border-l-2"
+        class="m-1 flex flex-col border-l-2 border-primary dark:border-lightest"
         v-if="opened"
       >
         <Folder
@@ -36,7 +36,7 @@
 </template>
 <script>
 import { shallowReactive } from "vue";
-import { sendCommand, getFolders } from "../helpers.js";
+import { sendCommand} from "../helpers.js";
 import endpoints from "../endpoints.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
@@ -64,7 +64,10 @@ export default {
         return;
       }
       this.opened = true;
-      this.folders = await getFolders(this.data.Directory);
+      const response = await sendCommand(endpoints.folders, "list", {
+        playlist: this.data.Directory,
+      });
+      this.folders = [...response.Folders, ...response.Files];
     },
     FolderCommand(command) {
       const data = {

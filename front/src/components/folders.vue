@@ -4,7 +4,8 @@
   </div>
 </template>
 <script>
-import { getFolders } from "../helpers";
+import endpoints from "../endpoints";
+import { sendCommand } from "../helpers";
 import { shallowReactive } from "vue";
 import Folder from "./folder.vue";
 export default {
@@ -17,7 +18,10 @@ export default {
     };
   },
   async created() {
-    this.folders = await getFolders("");
+    const resp = await sendCommand(endpoints.folders, "list", {
+      playlist: "",
+    });
+    this.folders = [...resp.Folders, ...resp.Files];
   },
 };
 </script>

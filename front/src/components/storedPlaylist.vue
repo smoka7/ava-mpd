@@ -138,25 +138,11 @@ export default {
         this.storedPlaylist[index].songs = [];
         return;
       }
-      const request = {
-        command: "list",
-        data: {
-          playlist: this.storedPlaylist[index].playlist,
-        },
-      };
-      const response = await fetch(endpoints.storedPlaylists, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify(request),
-      });
-      if (response.ok) {
-        const json = await response.json();
-        this.storedPlaylist[index].songs = json;
-        return;
-      }
-      console.log(response.error);
+      this.storedPlaylist[index].songs = await sendCommand(
+        endpoints.storedPlaylists,
+        "list",
+        {playlist: this.storedPlaylist[index].playlist,}
+      );
     },
     PlCommand(method, index) {
       if (index != null) {
