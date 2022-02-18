@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-primary bg-gradian flex h-screen w-screen flex-col overflow-hidden text-lg duration-300 dark:text-white md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 md:p-1"
+    class="from-lightest to-accent via-lighter text-primary flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br text-lg duration-300 dark:text-white md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 md:p-1"
   >
     <sidebar
       id="sidebar"
@@ -47,37 +47,18 @@ export default {
       this.settingIsOpen = !this.settingIsOpen;
       toggleMediaController();
     },
-    connectToSocket() {
-      const hostname = new URL(window.location.href).host;
-      const socket = new WebSocket("ws://" + hostname + "/update");
-      socket.onmessage = () => {
-        this.updatePlayer();
-      };
-      socket.onerror = (err) => {
-        alert("connection to server failed");
-        console.log(err);
-      };
-    },
   },
   created() {
+    this.$store.dispatch("connectToSocket");
     this.$store.dispatch("getCurrentSong");
     this.$store.dispatch("startCounter");
   },
   mounted() {
-    this.connectToSocket();
     setColorScheme();
   },
 };
 </script>
 <style>
-.bg-gradian {
-  background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
-    linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
-    linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
-    radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
-    radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
-  background-blend-mode: screen, color-dodge, overlay, difference, normal;
-}
 .tooltip {
   @apply relative inline-block;
 }

@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-center text-3xl">Database stats</h2>
-  <ul class="-mx-4 mt-2">
+  <ul class="-mx-4 mt-2" v-if="stats['songs']">
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       songs : <span>{{ stats["songs"] }}</span>
     </li>
@@ -21,16 +21,16 @@
       Play time : <span>{{ humanizeTime(stats["playtime"]) }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      UP time : <span>{{ humanizeTime(stats["uptime"]) }}</span>
+      Up time : <span>{{ humanizeTime(stats["uptime"]) }}</span>
     </li>
   </ul>
-  <div>
+  <div class="flex flex-col">
     <button
       aria-label="update-database"
       class="my-2 rounded border-2 border-green-500 p-2 text-green-500 hover:bg-green-500 hover:text-white"
       @click="updateDatabase"
     >
-      <font-awesome-icon icon="database"></font-awesome-icon> Update the MPD
+      <font-awesome-icon icon="database"/> Update the MPD
       database
     </button>
     <button
@@ -38,7 +38,7 @@
       class="my-2 rounded border-2 border-red-500 p-2 text-red-500 hover:bg-red-500 hover:text-white"
       @click="deleteCache"
     >
-      <font-awesome-icon icon="eraser"></font-awesome-icon> Delete the Cover Art
+      <font-awesome-icon icon="eraser"/> Delete the Cover Art
       cache
     </button>
   </div>

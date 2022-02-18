@@ -4,20 +4,20 @@
   >
     <div
       v-if="queue.Length == 0"
-      class="flex h-full w-full items-center justify-center p-4 text-9xl underline decoration-accent"
+      class="decoration-accent flex h-full w-full items-center justify-center p-4 text-7xl underline md:text-9xl"
     >
-      Queue is empty!
+      {{ message }}
     </div>
     <div
-      v-if="!songInfo && queue.Length != 0"
-      class="absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 bg-secondary px-4 text-base text-primary md:h-6 md:text-sm"
+      v-if="!songInfo"
+      class="bg-secondary text-primary absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
         aria-label="goto-current-song"
         @click="ScrollToCurrentSong()"
-        class="px-2 hover:bg-primary hover:text-secondary"
+        class="hover:bg-primary hover:text-secondary px-2"
       >
         <font-awesome-icon icon="compact-disc" />
         Current Song
@@ -25,7 +25,7 @@
       <button
         aria-label="close-playlist"
         @click="closePlaylist"
-        class="px-2 hover:bg-primary hover:text-secondary md:hidden"
+        class="hover:bg-primary hover:text-secondary px-2 md:hidden"
       >
         <font-awesome-icon icon="times" size="2x" />
       </button>
@@ -110,6 +110,14 @@ export default {
     ...mapState({
       queue: (state) => shallowReactive(state.queue),
       currentSongPos: (state) => state.currentSong.Info.Pos,
+      message: (state) => {
+        if (!state.connected) {
+          return "Couldn't Connect to server!!";
+        }
+        if (state.queue.Length == 0) {
+          return "Queue is empty!";
+        }
+      },
     }),
   },
   watch: {
@@ -125,6 +133,6 @@ export default {
 </script>
 <style>
 #currentSong {
-  @apply bg-red-300 dark:text-primary !important;
+  @apply dark:text-primary bg-red-300 !important;
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div @click.self="zoom" class="bg-gradian rounded">
+  <div
+    @click.self="zoom"
+    class="from-lightest to-accent via-lighter rounded bg-gradient-to-br"
+  >
     <img
       v-if="!defaultAlbumArt"
       @click="zoom"

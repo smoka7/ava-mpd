@@ -3,6 +3,7 @@ import { fetchOrFail } from "./helpers";
 import endpoints from "./endpoints";
 const store = createStore({
   state: {
+    connected: true,
     currentSong: {
       Info: {},
       Liked: false,
@@ -33,6 +34,9 @@ const store = createStore({
     setAlbumArt(state, albumArt) {
       state.albumArt = albumArt;
     },
+    setConnected(state, connected) {
+      state.connected = connected;
+    },
     setCounter(state) {
       clearInterval(state.durationInterval);
       state.durationInterval = setInterval(() => {
@@ -59,6 +63,18 @@ const store = createStore({
     },
     startCounter() {
       store.commit("setCounter");
+    },
+    connectToSocket() {
+      const hostname = new URL(window.location.href).host;
+      const socket = new WebSocket("ws://" + hostname + "/update");
+      socket.onmessage = (msg) => {
+        this.updatePlayer();
+        console.log(msg);
+      };
+      socket.onerror = (err) => {
+        store.commit("setConnected", false);
+        console.log(err);
+      };
     },
   },
 });
