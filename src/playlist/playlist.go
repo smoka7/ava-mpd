@@ -222,6 +222,32 @@ func GetSongFile(c *config.Connection, pos int) string {
 	return song[0]["file"]
 }
 
+// shuffles an album given the position of the song in queue
+func ShuffleAlbum(c *config.Connection, pos int) {
+	queue, err := c.Client.PlaylistInfo(-1, -1)
+	if err != nil {
+		config.Log(err)
+		return
+	}
+
+	lastSongIndex := pos
+	for ; lastSongIndex < len(queue); lastSongIndex++ {
+		if queue[lastSongIndex]["Album"] != queue[pos]["Album"] {
+			break
+		}
+	}
+
+	firstSongIndex := pos
+	for ; firstSongIndex >= 0; firstSongIndex-- {
+		if queue[firstSongIndex]["Album"] != queue[pos]["Album"] {
+			break
+		}
+	}
+
+	err = c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
+	config.Log(err)
+}
+
 // filter album info
 func (q *Queue) newAlbum(song mpd.Attrs) {
 	album := Album{

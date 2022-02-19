@@ -48,6 +48,7 @@ export default {
       actions: [
         { title: "delete", func: this.deleteSong },
         { title: "info", func: this.showInfo },
+        { title: "shuffle Album", func: this.shuffleAlbum },
         { title: "remove duplicate songs", func: this.removeDuplicate },
       ],
       btnClass:
@@ -67,6 +68,12 @@ export default {
       sendCommand(endpoints.queue, "addsong", {
         Start: this.song,
         playlist: playlist,
+      });
+      this.$emit("close");
+    },
+    shuffleAlbum() {
+      sendCommand(endpoints.queue, "shuffleAlbum", {
+        Start: this.song,
       });
       this.$emit("close");
     },
