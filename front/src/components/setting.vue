@@ -12,17 +12,17 @@
     <div class="card-class">
       <theme-settings />
     </div>
-    <div class="card-class">
+    <div class="card-class" v-if="connected">
       <database-info :stats="databaseStats" />
     </div>
-    <div class="card-class">
+    <div class="card-class" v-if="connected">
       <playback-options
         :crossfade="crossfade"
         :replayGain="replayGain"
         @updatesetting="getSettings()"
       />
     </div>
-    <div class="card-class">
+    <div v-if="connected" class="card-class">
       <outputs :outputs="outputs" @updatesetting="getSettings()" />
     </div>
   </div>
@@ -35,6 +35,7 @@ import PlaybackOptions from "./playbackOptions.vue";
 import ThemeSettings from "./themeSettings.vue";
 import endpoints from "../endpoints.js";
 import { fetchOrFail } from "../helpers.js";
+import { mapState } from "vuex";
 export default {
   components: {
     FontAwesomeIcon,
@@ -63,6 +64,9 @@ export default {
   async created() {
     this.crossfade = Number(this.$store.state.status.xfade || 0);
     await this.getSettings();
+  },
+  computed: {
+    connected: mapState("connected"),
   },
 };
 </script>
