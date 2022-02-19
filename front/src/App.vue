@@ -39,10 +39,6 @@ export default {
     };
   },
   methods: {
-    updatePlayer() {
-      this.$store.dispatch("getCurrentSong");
-      this.$store.dispatch("getQueue");
-    },
     toggleSetting() {
       this.settingIsOpen = !this.settingIsOpen;
       toggleMediaController();

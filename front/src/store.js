@@ -67,9 +67,9 @@ const store = createStore({
     connectToSocket() {
       const hostname = new URL(window.location.href).host;
       const socket = new WebSocket("ws://" + hostname + "/update");
-      socket.onmessage = (msg) => {
-        this.updatePlayer();
-        console.log(msg);
+      socket.onmessage = () => {
+        store.dispatch("getCurrentSong");
+        store.dispatch("getQueue");
       };
       socket.onerror = (err) => {
         store.commit("setConnected", false);
