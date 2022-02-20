@@ -13,62 +13,30 @@
       <theme-settings />
     </div>
     <div class="card-class" v-if="connected">
-      <database-info :stats="databaseStats" />
+      <database-info />
     </div>
     <div class="card-class" v-if="connected">
-      <playback-options
-        :crossfade="crossfade"
-        :replayGain="replayGain"
-        @updatesetting="getSettings()"
-      />
+      <playback-options/>
     </div>
     <div v-if="connected" class="card-class">
-      <outputs :outputs="outputs" @updatesetting="getSettings()" />
+      <outputs />
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import DatabaseInfo from "./databaseInfo.vue";
 import Outputs from "./outputs.vue";
 import PlaybackOptions from "./playbackOptions.vue";
 import ThemeSettings from "./themeSettings.vue";
-import endpoints from "../endpoints.js";
-import { fetchOrFail } from "../helpers.js";
-import { mapState } from "vuex";
-export default {
-  components: {
-    FontAwesomeIcon,
-    DatabaseInfo,
-    ThemeSettings,
-    Outputs,
-    PlaybackOptions,
-  },
-  emits: ["close"],
-  data() {
-    return {
-      databaseStats: [],
-      outputs: [],
-      crossfade: 0,
-      replayGain: "off",
-    };
-  },
-  methods: {
-    async getSettings() {
-      const response = await fetchOrFail(endpoints.setting);
-        this.outputs = response.Outputs;
-        this.databaseStats = response.DatabaseStats;
-        this.replayGain = response.ReplayGain.replay_gain_mode;
-    },
-  },
-  async created() {
-    this.crossfade = Number(this.$store.state.status.xfade || 0);
-    await this.getSettings();
-  },
-  computed: {
-    connected: mapState("connected"),
-  },
-};
+import { useStore } from "vuex";
+import { computed } from "vue";
+
+const emit = defineEmits(["close"]);
+const store=useStore();
+const connected= computed(()=>store.state.connected);
+
+store.dispatch("getSettings");
 </script>
 <style>
 .card-class {

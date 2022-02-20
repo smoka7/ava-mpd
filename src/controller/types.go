@@ -48,7 +48,7 @@ type SongInfoResponse struct {
 type SettingsResponse struct {
 	Outputs       []mpd.Attrs
 	DatabaseStats mpd.Attrs
-	ReplayGain    mpd.Attrs
+	ReplayGain    string
 }
 
 var err error

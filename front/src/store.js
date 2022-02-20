@@ -17,6 +17,18 @@ const store = createStore({
       Length: 0,
       Duration: 0,
     },
+    settings: {
+      Outputs: {},
+      DatabaseStats: {
+        albums: "",
+        artists: "",
+        db_playtime: "",
+        db_update: "",
+        playtime: "",
+        songs: "",
+        uptime: "",
+      },
+    },
   },
   mutations: {
     setCurrentSong(state, song) {
@@ -36,6 +48,9 @@ const store = createStore({
     },
     setConnected(state, connected) {
       state.connected = connected;
+    },
+    setSettings(state, settings) {
+      state.settings = settings;
     },
     setCounter(state) {
       clearInterval(state.durationInterval);
@@ -75,6 +90,10 @@ const store = createStore({
         store.commit("setConnected", false);
         console.log(err);
       };
+    },
+    async getSettings() {
+      const response = await fetchOrFail(endpoints.setting);
+      store.commit("setSettings", response);
     },
   },
 });

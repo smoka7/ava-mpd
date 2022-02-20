@@ -2,26 +2,26 @@
   <h2 class="text-center text-3xl">Database stats</h2>
   <ul class="-mx-4 mt-2">
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      songs : <span>{{ stats["songs"] }}</span>
+      songs : <span>{{ stats.songs }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      albums : <span>{{ stats["albums"] }}</span>
+      albums : <span>{{ stats.albums }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      artists : <span>{{ stats["artists"] }}</span>
+      artists : <span>{{ stats.artists }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       Database play time:
-      <span>{{ humanizeTime(stats["db_playtime"]) }}</span>
+      <span>{{ humanizeTime(stats.db_playtime) }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      <span>{{ new Date(stats["db_update"] * 1000).toString() }}</span>
+      <span>{{ new Date(stats.db_update * 1000).toString() }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      Play time : <span>{{ humanizeTime(stats["playtime"]) }}</span>
+      Play time : <span>{{ humanizeTime(stats.playtime) }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
-      Up time : <span>{{ humanizeTime(stats["uptime"]) }}</span>
+      Up time : <span>{{ humanizeTime(stats.uptime) }}</span>
     </li>
   </ul>
   <div class="flex flex-col">
@@ -43,23 +43,21 @@
     </button>
   </div>
 </template>
-<script>
+<script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand, humanizeTime } from "../helpers.js";
 import endpoints from "../endpoints.js";
-export default {
-  props: ["stats"],
-  components: {
-    FontAwesomeIcon,
-  },
-  methods: {
-    updateDatabase() {
-      sendCommand(endpoints.setting, "updateDatabase");
-    },
-    deleteCache() {
-      sendCommand(endpoints.setting, "deleteCache");
-    },
-    humanizeTime: humanizeTime,
-  },
-};
+import { useStore } from "vuex";
+import { computed } from "vue";
+
+const stats=computed(()=>useStore().state.settings.DatabaseStats);
+
+function updateDatabase() {
+  sendCommand(endpoints.setting, "updateDatabase");
+}
+
+function deleteCache() {
+  sendCommand(endpoints.setting, "deleteCache");
+}
+
 </script>

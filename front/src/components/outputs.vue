@@ -18,22 +18,21 @@
     </label>
   </div>
 </template>
-<script>
+<script setup>
 import { sendCommand } from "../helpers.js";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import endpoints from "../endpoints.js";
-export default {
-  props: ["outputs"],
-  emits: ["updatesetting"],
-  methods: {
-    toggleOutput(index) {
-      let id = Number(this.outputs[index]["outputid"]);
-      if (this.outputs[index]["outputenabled"] == 1) {
-        sendCommand(endpoints.setting, "disableOutput", { Start: id });
-        return;
-      }
-      sendCommand(endpoints.setting, "enableOutput", { Start: id });
-      this.$emit("updatesetting");
-    },
-  },
-};
+
+const outputs=computed(()=>useStore().state.settings.Outputs);
+
+
+function toggleOutput(index) {
+  const id = Number(outputs[index]["outputid"]);
+  if (outputs[index]["outputenabled"] == 1) {
+    sendCommand(endpoints.setting, "disableOutput", { Start: id });
+    return;
+  }
+  sendCommand(endpoints.setting, "enableOutput", { Start: id });
+}
 </script>

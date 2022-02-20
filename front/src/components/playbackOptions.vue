@@ -14,13 +14,13 @@
       />
     </div>
     <div class="space-x-2">
-      <label for="replaygain"> Replay gain </label>
+      <label for="replaygain"> Replay gain :{{ storeGain }}</label>
       <select
         name="replaygain"
         aria-label="replayGain"
         class="mt-2 rounded border border-blue-500 bg-white p-2 dark:bg-gray-700"
         @change="setReplayGain"
-        v-model.lazy="Gain"
+        v-model="gain.state"
       >
         <option
           :value="mode"
@@ -33,33 +33,31 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { sendCommand } from "../helpers.js";
 import endpoints from "../endpoints.js";
-export default {
-  emits: ["updatesetting"],
-  props: ["crossfade", "replayGain"],
-  data() {
-    return {
-      replayGainMods: ["off", "track", "album", "auto"],
-      Gain: this.replayGain,
-    };
-  },
-  methods: {
-    setCrossfade() {
-      let second = Number(this.crossfade);
-      if (second < 0) {
-        second = 0;
-        this.crossfade = 0;
-      }
-      sendCommand(endpoints.setting, "crossfade", { Start: second });
-      this.$emit("updatesetting");
-    },
-    setReplayGain() {
-      const index = this.replayGainMods.indexOf(this.Gain);
-      sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
-      this.$emit("updatesetting");
-    },
-  },
-};
+import { useStore } from "vuex";
+import { computed, reactive } from "vue";
+
+const gain = reactive({ state: "off" });
+const store = useStore();
+const storeGain = computed(() => store.state.settings.ReplayGain);
+const crossfade = computed(() => store.state.status.xfade || 0);
+const replayGainMods = ["off", "track", "album", "auto"];
+
+function setCrossfade() {
+  let second = Number(crossfade);
+  if (second < 0) {
+    second = 0;
+    crossfade = 0;
+  }
+  sendCommand(endpoints.setting, "crossfade", { Start: second });
+  store.dispatch("getSettings");
+}
+
+function setReplayGain() {
+  const index = replayGainMods.indexOf(gain.state);
+  sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
+  store.dispatch("getSettings");
+}
 </script>

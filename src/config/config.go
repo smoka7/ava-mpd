@@ -146,8 +146,8 @@ func (c *Connection) ChangeReplayGain(id int) {
 }
 
 // returns the Gain status
-func (c *Connection) GetReplayGain() (status mpd.Attrs) {
-	status, err = c.Client.Command("replay_gain_status").Attrs()
+func (c *Connection) GetReplayGain() string {
+	status, err := c.Client.Command("replay_gain_status").Attrs()
 	Log(err)
-	return
+	return status["replay_gain_mode"]
 }
