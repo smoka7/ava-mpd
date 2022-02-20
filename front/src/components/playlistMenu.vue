@@ -31,66 +31,53 @@
     </Menu>
   </div>
 </template>
-<script>
+<script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-export default {
-  emits: [
-    "addafter",
-    "delete",
-    "clearSelection",
-    "clear",
-    "rename",
-    "removeDuplicate",
-    "removeInvalid",
-  ],
-  components: {
-    FontAwesomeIcon,
-    Menu,
-    MenuButton,
-    MenuItems,
-    MenuItem,
+const emit = defineEmits([
+  "addafter",
+  "delete",
+  "clearSelection",
+  "clear",
+  "rename",
+  "removeDuplicate",
+  "removeInvalid",
+]);
+const actions = [
+  {
+    name: "Add after current",
+    icon: "plus",
+    method: "addafter",
   },
-  data() {
-    return {
-      actions: [
-        {
-          name: "Add after current",
-          icon: "plus",
-          method: "addafter",
-        },
-        {
-          name: "Delete Playlists",
-          icon: "trash",
-          method: "delete",
-        },
-        {
-          name: "Clear Playlists",
-          icon: "eraser",
-          method: "clear",
-        },
-        {
-          name: "Rename Playlists",
-          icon: "edit",
-          method: "rename",
-        },
-        {
-          name: "Remove Duplicate songs",
-          icon: "eraser",
-          method: "removeDuplicate",
-        },
-        {
-          name: "Remove Invalid songs",
-          icon: "eraser",
-          method: "removeInvalid",
-        },
-        {
-          name: "Clear Selection",
-          icon: "check-circle",
-          method: "clearSelection",
-        },
-      ],
-    };
+  {
+    name: "Delete Playlists",
+    icon: "trash",
+    method: "delete",
   },
-};
+  {
+    name: "Clear Playlists",
+    icon: "eraser",
+    method: "clear",
+  },
+  {
+    name: "Rename Playlists",
+    icon: "edit",
+    method: "rename",
+  },
+  {
+    name: "Remove Duplicate songs",
+    icon: "eraser",
+    method: "removeDuplicate",
+  },
+  {
+    name: "Remove Invalid songs",
+    icon: "eraser",
+    method: "removeInvalid",
+  },
+  {
+    name: "Clear Selection",
+    icon: "check-circle",
+    method: "clearSelection",
+  },
+];
 </script>

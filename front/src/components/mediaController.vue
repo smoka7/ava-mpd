@@ -1,15 +1,15 @@
 <template>
   <div
-    class="grid-rows-8 grid grid-cols-1 bg-primary p-4 text-white md:static md:grid-cols-12 md:grid-rows-3 md:rounded"
+    class="grid-rows-8 bg-primary grid grid-cols-1 p-4 text-white md:static md:grid-cols-12 md:grid-rows-3 md:rounded"
     id="mediaController"
   >
     <div
-      class="row-end-9 row-start-7 flex h-28 w-full justify-center space-x-10 text-lightest md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 md:h-auto md:w-auto md:space-x-6"
+      class="row-end-9 text-lightest row-start-7 flex h-28 w-full justify-center space-x-10 md:col-start-1 md:col-end-4 md:row-start-1 md:row-end-3 md:h-auto md:w-auto md:space-x-6"
     >
       <button
         aria-label="previous-song"
         @click="playbackCommand('previous')"
-        class="scale-110 hover:text-accent md:scale-75"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="step-backward" size="2x" />
       </button>
@@ -19,7 +19,7 @@
         @click="playbackCommand('toggle')"
         :class="[
           status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-          'flex aspect-square items-center justify-center rounded-full text-white hover:text-primary',
+          'hover:text-primary flex aspect-square items-center justify-center rounded-full text-white',
         ]"
       >
         <font-awesome-icon
@@ -30,14 +30,14 @@
       <button
         aria-label="stop-song"
         @click="playbackCommand('stop')"
-        class="scale-110 hover:text-accent md:scale-75"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="stop" size="2x" />
       </button>
       <button
         aria-label="next-song"
         @click="playbackCommand('next')"
-        class="scale-110 hover:text-accent md:scale-75"
+        class="hover:text-accent scale-110 md:scale-75"
       >
         <font-awesome-icon icon="step-forward" size="2x" />
       </button>
@@ -46,7 +46,7 @@
       class="row-start-1 row-end-3 flex flex-col-reverse justify-around md:col-start-4 md:col-end-11 md:row-start-1 md:row-end-3 md:flex-row md:justify-start"
     >
       <album-art
-        :url="albumArt"
+        :url="AlbumArt"
         :altText="currentSong.Title + 'cover'"
         id="albumArt"
         class="aspect-square w-full flex-shrink-0 md:mx-2 md:h-24 md:w-24"
@@ -86,29 +86,29 @@
         <button
           aria-label="setting"
           @click="$emit('openSetting')"
-          :class="[btnClass.noramal, btnClass.base]"
+          :class="[btnClass.normal, btnClass.base]"
         >
           <span class="tooltiptext">settings</span>
           <font-awesome-icon icon="cog" size="lg" />
         </button>
         <button
           aria-label="open-playlist"
-          @click="openPlaylist"
+          @click="toggleMediaController"
           :class="[
-            btnClass.noramal,
+            btnClass.normal,
             btnClass.base,
-            'rounded-full bg-white p-2 text-primary md:hidden',
+            'text-primary rounded-full bg-white p-2 md:hidden',
           ]"
         >
           <font-awesome-icon icon="list-ul" size="lg" />
         </button>
         <button
           aria-label="open-folders"
-          @click="openFolders"
+          @click="toggleFolders"
           :class="[
-            btnClass.noramal,
+            btnClass.normal,
             btnClass.base,
-            'rounded-full bg-white p-2 text-primary md:hidden',
+            'text-primary rounded-full bg-white p-2 md:hidden',
           ]"
         >
           <font-awesome-icon icon="folder" size="lg" />
@@ -141,13 +141,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import progressBar from "./progressBar.vue";
 import albumArt from "./albumArt.vue";
 import saveQueue from "./saveQueue.vue";
 import likeSong from "./likeSong.vue";
 import volumeControl from "./volumeControl.vue";
-import { shallowReactive } from "vue";
+import { shallowReactive, computed } from "vue";
 import endpoints from "../endpoints.js";
 import {
   sendCommand,
@@ -156,73 +156,56 @@ import {
   toggleFolders,
 } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { mapState } from "vuex";
 import { useStore } from "vuex";
-import { reactive, computed } from "vue";
-export default {
-  components: {
-    progressBar,
-    FontAwesomeIcon,
-    albumArt,
-    saveQueue,
-    likeSong,
-    volumeControl,
+
+const store = useStore();
+const emit = defineEmits(["openSetting"]);
+const AlbumArt = computed(() => store.state.albumArt);
+const liked = computed(() => store.state.currentSong.Liked);
+const currentSong = computed(() =>
+  shallowReactive(store.state.currentSong.Info),
+);
+const status = computed(() => shallowReactive(store.state.status));
+
+const playbackCommands = [
+  {
+    command: "consume",
+    icon: "minus-square",
+    status: computed(() => store.state.status.consume),
   },
-  emits: ["openSetting"],
-  setup() {
-    const store = useStore();
-    const playbackCommands = reactive([
-      {
-        command: "consume",
-        icon: "minus-square",
-        status: computed(() => store.state.status.consume),
-      },
-      {
-        command: "single",
-        icon: "dice-one",
-        status: computed(() => store.state.status.single),
-      },
-      {
-        command: "repeat",
-        icon: "retweet",
-        status: computed(() => store.state.status.repeat),
-      },
-      {
-        command: "random",
-        icon: "random",
-        status: computed(() => store.state.status.random),
-      },
-      {
-        command: "clear",
-        icon: "eraser",
-        status: 0,
-      },
-    ]);
-    const btnClass = {
-      active: "text-green-500 bg-transparent",
-      normal: "bg-transparent",
-      base: "p-2 md:p-0 tooltip md:hover:text-accent",
-    };
-    return { playbackCommands, btnClass };
+  {
+    command: "single",
+    icon: "dice-one",
+    status: computed(() => store.state.status.single),
   },
-  methods: {
-    seek(time) {
-      sendCommand(endpoints.playback, "seek", { start: Number(time) });
-    },
-    playbackCommand(command) {
-      sendCommand(endpoints.playback, command);
-    },
-    openPlaylist: toggleMediaController,
-    openFolders: toggleFolders,
-    humanizeTime: humanizeTime,
+  {
+    command: "repeat",
+    icon: "retweet",
+    status: computed(() => store.state.status.repeat),
   },
-  computed: {
-    ...mapState({
-      albumArt: (state) => state.albumArt,
-      liked: (state) => state.currentSong.Liked,
-      currentSong: (state) => shallowReactive(state.currentSong.Info),
-      status: (state) => shallowReactive(state.status),
-    }),
+  {
+    command: "random",
+    icon: "random",
+    status: computed(() => store.state.status.random),
   },
+  {
+    command: "clear",
+    icon: "eraser",
+    status: 0,
+  },
+];
+
+const btnClass = {
+  active: "text-green-500 bg-transparent",
+  normal: "bg-transparent",
+  base: "p-2 md:p-0 tooltip md:hover:text-accent",
 };
+
+function seek(time) {
+  sendCommand(endpoints.playback, "seek", { start: Number(time) });
+}
+
+function playbackCommand(command) {
+  sendCommand(endpoints.playback, command);
+}
 </script>
