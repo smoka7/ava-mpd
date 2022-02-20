@@ -131,6 +131,12 @@ func (c *Connection) ChangeCrossfade(second int) {
 	Log(err)
 }
 
+// sets the crossFade
+func (c *Connection) ChangeMixRampdb(second int) {
+	err := c.Client.Command("mixrampdb %d", second).OK()
+	Log(err)
+}
+
 // sets the Gain status
 func (c *Connection) ChangeReplayGain(id int) {
 	modes := map[int]string{

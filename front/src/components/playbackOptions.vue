@@ -1,8 +1,8 @@
 <template>
-  <h2 class="mb-2 text-2xl">Playback Options</h2>
   <div class="flex flex-col space-y-2">
-    <div class="space-x-2">
-      <label for="crossfade"> Crossfade </label>
+        <h2 class="mb-2 text-2xl">Playback Options</h2>
+    <div class="space-x-2 flex flex-row justify-between items-center">
+      <label for="crossfade"> Crossfade : {{ storeCrossfade }} </label>
       <input
         class="rounded border border-blue-500 p-2 dark:bg-gray-700"
         name="crossfade"
@@ -10,17 +10,28 @@
         min="0"
         aria-label="crossfade"
         @input="setCrossfade"
-        v-model="crossfade"
+        v-model="options.crossfade"
       />
     </div>
-    <div class="space-x-2">
+    <div class="space-x-2 flex flex-row justify-between items-center">
+      <label for="mixrampdb" class="w-full">MixRampdb: {{ storeMixrampdb }}</label>
+      <input
+        class="rounded border border-blue-500 p-2 dark:bg-gray-700 w-1/2"
+        name="mixrampdb"
+        type="number"
+        aria-label="mixrampdb"
+        @input="setMixrampdb"
+        v-model="options.mixrampdb"
+      />
+    </div>
+    <div class="space-x-2 flex flex-row justify-between items-center">
       <label for="replaygain"> Replay gain :{{ storeGain }}</label>
       <select
         name="replaygain"
         aria-label="replayGain"
         class="mt-2 rounded border border-blue-500 bg-white p-2 dark:bg-gray-700"
         @change="setReplayGain"
-        v-model="gain.state"
+        v-model="options.gain"
       >
         <option
           :value="mode"
@@ -39,10 +50,11 @@ import endpoints from "../endpoints.js";
 import { useStore } from "vuex";
 import { computed, reactive } from "vue";
 
-const gain = reactive({ state: "off" });
+const options = reactive({ gain: "off", mixrampdb: 0, crossfade: 0 });
 const store = useStore();
 const storeGain = computed(() => store.state.settings.ReplayGain);
-const crossfade = computed(() => store.state.status.xfade || 0);
+const storeCrossfade = computed(() => store.state.status.xfade || "none");
+const storeMixrampdb = computed(() => store.state.status.mixrampdb || 0);
 const replayGainMods = ["off", "track", "album", "auto"];
 
 function setCrossfade() {
@@ -55,8 +67,13 @@ function setCrossfade() {
   store.dispatch("getSettings");
 }
 
+function setMixrampdb() {
+  sendCommand(endpoints.setting, "mixrampdb", { Start: Number(options.mixrampdb) });
+  store.dispatch("getSettings");
+}
+
 function setReplayGain() {
-  const index = replayGainMods.indexOf(gain.state);
+  const index = replayGainMods.indexOf(options.gain);
   sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
   store.dispatch("getSettings");
 }

@@ -77,6 +77,8 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 		switch request.Command {
 		case "crossfade":
 			c.Client.ChangeCrossfade(request.Data.Start)
+		case "mixrampdb":
+			c.Client.ChangeMixRampdb(request.Data.Start)
 		case "enableOutput":
 			c.Client.EnableOutput(request.Data.Start)
 		case "disableOutput":
