@@ -10,7 +10,7 @@
     </div>
     <div
       v-if="!songInfo"
-      class="bg-secondary text-primary absolute bottom-0 z-10 flex h-10 w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
+      class="bg-secondary text-primary absolute bottom-0 z-10 flex h-content w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
@@ -48,7 +48,7 @@
         @showInfo="songInfo = true"
       />
     </teleport>
-    <songInfo v-if="songInfo" :song="selected" @close="songInfo = false" />
+    <songInfo v-if="songInfo" :song="selected.pos" @close="songInfo = false" />
   </div>
 </template>
 <script>
@@ -68,19 +68,20 @@ export default {
     return {
       menu: false,
       songInfo: false,
-      selected: -1,
+      selected: { id: -1, pos: -1 },
     };
   },
   async mounted() {
     await this.$store.dispatch("getQueue");
-    this.ChangeCurrentSongTo(this.currentSongPos);
-    this.ScrollToCurrentSong();
+    this.changeCurrentSongTo(this.currentSongPos);
+    this.scrollToCurrentSong();
   },
   methods: {
     humanizeTime: humanizeTime,
     closePlaylist: toggleMediaController,
-    showMenu(pos, e) {
-      this.selected = Number(pos);
+    showMenu(pos, id, e) {
+      this.selected.pos = Number(pos);
+      this.selected.id = Number(id);
       const el = document.getElementById("context-menu");
       el.style.top = e.pageY + "px";
       this.menu = true;
@@ -88,13 +89,13 @@ export default {
     hideMenu() {
       this.menu = false;
     },
-    ChangeCurrentSongTo(id) {
+    changeCurrentSongTo(id) {
       const el = document.getElementById("song" + id);
       if (el !== null) {
         el.id = "currentSong";
       }
     },
-    ScrollToCurrentSong() {
+    scrollToCurrentSong() {
       const el = document.getElementById("currentSong");
       if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
     },
@@ -121,12 +122,12 @@ export default {
     }),
   },
   watch: {
-    currentSongPos: function (newSong, oldSong) {
+    currentSongPos: function(newSong, oldSong) {
       const oldId = "song" + oldSong;
       const el = document.getElementById("currentSong");
       if (el) el.id = oldId;
-      this.ChangeCurrentSongTo(newSong);
-      this.ScrollToCurrentSong();
+      this.changeCurrentSongTo(newSong);
+      this.scrollToCurrentSong();
     },
   },
 };

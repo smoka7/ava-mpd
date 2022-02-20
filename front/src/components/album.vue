@@ -18,13 +18,13 @@
         @dragover.prevent
         @dragenter.prevent
         @drop="moveSong($event, song.Pos)"
-        @dragstart="startMoveSong($event, song.Pos)"
+        @dragstart="startMoveSong($event, song.Id)"
         class="group grid grid-cols-12 items-center py-2 px-4 text-black odd:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:odd:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:odd:bg-gray-800/70 md:m-1 md:rounded md:py-1"
         :id="'song' + song.Pos"
       >
         <span
           class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
-          @click.stop="play(song.Pos)"
+          @click.stop="play(song.Id)"
         >
           <FontAwesomeIcon
             :id="song.Pos"
@@ -47,7 +47,7 @@
         </span>
         <span
           class="col-start-11 col-end-13 cursor-pointer md:col-start-12"
-          @click="$emit('showMenu', song.Pos, $event)"
+          @click="$emit('showMenu', song.Pos,song.Id, $event)"
         >
           <FontAwesomeIcon
             :id="'delete' + song.Pos"
@@ -84,13 +84,13 @@ export default {
     loadSongs() {
       this.open = true;
     },
-    startMoveSong(event, position) {
-      event.dataTransfer.setData("position", position);
+    startMoveSong(event, id) {
+      event.dataTransfer.setData("id", id);
       event.dataTransfer.dropEfect = "move";
       event.dataTransfer.effectAllowed = "move";
     },
     moveSong(event, position) {
-      const start = event.dataTransfer.getData("position");
+      const start = event.dataTransfer.getData("id");
       const data = {
         Start: Number(start),
         Finish: Number(position),

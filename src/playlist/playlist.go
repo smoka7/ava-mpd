@@ -54,8 +54,8 @@ func RemoveDuplicatesongs(c *config.Connection, name string) {
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, ok := songs[queue[i]["file"]]; ok {
 			if name == "" {
-				index, _ := strconv.Atoi(queue[i]["Pos"])
-				cmds.Delete(index, -1)
+				id, _ := strconv.Atoi(queue[i]["Id"])
+				cmds.DeleteID(id)
 			} else {
 				cmds.PlaylistDelete(name, i)
 			}
@@ -83,19 +83,21 @@ func RemoveInvalidsongs(c *config.Connection, name string) {
 
 // plays the id song in current Queue
 func PlaySong(c *config.Connection, id int) {
-	err := c.Client.Play(id)
+	err := c.Client.PlayID(id)
 	config.Log(err)
 }
 
 // moves the song from position in queue to newPosition
 func MoveSong(c *config.Connection, position int, newPosition int) {
-	err := c.Client.Move(position, -1, newPosition)
+	err := c.Client.MoveID(position, newPosition)
 	config.Log(err)
 }
 
 // deletes the song from start to end from current Queue
-func DeleteSong(c *config.Connection, start, end int) {
-	err := c.Client.Delete(start, end)
+
+func DeleteSong(c *config.Connection, id int) {
+	err := c.Client.DeleteID(id)
+	// err := c.Client.Delete(start, end)
 	config.Log(err)
 }
 
@@ -264,6 +266,7 @@ func (a *Album) newSong(song mpd.Attrs) {
 	a.Songs = append(a.Songs, Song{
 		Title:    song["Title"],
 		Pos:      song["Pos"],
+		Id:       song["Id"],
 		Track:    song["Track"],
 		Duration: song["duration"],
 	})

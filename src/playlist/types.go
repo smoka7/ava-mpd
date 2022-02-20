@@ -12,7 +12,7 @@ type Album struct {
 }
 
 type Song struct {
-	Title, Pos, Track, Duration string
+	Title, Pos, Id, Track, Duration string
 }
 
 type Folder struct {

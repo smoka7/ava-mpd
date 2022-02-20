@@ -40,7 +40,10 @@ import endpoints from "../endpoints.js";
 export default {
   props: {
     open: Boolean,
-    song: Number,
+    song: {
+      id: Number,
+      pos: Number,
+    },
   },
   emits: ["close", "showInfo"],
   data() {
@@ -56,10 +59,9 @@ export default {
     };
   },
   methods: {
-    deleteSong(end = -1) {
+    deleteSong() {
       const data = {
-        Start: this.song,
-        End: Number(end),
+        Start: this.song.id,
       };
       sendCommand(endpoints.queue, "delete", data);
       this.$emit("close");
