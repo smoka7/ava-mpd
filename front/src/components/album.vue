@@ -19,7 +19,7 @@
         @dragenter.prevent
         @drop="moveSong($event, song.Pos)"
         @dragstart="startMoveSong($event, song.Id)"
-        class="group grid grid-cols-12 items-center py-2 px-4 text-black odd:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:odd:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:odd:bg-gray-800/70 md:m-1 md:rounded md:py-1"
+        class="group grid grid-cols-12 items-center py-2 px-4 text-black even:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
         :id="'song' + song.Pos"
       >
         <span
@@ -45,60 +45,78 @@
         >
           {{ song.Title }}
         </span>
-        <span
-          class="col-start-11 col-end-13 cursor-pointer md:col-start-12"
-          @click="$emit('showMenu', song.Pos,song.Id, $event)"
+        <button
+          class="col-start-10 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-12"
         >
           <FontAwesomeIcon
-            :id="'delete' + song.Pos"
+            label="select song"
+            icon="check-circle"
+            :class="
+              isSelected(song.Id)
+                ? 'visible text-green-500'
+                : 'invisible group-hover:visible'
+            "
+            @click="$emit('select', song.Id)"
+          />
+          <FontAwesomeIcon
+            @click="$emit('showMenu', song.Pos, song.Id, $event)"
             class="invisible mr-2 group-hover:visible"
             icon="ellipsis-h"
           />
-          {{ humanizeTime(song.Duration) }}
-        </span>
+          <span>
+            {{ humanizeTime(song.Duration) }}
+          </span>
+        </button>
       </div>
     </div>
   </details>
 </template>
-<script>
+<script setup>
+import { ref } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-export default {
-  props: ["album", "currentSongPos", "currentAlbum"],
-  components: { FontAwesomeIcon },
-  emits: ["showMenu"],
-  data() {
-    return {
-      open: this.currentAlbum,
-    };
-  },
-  methods: {
-    humanizeTime: humanizeTime,
-    play(id) {
-      const data = {
-        Start: Number(id),
-      };
-      sendCommand(endpoints.queue, "play", data);
-    },
-    loadSongs() {
-      this.open = true;
-    },
-    startMoveSong(event, id) {
-      event.dataTransfer.setData("id", id);
-      event.dataTransfer.dropEfect = "move";
-      event.dataTransfer.effectAllowed = "move";
-    },
-    moveSong(event, position) {
-      const start = event.dataTransfer.getData("id");
-      const data = {
-        Start: Number(start),
-        Finish: Number(position),
-      };
-      sendCommand(endpoints.queue, "move", data);
-    },
-  },
-};
+
+defineEmits(["showMenu", "select"]);
+
+const props = defineProps([
+  "album",
+  "currentSongPos",
+  "currentAlbum",
+  "selectedIds",
+]);
+
+const open = ref(props.currentAlbum);
+
+function play(id) {
+  const data = {
+    Start: Number(id),
+  };
+  sendCommand(endpoints.queue, "play", data);
+}
+
+function loadSongs() {
+  this.open = true;
+}
+
+function isSelected(id) {
+  return props.selectedIds.indexOf(id) > -1;
+}
+
+function startMoveSong(event, id) {
+  event.dataTransfer.setData("id", id);
+  event.dataTransfer.dropEfect = "move";
+  event.dataTransfer.effectAllowed = "move";
+}
+
+function moveSong(event, position) {
+  const start = event.dataTransfer.getData("id");
+  const data = {
+    Start: Number(start),
+    Finish: Number(position),
+  };
+  sendCommand(endpoints.queue, "move", data);
+}
 </script>
 <style scoped>
 details[open] > summary > svg {

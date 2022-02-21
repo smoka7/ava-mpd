@@ -10,7 +10,7 @@
     </div>
     <div
       v-if="!songInfo"
-      class="bg-secondary text-primary absolute bottom-0 z-10 flex h-content w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
+      class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
@@ -36,8 +36,10 @@
         :key="index"
         :album="album"
         :currentAlbum="currentAlbum(album)"
+        :selectedIds="selectedIds"
         :currentSongPos="currentSongPos"
         @showMenu="showMenu"
+        @select="selectSong"
       />
     </div>
     <teleport to="#app">
@@ -69,6 +71,7 @@ export default {
       menu: false,
       songInfo: false,
       selected: { id: -1, pos: -1 },
+      selectedIds: [],
     };
   },
   async mounted() {
@@ -88,6 +91,14 @@ export default {
     },
     hideMenu() {
       this.menu = false;
+    },
+    selectSong(id) {
+      const index = this.selectedIds.indexOf(id);
+      if (index > -1) {
+        this.selectedIds.splice(index, 1);
+        return;
+      }
+      this.selectedIds.push(id);
     },
     changeCurrentSongTo(id) {
       const el = document.getElementById("song" + id);
