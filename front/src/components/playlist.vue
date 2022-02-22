@@ -13,6 +13,9 @@
       class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
+      <span v-if="selectedIds.length > 0">
+        {{ selectedIds.length }} selected
+      </span>
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
         aria-label="goto-current-song"
@@ -45,12 +48,14 @@
     <teleport to="#app">
       <queue-menu
         :open="menu"
-        @close="hideMenu"
         :song="selected"
+        :selected-ids="selectedIds"
+        @close="hideMenu"
+        @clearSelection="selectedIds = []"
         @showInfo="songInfo = true"
       />
     </teleport>
-    <songInfo v-if="songInfo" :song="selected.pos" @close="songInfo = false" />
+    <songInfo v-if="songInfo" :song="selected.id" @close="songInfo = false" />
   </div>
 </template>
 <script>
