@@ -10,7 +10,7 @@
     </div>
     <div
       v-if="!songInfo"
-      class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex w-full items-center justify-between space-x-4 px-4 text-base md:h-6 md:text-sm"
+      class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex flex-wrap-reverse w-full items-center justify-between space-x-4 space-y-2 px-4 text-base md:h-6 md:text-sm"
     >
       <span>{{ queue.Length }} Tracks </span>
       <span v-if="selectedIds.length > 0">
@@ -19,7 +19,7 @@
       <span>duration: {{ humanizeTime(queue.Duration) }} </span>
       <button
         aria-label="goto-current-song"
-        @click="ScrollToCurrentSong()"
+        @click="scrollToCurrentSong()"
         class="hover:bg-primary hover:text-secondary px-2"
       >
         <font-awesome-icon icon="compact-disc" />
@@ -30,7 +30,7 @@
         @click="closePlaylist"
         class="hover:bg-primary hover:text-secondary px-2 md:hidden"
       >
-        <font-awesome-icon icon="times" size="2x" />
+        <font-awesome-icon icon="times" class="scale-125"/>
       </button>
     </div>
     <div class="mb-10 space-y-1 overflow-y-auto md:mb-6 md:px-2">
@@ -87,11 +87,9 @@ export default {
   methods: {
     humanizeTime: humanizeTime,
     closePlaylist: toggleMediaController,
-    showMenu(pos, id, e) {
+    showMenu(pos, id) {
       this.selected.pos = Number(pos);
       this.selected.id = Number(id);
-      const el = document.getElementById("context-menu");
-      el.style.top = e.pageY + "px";
       this.menu = true;
     },
     hideMenu() {

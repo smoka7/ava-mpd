@@ -1,41 +1,46 @@
 <template>
-  <div
-    v-show="open"
-    class="absolute top-0 bottom-0 left-0 right-0 z-50 bg-white bg-opacity-30"
-    @click.self="$emit('close')"
-  ></div>
-  <div
-    v-show="open"
-    class="border-primary dark:border-lightest absolute right-10 z-50 flex w-48 flex-col rounded border-2 bg-white text-lg dark:bg-gray-600 dark:text-white"
+  <Dialog
+    :open="open"
+    @close="$emit('close')"
+    class="fixed inset-0 z-10 overflow-y-auto"
     id="context-menu"
   >
-    <button
-      :class="btnClass"
-      @click="action.func()"
-      v-for="action in actions"
-      :key="action.title"
+    <DialogOverlay
+      v-show="open"
+      class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
+    />
+    <div
+      class="rounded drop-blur-3xl absolute mx-auto top-1/4 left-1/4 right-1/4 md:left-auto md:top-1/3 md:right-12 flex w-48 flex-col divide-y bg-white dark:bg-gray-800 dark:text-white"
     >
-      {{ action.title }}
-    </button>
-    <details :class="btnClass">
-      <summary @click="getStoredPlaylist" class="flex cursor-pointer" >
-        add to playlist
-      </summary>
+      <button
+        class="menuItem"
+        @click="action.func()"
+        v-for="action in actions"
+        :key="action.title"
+      >
+        {{ action.title }}
+      </button>
+      <details>
+        <summary @click="getStoredPlaylist" class="menuItem flex">
+          add to playlist
+        </summary>
         <button
           @click="addSongTo(pl.playlist)"
-          :class="btnClass"
+          class="menuItem"
           v-for="pl in storedPlaylist"
           :key="pl.playlist"
         >
           {{ pl.playlist }}
         </button>
-    </details>
-  </div>
+      </details>
+    </div>
+  </Dialog>
 </template>
 <script setup>
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { sendCommand } from "../helpers.js";
+import { Dialog, DialogOverlay } from "@headlessui/vue";
 import endpoints from "../endpoints.js";
 
 const store = useStore();
@@ -58,9 +63,6 @@ const actions = [
   { title: "Remove Duplicate songs", func: removeDuplicate },
   { title: "Clear Selection", func: clearSelection },
 ];
-
-const btnClass =
-  "w-full text-left p-2 hover:bg-blue-100 focus:bg-blue-100 dark:hover:text-black overflow-x-hidden text-ellipsis even:bg-blue-50 even:dark:bg-gray-800 dark:hover:bg-blue-100";
 
 function deleteSong() {
   props.selectedIds.forEach((id) => {
@@ -111,3 +113,8 @@ function getStoredPlaylist() {
   store.dispatch("getStoredPlaylist");
 }
 </script>
+<style>
+.menuItem {
+  @apply w-full overflow-x-hidden text-ellipsis p-2 text-left  hover:bg-blue-100 dark:hover:bg-blue-100 dark:hover:text-black;
+}
+</style>

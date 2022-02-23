@@ -41,26 +41,26 @@
           {{ song.Track }}
         </span>
         <span
-          class="col-start-3 col-end-11 overflow-x-hidden text-ellipsis md:col-start-2"
+          class="col-start-3 col-end-9 overflow-x-hidden text-ellipsis md:col-start-2"
         >
           {{ song.Title }}
         </span>
         <button
-          class="col-start-10 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-12"
+          class="col-start-9 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-12"
         >
           <FontAwesomeIcon
             label="select song"
             icon="check-circle"
             :class="
               isSelected(song.Id)
-                ? 'visible text-green-500'
-                : 'invisible group-hover:visible'
+                ? 'visible text-green-500 dark:text-green-400'
+                : 'dark:text-white text-primary invisible group-hover:visible'
             "
             @click="$emit('select', song.Id)"
           />
           <FontAwesomeIcon
             @click="$emit('showMenu', song.Pos, song.Id, $event)"
-            class="invisible mr-2 group-hover:visible"
+            class="text-primary dark:text-white invisible mr-2 group-hover:visible"
             icon="ellipsis-h"
           />
           <span>
