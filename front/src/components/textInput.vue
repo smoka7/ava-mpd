@@ -14,7 +14,7 @@
       <input
         type="text"
         v-model="inputText"
-        class="ring-primary focus:ring-secondary dark:ring-accent dark:focus:ring-secondary w-full rounded bg-gray-200 p-2 text-black outline-none ring-2 dark:bg-gray-700 dark:text-white"
+        class="w-full rounded bg-gray-200 p-2 text-black outline-none ring-2 ring-primary focus:ring-secondary dark:bg-gray-700 dark:text-white dark:ring-accent dark:focus:ring-secondary"
       />
       <div class="mt-2 flex w-full justify-end space-x-4">
         <button
@@ -36,20 +36,11 @@
     </div>
   </Dialog>
 </template>
-<script>
+<script setup>
 import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-export default {
-  props: ["isOpen"],
-  emits: ["close", "finish"],
-  components: {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
-  },
-  data() {
-    return {
-      inputText: "",
-    };
-  },
-};
+import { ref } from "vue";
+
+defineEmits(["close", "finish"]);
+defineProps(["isOpen"]);
+const inputText = ref("");
 </script>

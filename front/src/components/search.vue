@@ -33,7 +33,7 @@
         </transition>
       </Listbox>
       <input
-        class="border-primary focus:border-lightest w-full rounded-r-lg border-2 border-l-0 bg-white/70 p-2 outline-none backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
+        class="border-primary focus:border-secondary w-full rounded-r-lg border-2 border-l-0 bg-white/70 p-2 outline-none backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
         type="text"
         name="term"
         v-model.trim="term"

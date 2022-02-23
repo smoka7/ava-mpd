@@ -97,7 +97,7 @@
           :class="[
             btnClass.normal,
             btnClass.base,
-            'text-primary rounded-full bg-white p-2 md:hidden',
+            'md:hidden',
           ]"
         >
           <font-awesome-icon icon="list-ul" size="lg" />
@@ -108,7 +108,7 @@
           :class="[
             btnClass.normal,
             btnClass.base,
-            'text-primary rounded-full bg-white p-2 md:hidden',
+            'md:hidden',
           ]"
         >
           <font-awesome-icon icon="folder" size="lg" />
@@ -159,7 +159,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useStore } from "vuex";
 
 const store = useStore();
-const emit = defineEmits(["openSetting"]);
+defineEmits(["openSetting"]);
 const AlbumArt = computed(() => store.state.albumArt);
 const liked = computed(() => store.state.currentSong.Liked);
 const currentSong = computed(() =>
