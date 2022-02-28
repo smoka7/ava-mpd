@@ -1,9 +1,12 @@
 package playlist
 
 type Queue struct {
-	Length   int
-	Duration float64
-	Albums   []Album
+	Length          int
+	CurrentSongPage uint
+	CurrentPage     uint
+	LastPage        uint
+	Duration        float64
+	Albums          []Album
 }
 
 type Album struct {

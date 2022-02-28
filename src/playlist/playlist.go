@@ -9,8 +9,10 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+const ClientQueueLimit = 200
+
 // returns current queue list
-func GetQueue(c config.Connection) (q Queue) {
+func GetQueue(c config.Connection, page string) (q Queue) {
 	c.Connect()
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	c.Close()
@@ -19,8 +21,8 @@ func GetQueue(c config.Connection) (q Queue) {
 	q.Length = len(queue)
 	if q.Length == 0 {
 		return
-	} else if q.Length > 500 {
-		queue = limitQueue(c, queue)
+	} else if q.Length > ClientQueueLimit {
+		queue, q.CurrentPage, q.LastPage, q.CurrentSongPage = limitQueue(c, queue, page)
 	}
 	q.newAlbum(queue[0])
 	for i := 1; i < len(queue); i++ {
@@ -272,16 +274,33 @@ func (a *Album) newSong(song mpd.Attrs) {
 	})
 }
 
-func limitQueue(c config.Connection, queue []mpd.Attrs) []mpd.Attrs {
+func limitQueue(c config.Connection, queue []mpd.Attrs, page string) (currentPage []mpd.Attrs, currentPageIndex, lastPage, pageIndex uint) {
 	c.Connect()
 	currentSong, err := c.Client.CurrentSong()
 	c.Close()
 	config.Log(err)
-	queuePosition := currentSong["Pos"]
-	if p, _ := strconv.Atoi(queuePosition); p >= 150 {
-		return queue[p-150 : p+150]
+
+	downLimit, upLimt := 0, ClientQueueLimit
+	csPos, _ := strconv.Atoi(currentSong["Pos"])
+	pageIndex = uint(csPos/ClientQueueLimit + 1)
+	lastPage = uint(len(queue)/ClientQueueLimit + 1)
+
+	// returns the part of queue that page number requested
+	pageInt, err := strconv.Atoi(page)
+	if pageInt > int(lastPage) {
+		pageInt = int(lastPage)
+	} else if pageInt <= 0 {
+		pageInt = 1
 	}
-	return queue[:300]
+	if err == nil || pageInt != 0 {
+		downLimit = (pageInt - 1) * ClientQueueLimit
+		upLimt = downLimit + ClientQueueLimit
+	}
+
+	if upLimt > len(queue) {
+		upLimt = len(queue)
+	}
+	return queue[downLimit:upLimt], uint(pageInt), lastPage, pageIndex
 }
 
 // returns the duration of a list of songs

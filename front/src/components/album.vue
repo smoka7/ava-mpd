@@ -20,7 +20,7 @@
         @drop="moveSong($event, song.Pos)"
         @dragstart="startMoveSong($event, song.Id)"
         class="group grid grid-cols-12 items-center py-2 px-4 text-black even:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
-        :id="'song' + song.Pos"
+        :id="song.Pos !== currentSongPos ? '' : 'currentSong'"
       >
         <span
           class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
@@ -54,13 +54,13 @@
             :class="
               isSelected(song.Id)
                 ? 'visible text-green-500 dark:text-green-400'
-                : 'dark:text-white text-primary invisible group-hover:visible'
+                : 'text-primary invisible group-hover:visible dark:text-white'
             "
             @click="$emit('select', song.Id)"
           />
           <FontAwesomeIcon
             @click="$emit('showMenu', song.Pos, song.Id, $event)"
-            class="text-primary dark:text-white invisible mr-2 group-hover:visible"
+            class="text-primary invisible mr-2 group-hover:visible dark:text-white"
             icon="ellipsis-h"
           />
           <span>

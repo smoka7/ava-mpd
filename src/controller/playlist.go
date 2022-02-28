@@ -81,7 +81,10 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	playlist := playlist.GetQueue(c.Client)
+	err = r.ParseForm()
+	config.Log(err)
+
+	playlist := playlist.GetQueue(c.Client, r.Form.Get("page"))
 	err = json.NewEncoder(w).Encode(playlist)
 	config.Log(err)
 }

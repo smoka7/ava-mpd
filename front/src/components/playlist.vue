@@ -10,28 +10,16 @@
     </div>
     <div
       v-if="!songInfo"
-      class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex flex-wrap-reverse w-full items-center justify-between space-x-4 space-y-2 px-4 text-base md:h-6 md:text-sm"
+      class="bg-secondary text-primary h-content absolute bottom-0 z-10 flex w-full flex-wrap-reverse items-center justify-between space-x-4 space-y-2 px-4 text-base md:h-6 md:text-sm"
     >
-      <span>{{ queue.Length }} Tracks </span>
+      <span>
+        {{ queue.Length }} Tracks / duration:
+        {{ humanizeTime(queue.Duration) }}
+      </span>
       <span v-if="selectedIds.length > 0">
         {{ selectedIds.length }} selected
       </span>
-      <span>duration: {{ humanizeTime(queue.Duration) }} </span>
-      <button
-        aria-label="goto-current-song"
-        @click="scrollToCurrentSong()"
-        class="hover:bg-primary hover:text-secondary px-2"
-      >
-        <font-awesome-icon icon="compact-disc" />
-        Current Song
-      </button>
-      <button
-        aria-label="close-playlist"
-        @click="closePlaylist"
-        class="hover:bg-primary hover:text-secondary px-2 md:hidden"
-      >
-        <font-awesome-icon icon="times" class="scale-125"/>
-      </button>
+      <queuePagination @goToCurrent="scrollToCurrentSong" />
     </div>
     <div class="mb-10 space-y-1 overflow-y-auto md:mb-6 md:px-2">
       <album
@@ -60,14 +48,14 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { humanizeTime, toggleMediaController } from "../helpers.js";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { humanizeTime } from "../helpers.js";
 import { defineAsyncComponent, shallowReactive } from "vue";
 import album from "./album.vue";
+import queuePagination from "./queuePagination.vue";
 export default {
   components: {
     album,
-    FontAwesomeIcon,
+    queuePagination,
     songInfo: defineAsyncComponent(() => import("./songInfo.vue")),
     queueMenu: defineAsyncComponent(() => import("./queueMenu.vue")),
   },
@@ -81,12 +69,10 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch("getQueue");
-    this.changeCurrentSongTo(this.currentSongPos);
     this.scrollToCurrentSong();
   },
   methods: {
     humanizeTime: humanizeTime,
-    closePlaylist: toggleMediaController,
     showMenu(pos, id) {
       this.selected.pos = Number(pos);
       this.selected.id = Number(id);
@@ -103,13 +89,10 @@ export default {
       }
       this.selectedIds.push(id);
     },
-    changeCurrentSongTo(id) {
-      const el = document.getElementById("song" + id);
-      if (el !== null) {
-        el.id = "currentSong";
+    async scrollToCurrentSong() {
+      if (this.queue.CurrentPage != this.queue.currentSongPage) {
+        await this.$store.dispatch("getQueue", this.queue.currentSongPage);
       }
-    },
-    scrollToCurrentSong() {
       const el = document.getElementById("currentSong");
       if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
     },
@@ -136,11 +119,7 @@ export default {
     }),
   },
   watch: {
-    currentSongPos: function(newSong, oldSong) {
-      const oldId = "song" + oldSong;
-      const el = document.getElementById("currentSong");
-      if (el) el.id = oldId;
-      this.changeCurrentSongTo(newSong);
+    currentSongPos: function() {
       this.scrollToCurrentSong();
     },
   },
