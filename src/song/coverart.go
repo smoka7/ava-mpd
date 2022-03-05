@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 
+	"github.com/smoka7/ava/src/brainz"
 	"github.com/smoka7/ava/src/config"
 )
 
@@ -42,6 +43,15 @@ func (s *Song) getAlbumArt(c *config.Connection) (err error) {
 		s.writeCoverToFile(coverBin)
 		return
 	}
+
+	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok && releaseID != "" {
+		coverBin, err = brainz.GetCoverURL(releaseID)
+		if err == nil {
+			s.writeCoverToFile(coverBin)
+			return
+		}
+	}
+
 	err = errors.New("cover not found")
 	return
 }
