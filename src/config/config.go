@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"flag"
 	"log"
 	"os"
@@ -9,16 +10,18 @@ import (
 )
 
 type Connection struct {
-	Address  string      // address of mpd server
-	Password string      // password of mpd server
-	AppPort  string      // port of current app
-	Client   *mpd.Client // connected client
+	DownloadCoverArt bool        `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
+	Address          string      `json:"address"`            // address of mpd server
+	Password         string      `json:"password:omitempty"` // password of mpd server
+	AppPort          string      `json:"app_port"`           // port of current app
+	Client           *mpd.Client `json:"-"`                  // connected client
 }
 
-// maximm log size in bytes
-const MaxLogSize = 20000
-
-const LogFilePath = "/ava-mpd/ava.log"
+const (
+	MaxLogSize     = 20000 // maximm log size in bytes
+	LogFilePath    = "/ava-mpd/ava.log"
+	ConfigFilePath = "/ava-mpd/ava.json"
+)
 
 var err error
 
@@ -41,6 +44,57 @@ func (c *Connection) ReadFromFlags() {
 	if address != "" {
 		c.Address = address
 	}
+}
+
+// saves the app configurations to file
+func (c *Connection) SaveConfig() {
+	bytes, err := json.MarshalIndent(c, "", " ")
+	if err != nil {
+		Log(err)
+		return
+	}
+
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		Log(err)
+		return
+	}
+
+	configPath := configDir + ConfigFilePath
+	if _, err = os.Stat(configPath); os.IsNotExist(err) {
+		err = os.Mkdir(configDir+"/ava-mpd", 0777)
+		if err != nil {
+			Log(err)
+			return
+		}
+	}
+
+	err = os.WriteFile(configPath, bytes, 0777)
+	Log(err)
+}
+
+func (c *Connection) loadConfig(configPath string) error {
+	// when config path is omited use the default one
+	if configPath == "" {
+		configDir, err := os.UserConfigDir()
+		if err != nil {
+			Log(err)
+			return err
+		}
+		configPath = configDir + ConfigFilePath
+	}
+
+	bytes, err := os.ReadFile(configPath)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(bytes, &c)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // connects to server
