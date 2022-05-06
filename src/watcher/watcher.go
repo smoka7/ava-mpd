@@ -26,7 +26,7 @@ func (m *Mpd) Serve(ws *websocket.Conn) {
 	eventWatcher(m.Client, event)
 	for {
 		message.Subsystem = <-event
-		err := websocket.JSON.Send(ws, <-event)
+		err := websocket.JSON.Send(ws, message)
 		config.Log(err)
 	}
 }
