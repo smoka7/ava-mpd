@@ -72,9 +72,3 @@ export function toggleMediaController() {
   document.getElementById("mediaController").classList.toggle("z-10");
   document.getElementById("queue").classList.toggle("z-10");
 }
-
-/**  toggles media controller visibility in mobile */
-export function toggleFolders() {
-  document.getElementById("mediaController").classList.toggle("z-10");
-  document.getElementById("sidebar").classList.toggle("z-10");
-}
