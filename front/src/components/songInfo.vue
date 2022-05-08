@@ -4,12 +4,12 @@
   >
     <div class="flex flex-row items-center justify-between">
       <h1
-        class="text-bold mr-2 flex items-center space-x-4 text-ellipsis text-4xl font-bold underline decoration-2"
+        class="mr-2 flex items-center space-x-4 text-ellipsis text-4xl font-bold text-primary underline decoration-accent"
       >
         <span>
-          {{ info.Title }}
+          {{ state.info.Title }}
         </span>
-        <likeSong :pLiked="liked" :file="info['file']" />
+        <likeSong :pLiked="state.liked" :file="state.info['file']" />
       </h1>
       <button
         aria-label="close-info"
@@ -23,26 +23,26 @@
       class="flex flex-col justify-around space-y-2 md:flex-row md:space-x-2 md:space-y-0"
     >
       <album-art
-        v-if="albumArt != 'default'"
-        :url="albumArt"
-        :altText="info['Title'] + ' cover'"
+        v-if="state.albumArt != 'default'"
+        :url="state.albumArt"
+        :altText="state.info['Title'] + ' cover'"
         class="top-0 h-fit md:sticky md:w-1/2"
       />
       <ul
         :class="{
           'flex w-full flex-col rounded bg-white dark:bg-gray-700': true,
-          'md:w-1/2': albumArt != 'default',
+          'md:w-1/2': state.albumArt != 'default',
         }"
       >
         <li
-          v-for="(value, index) in info"
+          v-for="(value, index) in state.info"
           :key="index"
           class="p-2 first:rounded-t last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
         >
           {{ index }} : {{ value }}
         </li>
         <li
-          v-for="(sticker, index) in stickers"
+          v-for="(sticker, index) in state.stickers"
           :key="index"
           class="p-2 last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
         >
@@ -53,49 +53,41 @@
   </div>
 </template>
 
-<script>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import likeSong from "./likeSong.vue";
-import albumArt from "./albumArt.vue";
-import endpoints from "../endpoints.js";
-import { sendCommand } from "../helpers";
-export default {
-  components: {
-    FontAwesomeIcon,
-    albumArt,
-    likeSong,
-  },
-  props: ["song"],
-  data() {
-    return {
-      info: {},
-      stickers: {},
-      albumArt: "",
-      liked: false,
-    };
-  },
-  methods: {
-    isItLiked() {
-      const index = this.stickers.findIndex((stick) => {
-        if (stick.Name == "liked" && stick.Value == "true") return true;
-      });
-      if (index > -1) {
-        this.liked = true;
-      }
-    },
-    async getInfo() {
-      
-      const song = await sendCommand(endpoints.song, "info", {
-        start: this.song,
-      });
-      this.info = song.Info;
-      this.stickers = song.Stickers;
-      this.albumArt = song.AlbumArt;
-      this.isItLiked();
-    },
-  },
-  async mounted() {
-    this.getInfo();
-  },
-};
+<script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import likeSong from './likeSong.vue';
+import albumArt from './albumArt.vue';
+import endpoints from '../endpoints.js';
+import { sendCommand } from '../helpers';
+import { reactive, onMounted } from 'vue';
+const props = defineProps(['song']);
+const state = reactive({
+  info: {},
+  stickers: {},
+  albumArt: '',
+  liked: false,
+});
+
+function isItLiked() {
+  const index = state.stickers.findIndex((stick) => {
+    if (stick.Name == 'liked' && stick.Value == 'true') return true;
+  });
+  if (index > -1) {
+    state.liked = true;
+  }
+}
+
+async function getInfo() {
+  const song = await sendCommand(endpoints.song, 'info', {
+    start: props.song,
+  });
+  state.info = song.Info;
+  state.stickers = song.Stickers;
+  state.albumArt = song.AlbumArt;
+  isItLiked();
+}
+
+onMounted(() => {
+  getInfo();
+});
 </script>
