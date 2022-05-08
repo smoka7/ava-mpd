@@ -1,15 +1,13 @@
 <template>
-  <div class="m-2 flex w-full items-center justify-center space-x-2">
+  <div class="tooltip flex w-full items-center justify-center space-x-2 px-2">
     <button
       @click="changeVolume()"
       :aria-label="volume > 0 ? 'mute' : 'max-the-volume'"
     >
       <font-awesome-icon :icon="['fas', icon()]" size="lg" />
     </button>
-    <div class="tooltip w-9/12">
-      <progressBar :data="{ value: volume, max: 100 }" @seek="changeVolume" />
-      <span class="tooltiptext">volume{{ volume }}%</span>
-    </div>
+    <progressBar :data="{ value: volume, max: 100 }" @seek="changeVolume" />
+    <span class="tooltiptext">volume{{ volume }}%</span>
   </div>
 </template>
 <script setup>

@@ -1,6 +1,6 @@
 <template>
   <progress
-    class="bg-lightest h-4 w-full cursor-pointer rounded"
+    class="h-2 w-full cursor-pointer rounded bg-lightest transition-all duration-100 ease-in hover:h-3"
     max="100"
     ref="progress"
     @click="seek"
@@ -40,12 +40,12 @@ progress {
   -webkit-appearance: none;
 }
 ::-webkit-progress-value {
-  @apply from-lighter via-accent to-secondary rounded bg-gradient-to-r;
+  @apply rounded bg-gradient-to-r from-lighter via-accent to-secondary;
 }
 ::-webkit-progress-bar {
-  @apply bg-lightest h-4 rounded;
+  @apply rounded bg-lightest;
 }
 ::-moz-progress-bar {
-  @apply from-lighter via-accent to-secondary rounded bg-gradient-to-r;
+  @apply rounded bg-gradient-to-r from-lighter via-accent to-secondary;
 }
 </style>
