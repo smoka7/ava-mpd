@@ -64,9 +64,13 @@ const store = createStore({
   actions: {
     async getCurrentSong(store) {
       const response = await fetchOrFail(endpoints.status);
-      store.commit("setCurrentSong", response.CurrentSong);
-      store.commit("setStatus", response.Status);
-      store.commit("setAlbumArt", response.AlbumArt);
+      if (response.Status != null || response.CurrentSong != null || response.AlbumArt != null) {
+        store.commit("setCurrentSong", response.CurrentSong);
+        store.commit("setStatus", response.Status);
+        store.commit("setAlbumArt", response.AlbumArt);
+        return;
+      }
+      store.dispatch("getCurrentSong");
     },
     async getStoredPlaylist() {
       const response = await fetchOrFail(endpoints.storedPlaylists);
