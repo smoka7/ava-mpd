@@ -41,10 +41,10 @@ setColorScheme();
   @apply bg-lightest;
 }
 ::-webkit-scrollbar-thumb {
-  @apply rounded-xl bg-primary;
+  @apply  bg-primary;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply rounded-xl bg-secondary;
+  @apply  bg-secondary;
 }
 @supports (-moz-appearance: none) {
   .fbg {
