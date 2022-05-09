@@ -1,14 +1,14 @@
 <template>
-  <div class="relative -m-2 flex flex-col overflow-x-hidden pt-6 pb-2">
+  <div class="relative flex flex-col overflow-x-hidden pt-6 pb-2">
     <playlist-menu
-      v-if="selectedCount > 0"
+      v-if="state.selectedCount > 0"
       @addafter="PlCommand('addafter')"
       @delete="PlCommand('delete')"
       @clear="PlCommand('clear')"
       @removeDuplicate="PlCommand('removeduplicate')"
       @removeInvalid="PlCommand('removeinvalid')"
       @clearSelection="clearSelection()"
-      @rename="renameOpen = true"
+      @rename="state.renameOpen = true"
     />
     <div
       v-for="playlist in playlists"
@@ -93,93 +93,85 @@
         </p>
       </div>
     </details>
-    <rename-playlist v-if="renameOpen" :rename="renamePlaylist" />
+    <rename-playlist v-if="state.renameOpen" :rename="state.renamePlaylist" />
   </div>
 </template>
-<script>
-import { humanizeTime, sendCommand } from "../helpers.js";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import endpoints from "../endpoints";
-import { shallowReactive } from "vue";
-import { mapState } from "vuex";
-import PlaylistMenu from "./playlistMenu.vue";
-import RenamePlaylist from "./renamePlaylist.vue";
-import SidebarButton from "./sidebarButton.vue";
-export default {
-  components: {
-    FontAwesomeIcon,
-    PlaylistMenu,
-    RenamePlaylist,
-    SidebarButton,
-  },
-  data() {
-    return {
-      renameOpen: false,
-      renamePlaylist: "",
-      selectedCount: 0,
-      playlists: [
-        { name: "Liked Songs", icon: "heart", method: "liked" },
-        { name: "Most Played Songs", icon: "chart-area", method: "most" },
-      ],
-    };
-  },
-  created() {
-    this.$store.dispatch("getStoredPlaylist");
-  },
-  methods: {
-    humanizeTime: humanizeTime,
-    sendCommand: sendCommand,
-    async getSongs(index) {
-      this.animate(this.storedPlaylist[index].playlist);
-      if (
-        this.storedPlaylist[index].songs &&
-        this.storedPlaylist[index].songs.length
-      ) {
-        this.storedPlaylist[index].songs = [];
-        return;
-      }
-      this.storedPlaylist[index].songs = await sendCommand(
-        endpoints.storedPlaylists,
-        "list",
-        {playlist: this.storedPlaylist[index].playlist,}
-      );
-    },
-    PlCommand(method, index) {
-      if (index != null) {
-        this.storedPlaylist[index].selected = true;
-      }
-      this.storedPlaylist.forEach((p) => {
-        if (p.selected) {
-          const data = {
-            playlist: p.playlist,
-          };
-          sendCommand(endpoints.storedPlaylists, method, data);
-        }
-      });
-      this.$store.dispatch("getStoredPlaylist");
-    },
-    clearSelection() {
-      this.storedPlaylist.forEach((p) => {
-        p.selected = false;
-      });
-    },
-    toggleSelected(index) {
-      this.storedPlaylist[index].selected
-        ? this.selectedCount--
-        : this.selectedCount++;
-      this.renamePlaylist = this.storedPlaylist[index].playlist;
-      this.storedPlaylist[index].selected =
-        !this.storedPlaylist[index].selected;
-    },
-    animate(id) {
-      const el = document.getElementById("icon-" + id);
-      if (el) el.classList.toggle("rotate-90");
-    },
-  },
-  computed: {
-    ...mapState({
-      storedPlaylist: (state) => shallowReactive(state.storedPlaylist),
-    }),
-  },
-};
+<script setup>
+import endpoints from '../endpoints';
+import { useStore } from 'vuex';
+import { humanizeTime, sendCommand } from '../helpers.js';
+import { shallowReactive, computed, reactive } from 'vue';
+import PlaylistMenu from './playlistMenu.vue';
+import SidebarButton from './sidebarButton.vue';
+import RenamePlaylist from './renamePlaylist.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+const store = useStore();
+
+await store.dispatch('getStoredPlaylist');
+
+const storedPlaylist = computed(() =>
+  shallowReactive(store.state.storedPlaylist)
+);
+
+const state = reactive({
+  renameOpen: false,
+  renamePlaylist: '',
+  selectedCount: 0,
+});
+
+const playlists = [
+  { name: 'Liked Songs', icon: 'heart', method: 'liked' },
+  { name: 'Most Played Songs', icon: 'chart-area', method: 'most' },
+];
+
+async function getSongs(index) {
+  animate(this.storedPlaylist[index].playlist);
+  if (
+    this.storedPlaylist[index].songs &&
+    this.storedPlaylist[index].songs.length
+  ) {
+    this.storedPlaylist[index].songs = [];
+    return;
+  }
+  this.storedPlaylist[index].songs = await sendCommand(
+    endpoints.storedPlaylists,
+    'list',
+    { playlist: this.storedPlaylist[index].playlist }
+  );
+}
+
+function PlCommand(method, index) {
+  if (index != null) {
+    this.storedPlaylist[index].selected = true;
+  }
+  this.storedPlaylist.forEach((p) => {
+    if (p.selected) {
+      const data = {
+        playlist: p.playlist,
+      };
+      sendCommand(endpoints.storedPlaylists, method, data);
+    }
+  });
+  store.dispatch('getStoredPlaylist');
+}
+
+function clearSelection() {
+  this.storedPlaylist.forEach((p) => {
+    p.selected = false;
+  });
+}
+
+function toggleSelected(index) {
+  this.storedPlaylist[index].selected
+    ? state.selectedCount--
+    : state.selectedCount++;
+  state.renamePlaylist = this.storedPlaylist[index].playlist;
+  this.storedPlaylist[index].selected = !this.storedPlaylist[index].selected;
+}
+
+function animate(id) {
+  const el = document.getElementById('icon-' + id);
+  if (el) el.classList.toggle('rotate-90');
+}
 </script>

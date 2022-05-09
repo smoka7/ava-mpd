@@ -1,65 +1,35 @@
 <template>
   <div
-    class="from-lightest to-accent via-lighter text-primary flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br text-lg duration-300 dark:text-white md:grid md:grid-cols-4 md:grid-rows-4 md:gap-2 md:p-1"
+    class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-lg text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
   >
-    <sidebar
-      id="sidebar"
-      class="fixed inset-0 h-full md:static md:col-span-1 md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-4"
-    />
     <div
-      class="fixed inset-0 md:relative md:col-span-3 md:col-start-2 md:col-end-5 md:row-start-1 md:row-end-4"
-      id="queue"
+      class="fixed z-10 h-screen md:static md:h-full md:w-1/4"
+      id="mediaController"
     >
-      <setting v-if="settingIsOpen" @close="toggleSetting()" />
-      <playlist v-else />
+      <media-controller />
     </div>
-    <media-controller
-      @openSetting="toggleSetting()"
-      class="fixed inset-0 z-10 md:col-span-4 md:col-start-1 md:col-end-5 md:row-span-1 md:row-start-4 md:row-end-4"
-    />
+    <sidebar class="h-screen md:h-full md:w-3/4" id="queue" />
   </div>
 </template>
-<script>
+<script setup>
 import MediaController from "./components/mediaController.vue";
-import Playlist from "./components/playlist.vue";
 import Sidebar from "./components/sidebar.vue";
 import { setColorScheme } from "./colors.js";
-import { toggleMediaController } from "./helpers.js";
-import { defineAsyncComponent } from "vue";
-export default {
-  components: {
-    MediaController,
-    Playlist,
-    Sidebar,
-    setting: defineAsyncComponent(() => import("./components/setting.vue")),
-  },
-  data() {
-    return {
-      settingIsOpen: false,
-    };
-  },
-  methods: {
-    toggleSetting() {
-      this.settingIsOpen = !this.settingIsOpen;
-      toggleMediaController();
-    },
-  },
-  created() {
-    this.$store.dispatch("connectToSocket");
-    this.$store.dispatch("getCurrentSong");
-    this.$store.dispatch("startCounter");
-  },
-  mounted() {
-    setColorScheme();
-  },
-};
+import { useStore } from "vuex";
+
+const store = useStore();
+
+store.dispatch("connectToSocket");
+store.dispatch("getCurrentSong");
+store.dispatch("startCounter");
+setColorScheme();
 </script>
 <style>
 .tooltip {
   @apply relative inline-block;
 }
 .tooltip .tooltiptext {
-  @apply bg-lightest/90 text-primary invisible absolute bottom-full left-1/2 z-10 -ml-10 inline w-auto rounded p-2 text-center;
+  @apply invisible absolute bottom-full left-1/2 z-10 -ml-10 inline w-auto rounded bg-lightest/90 p-2 text-center text-primary;
 }
 .tooltip:hover .tooltiptext {
   @apply visible;
@@ -71,14 +41,14 @@ export default {
   @apply bg-lightest;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary rounded-xl;
+  @apply  bg-primary;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary rounded-xl;
+  @apply  bg-secondary;
 }
 @supports (-moz-appearance: none) {
   .fbg {
-    @apply bg-white dark:bg-gray-700 !important;
+    @apply bg-white/70 dark:bg-gray-700 !important;
   }
 }
 </style>

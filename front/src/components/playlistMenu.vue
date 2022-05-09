@@ -8,7 +8,7 @@
       </MenuButton>
       <transition name="fade">
         <MenuItems
-          class="absolute right-12 top-10 z-50 flex cursor-default flex-col rounded bg-white/60 text-left shadow-md backdrop-blur-3xl focus:outline-none dark:bg-gray-700/60 md:left-32 md:right-2"
+          class="absolute right-12 top-10 z-50 flex cursor-default flex-col rounded bg-white/60 text-left shadow-md backdrop-blur-3xl focus:outline-none dark:bg-gray-700/60 md:right-2"
         >
           <MenuItem
             v-slot="{ active }"
@@ -18,7 +18,7 @@
           >
             <div
               :class="{
-                'text-primary bg-blue-100': active,
+                'bg-blue-100 text-primary': active,
                 'flex items-center space-x-2 p-2 first:rounded-t last:rounded-b': true,
               }"
             >
@@ -34,7 +34,7 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-const emit = defineEmits([
+defineEmits([
   "addafter",
   "delete",
   "clearSelection",

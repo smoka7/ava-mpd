@@ -3,7 +3,7 @@
     <form class="flex w-full p-2" @submit.prevent="search">
       <Listbox v-model="tag">
         <ListboxButton
-          class="dark:bg-lightest bg-primary dark:text-primary flex items-center rounded-l-lg p-2 text-white"
+          class="flex items-center rounded-l-lg bg-primary p-2 text-white dark:bg-lightest dark:text-primary"
         >
           {{ tag }}
           <FontAwesomeIcon icon="angle-right" class="ml-2 rotate-90" />
@@ -21,7 +21,7 @@
             >
               <li
                 :class="{
-                  'dark:hover:text-primary p-2 hover:bg-blue-200': true,
+                  'p-2 hover:bg-blue-200 dark:hover:text-primary': true,
                   'bg-lightest dark:text-primary': selected,
                 }"
               >
@@ -33,7 +33,7 @@
         </transition>
       </Listbox>
       <input
-        class="border-primary focus:border-secondary w-full rounded-r-lg border-2 border-l-0 bg-white/70 p-2 outline-none backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
+        class="w-full rounded-r-lg border-2 border-l-0 border-primary bg-white/70 p-2 outline-none backdrop-blur-3xl focus:border-secondary dark:bg-gray-700/60 dark:text-white"
         type="text"
         name="term"
         v-model.trim="term"
@@ -76,7 +76,8 @@
     </details>
   </div>
 </template>
-<script>
+<script setup>
+import { ref } from "vue";
 import Folder from "./folder.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
@@ -87,51 +88,36 @@ import {
   ListboxOptions,
   ListboxOption,
 } from "@headlessui/vue";
-export default {
-  components: {
-    Folder,
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-    FontAwesomeIcon,
-    SidebarButton,
-  },
-  data() {
-    return {
-      searchTags: ["file", "Artist", "Album", "Genre", "Date", "Title"],
-      tag: "file",
-      term: "",
-      files: [],
-    };
-  },
-  methods: {
-    async search() {
-      if (this.term === "") {
-        this.files = [];
-        return;
-      }
-      const response = await this.command("search", this.term);
-      if (response.ok) {
-        const json = await response.json();
-        if (this.files.length) this.files = [];
-        this.files = json.Songs;
-        return;
-      }
+const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];
+const tag = ref("file");
+const term = ref("");
+const files = ref([]);
+
+async function search() {
+  if (term.value === "") {
+    files = [];
+    return;
+  }
+  const response = await command("search", term.value);
+  if (response.ok) {
+    const json = await response.json();
+    if (files.length) files = [];
+    files.value = json.Songs;
+    return;
+  }
+}
+
+async function command(cm, title) {
+  const request = {
+    terms: [tag.value, title],
+    command: cm,
+  };
+  return await fetch(endpoints.search, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
     },
-    async command(cm, title) {
-      const request = {
-        terms: [this.tag, title],
-        command: cm,
-      };
-      return await fetch(endpoints.search, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify(request),
-      });
-    },
-  },
-};
+    body: JSON.stringify(request),
+  });
+}
 </script>
