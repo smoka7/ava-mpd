@@ -1,5 +1,5 @@
 #!/bin/sh
-cd front  && npm install && npm run build
+cd front  && pnpm install && pnpm run build
 cd ..
 go install
 
