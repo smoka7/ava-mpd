@@ -7,13 +7,10 @@
     <font-awesome-icon :icon="icon" />
   </button>
 </template>
-<script>
+<script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-export default {
-  props: {
-    label: String,
-    icon: String,
-  },
-  components: { FontAwesomeIcon },
-};
+defineProps({
+  label: String,
+  icon: String,
+});
 </script>
