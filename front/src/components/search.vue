@@ -95,13 +95,13 @@ const files = ref([]);
 
 async function search() {
   if (term.value === "") {
-    files = [];
+    files.value = [];
     return;
   }
   const response = await command("search", term.value);
   if (response.ok) {
     const json = await response.json();
-    if (files.length) files = [];
+    if (files.value.length) files.value = [];
     files.value = json.Songs;
     return;
   }
