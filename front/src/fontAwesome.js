@@ -1,6 +1,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faAngleRight,
+  faBookmark,
   faCog,
   faCompactDisc,
   faDiceOne,
@@ -35,6 +36,7 @@ import {
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 const icons = [
   faStop,
+  faBookmark,
   faPlay,
   faPause,
   faStepBackward,

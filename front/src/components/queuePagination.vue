@@ -4,7 +4,7 @@
       v-if="queue.CurrentPage > 1"
       aria-label="Previous-page"
       @click="loadPage(queue.CurrentPage - 1)"
-      class="hover:bg-primary hover:text-secondary flex items-center justify-between space-x-1 px-2"
+      class="flex items-center justify-between space-x-1 px-2 hover:bg-primary hover:text-secondary"
     >
       <font-awesome-icon icon="angle-right" flip="horizontal" />
       <span> previous </span>
@@ -13,7 +13,7 @@
       v-if="queue.CurrentPage !== queue.LastPage"
       aria-label="next-page"
       @click="loadPage(queue.CurrentPage + 1)"
-      class="hover:bg-primary hover:text-secondary flex items-center justify-between space-x-1 px-2"
+      class="flex items-center justify-between space-x-1 px-2 hover:bg-primary hover:text-secondary"
     >
       <span> next </span>
       <font-awesome-icon icon="angle-right" />
@@ -21,17 +21,10 @@
     <button
       aria-label="goto-current-song"
       @click="$emit('goToCurrent')"
-      class="hover:bg-primary hover:text-secondary flex items-center justify-between space-x-1 px-2"
+      class="flex items-center justify-between space-x-1 px-2 hover:bg-primary hover:text-secondary"
     >
       <font-awesome-icon icon="compact-disc" />
       <span> Current Song </span>
-    </button>
-    <button
-      aria-label="close-playlist"
-      @click="toggleMediaController"
-      class="hover:bg-primary hover:text-secondary px-2 md:hidden"
-    >
-      <font-awesome-icon icon="times" class="scale-125" />
     </button>
   </div>
 </template>
@@ -39,7 +32,7 @@
 import { useStore } from "vuex";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed } from "vue";
-import { toggleMediaController } from "../helpers.js";
+
 const store = useStore();
 const queue = computed(() => store.state.queue);
 defineEmits(["goToCurrent"]);

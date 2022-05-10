@@ -20,8 +20,8 @@
         @click="toggleMediaController"
         :class="[btnClass.normal, btnClass.base, 'md:hidden']"
       >
-        <span class="tooltiptext">settings</span>
-        <font-awesome-icon icon="cog" size="lg" />
+        <span class="tooltiptext">queue...</span>
+        <font-awesome-icon icon="list-ul" size="lg" />
       </button>
     </div>
   </div>
@@ -39,7 +39,7 @@
       @click="Command('toggle')"
       :class="[
         status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-        'flex items-center justify-center rounded-full px-10 text-white hover:text-primary',
+        'flex items-center justify-center rounded-full px-12 md:px-10 text-white hover:text-primary',
       ]"
     >
       <font-awesome-icon
@@ -84,7 +84,7 @@ const status = computed(() => shallowReactive(store.state.status));
 const btnClass = {
   active: "text-green-500 bg-transparent",
   normal: "bg-transparent hover:text-accent",
-  base: "p-2 tooltip",
+  base: "p-2 tooltip transform scale-125",
 };
 
 const playbackCommands = computed(() => [

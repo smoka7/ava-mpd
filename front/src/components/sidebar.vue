@@ -104,7 +104,7 @@ const tabs = {
   },
   Playlists: {
     component: storedPlaylist,
-    icon: "list-ul",
+    icon: "bookmark",
   },
   Folders: {
     component: folders,
