@@ -1,5 +1,5 @@
 <template>
-  <details :open="currentAlbum" @click="loadSongs()">
+  <details :open="currentAlbum">
     <summary
       class="bg-lightest dark:text-primary sticky top-0 flex cursor-pointer items-center px-8 py-2 md:rounded"
     >
@@ -10,7 +10,6 @@
       />
       {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
     </summary>
-    <div v-if="currentAlbum || open">
       <div
         v-for="song in album.Songs"
         :key="song.Pos"
@@ -68,7 +67,6 @@
           </span>
         </button>
       </div>
-    </div>
   </details>
 </template>
 <script setup>
@@ -86,17 +84,11 @@ const props = defineProps([
   "selectedIds",
 ]);
 
-const open = ref(props.currentAlbum);
-
 function play(id) {
   const data = {
     Start: Number(id),
   };
   sendCommand(endpoints.queue, "play", data);
-}
-
-function loadSongs() {
-  this.open = true;
 }
 
 function isSelected(id) {

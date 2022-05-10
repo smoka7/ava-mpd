@@ -4,13 +4,13 @@
   </div>
 </template>
 <script setup>
-import endpoints from '../endpoints';
-import { sendCommand } from '../helpers';
-import { shallowReactive } from 'vue';
-import Folder from './folder.vue';
-const resp = await sendCommand(endpoints.folders, 'list', {
-  playlist: '',
-});
+import { shallowReactive, computed } from "vue";
+import { useStore } from "vuex";
+import Folder from "./folder.vue";
 
-const serverRoot = shallowReactive([...resp.Folders, ...resp.Files]);
+const store = useStore();
+const serverRoot = computed(() =>
+  shallowReactive(store.state.serverFolders),
+);
+
 </script>

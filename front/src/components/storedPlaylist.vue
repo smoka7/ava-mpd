@@ -97,32 +97,31 @@
   </div>
 </template>
 <script setup>
-import endpoints from '../endpoints';
-import { useStore } from 'vuex';
-import { humanizeTime, sendCommand } from '../helpers.js';
-import { shallowReactive, computed, reactive } from 'vue';
-import PlaylistMenu from './playlistMenu.vue';
-import SidebarButton from './sidebarButton.vue';
-import RenamePlaylist from './renamePlaylist.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import endpoints from "../endpoints";
+import { useStore } from "vuex";
+import { humanizeTime, sendCommand } from "../helpers.js";
+import { shallowReactive, computed, reactive } from "vue";
+import PlaylistMenu from "./playlistMenu.vue";
+import SidebarButton from "./sidebarButton.vue";
+import RenamePlaylist from "./renamePlaylist.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const store = useStore();
 
-await store.dispatch('getStoredPlaylist');
 
 const storedPlaylist = computed(() =>
-  shallowReactive(store.state.storedPlaylist)
+  shallowReactive(store.state.storedPlaylist),
 );
 
 const state = reactive({
   renameOpen: false,
-  renamePlaylist: '',
+  renamePlaylist: "",
   selectedCount: 0,
 });
 
 const playlists = [
-  { name: 'Liked Songs', icon: 'heart', method: 'liked' },
-  { name: 'Most Played Songs', icon: 'chart-area', method: 'most' },
+  { name: "Liked Songs", icon: "heart", method: "liked" },
+  { name: "Most Played Songs", icon: "chart-area", method: "most" },
 ];
 
 async function getSongs(index) {
@@ -136,8 +135,8 @@ async function getSongs(index) {
   }
   this.storedPlaylist[index].songs = await sendCommand(
     endpoints.storedPlaylists,
-    'list',
-    { playlist: this.storedPlaylist[index].playlist }
+    "list",
+    { playlist: this.storedPlaylist[index].playlist },
   );
 }
 
@@ -153,7 +152,7 @@ function PlCommand(method, index) {
       sendCommand(endpoints.storedPlaylists, method, data);
     }
   });
-  store.dispatch('getStoredPlaylist');
+  store.dispatch("getStoredPlaylist");
 }
 
 function clearSelection() {
@@ -163,15 +162,15 @@ function clearSelection() {
 }
 
 function toggleSelected(index) {
-  this.storedPlaylist[index].selected
-    ? state.selectedCount--
-    : state.selectedCount++;
+  this.storedPlaylist[index].selected ?
+    state.selectedCount-- :
+    state.selectedCount++;
   state.renamePlaylist = this.storedPlaylist[index].playlist;
   this.storedPlaylist[index].selected = !this.storedPlaylist[index].selected;
 }
 
 function animate(id) {
-  const el = document.getElementById('icon-' + id);
-  if (el) el.classList.toggle('rotate-90');
+  const el = document.getElementById("icon-" + id);
+  if (el) el.classList.toggle("rotate-90");
 }
 </script>

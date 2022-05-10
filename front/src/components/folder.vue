@@ -54,7 +54,6 @@ async function listFolders() {
   const response = await sendCommand(endpoints.folders, "list", {
     playlist: props.data.Directory,
   });
-  console.log([...response.Folders, ...response.Files]);
   folders.data = [...response.Folders, ...response.Files];
 }
 

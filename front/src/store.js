@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { fetchOrFail } from "./helpers";
+import { fetchOrFail, sendCommand } from "./helpers";
 import endpoints from "./endpoints";
 const store = createStore({
   state: {
@@ -17,6 +17,7 @@ const store = createStore({
       Length: 0,
       Duration: 0,
     },
+    serverFolders: [],
     settings: {
       Outputs: {},
       DatabaseStats: {
@@ -49,6 +50,9 @@ const store = createStore({
     setConnected(state, connected) {
       state.connected = connected;
     },
+    setServerFolders(state, response) {
+      state.serverFolders = [...response.Folders, ...response.Files];
+    },
     setSettings(state, settings) {
       state.settings = settings;
     },
@@ -71,6 +75,12 @@ const store = createStore({
         return;
       }
       store.dispatch("getCurrentSong");
+    },
+    async getServerFolders() {
+      const response = await sendCommand(endpoints.folders, "list", {
+        playlist: "",
+      });
+      store.commit("setServerFolders", response);
     },
     async getStoredPlaylist() {
       const response = await fetchOrFail(endpoints.storedPlaylists);

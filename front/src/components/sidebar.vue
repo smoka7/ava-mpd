@@ -1,7 +1,7 @@
 <template>
   <TabGroup
     as="div"
-    class="fbg flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
+    class="fbg relative flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
   >
     <TabList
       as="div"
@@ -49,15 +49,36 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { toggleMediaController } from "../helpers.js";
 import { defineAsyncComponent } from "vue";
+import { useStore } from "vuex";
 
-const playlist = defineAsyncComponent(() => import("./playlist.vue"));
-const storedPlaylist = defineAsyncComponent(() =>
-  import("./storedPlaylist.vue"),
-);
-const folders = defineAsyncComponent(() => import("./folders.vue"));
+const store = useStore();
 
 const setting = defineAsyncComponent({
   loader: () => import("./setting.vue"),
+  delay: 200,
+});
+
+const queueCmp = defineAsyncComponent({
+  loader: () => {
+    store.dispatch("getQueue");
+    return import("./playlist.vue");
+  },
+  delay: 200,
+});
+
+const storedPlaylist = defineAsyncComponent({
+  loader: () => {
+    store.dispatch("getStoredPlaylist");
+    return import("./storedPlaylist.vue");
+  },
+  delay: 200,
+});
+
+const folders = defineAsyncComponent({
+  loader: () => {
+    store.dispatch("getServerFolders");
+    return import("./folders.vue");
+  },
   delay: 200,
 });
 
@@ -74,7 +95,7 @@ const tabClasses = {
 
 const tabs = {
   Queue: {
-    component: playlist,
+    component: queueCmp,
     icon: "list-ul",
   },
   Settings: {
