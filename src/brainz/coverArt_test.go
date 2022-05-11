@@ -19,7 +19,7 @@ func TestFetch(t *testing.T) {
 	}{{name: "one", args: args{releaseID: CAURL + "73d5bede-e281-4e08-b00e-d81dcae2e75c"}, wantBody: []byte(resp), wantErr: false}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotBody, err := Fetch(tt.args.releaseID)
+			gotBody, err := fetch(tt.args.releaseID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Fetch() error = %v, wantErr %v", err, tt.wantErr)
 				return

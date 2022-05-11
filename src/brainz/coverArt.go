@@ -24,9 +24,9 @@ type images struct {
 	Front bool   `json:"front"`
 }
 
-func Fetch(url string) (body []byte, err error) {
+func fetch(url string) (body []byte, err error) {
 	ctx := context.Background()
-	timeout, cancel := context.WithTimeout(ctx, 1*time.Second)
+	timeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(timeout, http.MethodGet, url, nil)
@@ -35,7 +35,7 @@ func Fetch(url string) (body []byte, err error) {
 	res, err := client.Do(req)
 	if err != nil {
 		config.Log(err)
-		return body, err
+		return
 	}
 	defer res.Body.Close()
 
@@ -50,14 +50,14 @@ func Fetch(url string) (body []byte, err error) {
 
 	body, err = io.ReadAll(res.Body)
 	if err != nil {
-		return body, err
+		return
 	}
 
-	return body, nil
+	return
 }
 
-func GetCoverURL(releaseID string) ([]byte, error) {
-	res, err := Fetch(CAURL + releaseID)
+func GetCover(releaseID string) ([]byte, error) {
+	res, err := fetch(CAURL + releaseID)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func GetCoverURL(releaseID string) ([]byte, error) {
 	if url == "" {
 		return nil, fmt.Errorf("couldn't find cover")
 	}
-	cover, err := Fetch(url)
+	cover, err := fetch(url)
 
 	return cover, err
 }

@@ -9,22 +9,29 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+const DefaultCover = "default"
+
 // returns the URL of the song
 func ServeAlbumArt(c config.Connection, songPath string) (coverURL string) {
 	song := NewSong()
 	if songPath == "" {
-		return "default"
+		return DefaultCover
 	}
 	c.Connect()
 	defer c.Close()
+
 	song.GetSongInfo(&c, songPath)
-	coverPath, coverURL := song.getCoverArtPath()
+	coverPath, coverURL, err := song.getCoverArtPath()
+	if err != nil {
+		return DefaultCover
+	}
+
 	//  if cover isn't cached get it from mpd
 	if _, err := os.Stat(coverPath); os.IsNotExist(err) {
 		err := song.getAlbumArt(&c)
 		if err != nil {
 			config.Log(err)
-			return "default"
+			return DefaultCover
 		}
 	}
 	return
@@ -44,8 +51,10 @@ func (s *Song) getAlbumArt(c *config.Connection) (err error) {
 		return
 	}
 
-	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok && releaseID != "" {
-		coverBin, err = brainz.GetCoverURL(releaseID)
+	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok &&
+		releaseID != "" &&
+		c.DownloadCoverArt {
+		coverBin, err = brainz.GetCover(releaseID)
 		if err == nil {
 			s.writeCoverToFile(coverBin)
 			return
@@ -58,7 +67,11 @@ func (s *Song) getAlbumArt(c *config.Connection) (err error) {
 
 // writes the cover data to cache folder
 func (s *Song) writeCoverToFile(data []byte) {
-	coverPath, _ := s.getCoverArtPath()
+	coverPath, _, err := s.getCoverArtPath()
+	if err != nil {
+		return
+	}
+
 	coverFile, err := os.OpenFile(coverPath, os.O_CREATE|os.O_WRONLY, 0600)
 	config.Log(err)
 	defer coverFile.Close()
@@ -67,7 +80,7 @@ func (s *Song) writeCoverToFile(data []byte) {
 }
 
 // generates a name for cover and returns its path in URL
-func (s *Song) getCoverArtPath() (coverPath string, url string) {
+func (s *Song) getCoverArtPath() (coverPath, url string, err error) {
 	coverFolder, _ := os.UserCacheDir()
 	coverFolder += "/ava-mpd/coverart/"
 	if _, e := os.Stat(coverFolder); os.IsNotExist(e) {
@@ -75,6 +88,17 @@ func (s *Song) getCoverArtPath() (coverPath string, url string) {
 		config.Log(err)
 	}
 	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
+
+	if fileName == "" {
+		fileName = sanitize(s.Info["Title"] + s.Info["Artist"])
+	}
+
+	if fileName == "" {
+		err = errors.New("couldn't find a name for cover")
+		config.Log(err)
+		return
+	}
+
 	coverPath = coverFolder + fileName
 	url = "/coverart/" + fileName
 	return

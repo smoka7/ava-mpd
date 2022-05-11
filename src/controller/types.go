@@ -8,7 +8,8 @@ import (
 )
 
 type Mpd struct {
-	Client config.Connection
+	Client           config.Connection
+	DownloadCoverArt bool
 }
 
 type Request struct {
