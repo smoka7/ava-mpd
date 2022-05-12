@@ -13,7 +13,8 @@ func SearchServer(c *config.Connection, term ...string) (result SearchResult, er
 	if err != nil {
 		return nil, err
 	}
-	result = make(map[string][]File)
+	filter := term[0]
+	result = make(map[string]Files)
 	query, err := c.Client.Search(term...)
 	config.Log(err)
 	if err != nil {
@@ -22,11 +23,15 @@ func SearchServer(c *config.Connection, term ...string) (result SearchResult, er
 	if len(query) >= 100 {
 		query = query[:100]
 	}
-	for i := 0; i < len(query); i++ {
-		if _, ok := result[query[i][term[0]]]; !ok {
-			result[query[i][term[0]]] = make([]File, 0)
+	for _, song := range query {
+
+		index := song[filter]
+
+		if _, duplicate := result[index]; !duplicate {
+			result[index] = make(Files, 0)
 		}
-		result[query[i][term[0]]] = append(result[query[i][term[0]]], newFile(query[i]))
+
+		result[index] = append(result[index], newFile(song))
 	}
 	return
 }

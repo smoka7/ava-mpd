@@ -9,8 +9,8 @@ import (
 func ListFolders(c *config.Connection, folder string) (list ServerList) {
 	contents, err := c.Client.ListInfo(folder)
 	config.Log(err)
-	list.Files = make([]File, 0)
-	list.Folders = make([]Folder, 0)
+	list.Files = make(Files, 0)
+	list.Folders = make(Folders, 0)
 	for _, item := range contents {
 		// ignore playlists
 		if _, ok := item["playlist"]; ok {

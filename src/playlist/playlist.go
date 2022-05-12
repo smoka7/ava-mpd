@@ -1,7 +1,6 @@
 package playlist
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 
@@ -17,13 +16,12 @@ func GetQueue(c config.Connection, page string) (q Queue) {
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	c.Close()
 	config.Log(err)
-	q.Duration = getDurationSum(queue)
-	q.Length = len(queue)
+	q.Length = uint(len(queue))
 	if q.Length == 0 {
 		return
-	} else if q.Length > ClientQueueLimit {
-		queue, q.CurrentPage, q.LastPage, q.CurrentSongPage = limitQueue(c, queue, page)
 	}
+	q.Duration = getDurationSum(queue)
+	queue = q.getQueueInPage(c, queue, page)
 	q.newAlbum(queue[0])
 	for i := 1; i < len(queue); i++ {
 		if queue[i]["Album"] != queue[i-1]["Album"] {
@@ -43,27 +41,34 @@ func AddAfterCurrent(c *config.Connection, name string) {
 // removes duplicate songs based on their file address from the playlist name
 // if name is empty then it deletes duplicate songs in current queue
 func RemoveDuplicatesongs(c *config.Connection, name string) {
-	var queue []mpd.Attrs
-	if name == "" {
-		queue, err = c.Client.PlaylistInfo(-1, -1)
-		config.Log(err)
-	} else {
+	getQueue := func() (queue []mpd.Attrs) {
+		if name == "" {
+			queue, err = c.Client.PlaylistInfo(-1, -1)
+			config.Log(err)
+			return
+		}
 		queue, err = c.Client.PlaylistContents(name)
 		config.Log(err)
+		return
 	}
+
+	queue := getQueue()
 	songs := make(map[string]bool)
 	cmds := c.Client.BeginCommandList()
 	for i := len(queue) - 1; i >= 0; i-- {
-		if _, ok := songs[queue[i]["file"]]; ok {
-			if name == "" {
-				id, _ := strconv.Atoi(queue[i]["Id"])
-				cmds.DeleteID(id)
-			} else {
-				cmds.PlaylistDelete(name, i)
-			}
+
+		if _, duplicate := songs[queue[i]["file"]]; !duplicate {
+			songs[queue[i]["file"]] = true
 			continue
 		}
-		songs[queue[i]["file"]] = true
+		// deleting from Queue
+		if name == "" {
+			id, _ := strconv.Atoi(queue[i]["Id"])
+			cmds.DeleteID(id)
+			continue
+		}
+		// deleting from StoredPlaylist
+		cmds.PlaylistDelete(name, i)
 	}
 	err := cmds.End()
 	config.Log(err)
@@ -96,10 +101,8 @@ func MoveSong(c *config.Connection, position int, newPosition int) {
 }
 
 // deletes the song from start to end from current Queue
-
 func DeleteSong(c *config.Connection, id int) {
 	err := c.Client.DeleteID(id)
-	// err := c.Client.Delete(start, end)
 	config.Log(err)
 }
 
@@ -110,30 +113,32 @@ func SaveQueue(c *config.Connection, name string) {
 }
 
 // return a list of playlists
-func ListStoredPlaylist(c config.Connection) (playlist []mpd.Attrs) {
+func ListStoredPlaylist(c config.Connection) (playlists Playlists) {
 	c.Connect()
-	playlist, err := c.Client.ListPlaylists()
+	list, err := c.Client.ListPlaylists()
 	config.Log(err)
-	for _, v := range playlist {
+	for _, v := range list {
 		songs, _ := c.Client.PlaylistContents(v["playlist"])
-		v["songsCount"] = fmt.Sprintf("%d", len(songs))
-		v["duration"] = fmt.Sprintf("%f", getDurationSum(songs))
+		playlists = append(playlists, Playlist{
+			Name:       v["playlist"],
+			Duration:   getDurationSum(songs),
+			SongsCount: uint(len(songs)),
+		})
 	}
 	c.Close()
 	return
 }
 
 //  returns list of playlist's song
-func ListSongs(c *config.Connection, playlist string) (songs []mpd.Attrs) {
+func ListSongsIn(c *config.Connection, playlist string) (songs Songs) {
 	contents, err := c.Client.PlaylistContents(playlist)
 	config.Log(err)
 	for _, song := range contents {
-		m := map[string]string{
-			"Title":  song["Title"],
-			"Album":  song["Album"],
-			"Artist": song["Artist"],
-		}
-		songs = append(songs, m)
+		songs = append(songs, Song{
+			Title:  song["Title"],
+			Album:  song["Album"],
+			Artist: song["Artist"],
+		})
 	}
 	return
 }
@@ -276,7 +281,7 @@ func (a *Album) newSong(song mpd.Attrs) {
 	})
 }
 
-func limitQueue(c config.Connection, queue []mpd.Attrs, page string) (currentPage []mpd.Attrs, currentPageIndex, lastPage, pageIndex uint) {
+func (q *Queue) getQueueInPage(c config.Connection, queue []mpd.Attrs, page string) (currentPage []mpd.Attrs) {
 	c.Connect()
 	currentSong, err := c.Client.CurrentSong()
 	c.Close()
@@ -284,32 +289,34 @@ func limitQueue(c config.Connection, queue []mpd.Attrs, page string) (currentPag
 
 	downLimit, upLimt := 0, ClientQueueLimit
 	csPos, _ := strconv.Atoi(currentSong["Pos"])
-	pageIndex = uint(csPos/ClientQueueLimit + 1)
-	lastPage = uint(len(queue)/ClientQueueLimit + 1)
+	q.CurrentSongPage = uint(csPos/ClientQueueLimit + 1)
+	q.LastPage = uint(len(queue)/ClientQueueLimit + 1)
 
 	// returns the part of queue that page number requested
-	pageInt, err := strconv.Atoi(page)
-	if pageInt > int(lastPage) {
-		pageInt = int(lastPage)
-	} else if pageInt <= 0 {
-		pageInt = 1
+	parsedPage, err := strconv.ParseUint(page, 10, 32)
+	q.CurrentPage = uint(parsedPage)
+	if q.CurrentPage > q.LastPage {
+		q.CurrentPage = q.LastPage
+	} else if q.CurrentPage <= 0 {
+		q.CurrentPage = 1
 	}
-	if err == nil || pageInt != 0 {
-		downLimit = (pageInt - 1) * ClientQueueLimit
+	if err == nil || q.CurrentPage != 0 {
+		downLimit = int((q.CurrentPage - 1) * ClientQueueLimit)
 		upLimt = downLimit + ClientQueueLimit
 	}
 
 	if upLimt > len(queue) {
 		upLimt = len(queue)
 	}
-	return queue[downLimit:upLimt], uint(pageInt), lastPage, pageIndex
+	return queue[downLimit:upLimt]
 }
 
 // returns the duration of a list of songs
-func getDurationSum(songs []mpd.Attrs) (sum float64) {
+func getDurationSum(songs []mpd.Attrs) uint {
+	sum := 0.0
 	for _, song := range songs {
 		duration, _ := strconv.ParseFloat(song["duration"], 64)
 		sum += duration
 	}
-	return
+	return uint(sum)
 }

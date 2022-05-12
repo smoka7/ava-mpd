@@ -44,7 +44,7 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			songs := playlist.GetMostPlayed(&c.Client)
 			playlist.AddFolder(&c.Client, songs...)
 		case "list":
-			songs := playlist.ListSongs(&c.Client, request.Data.Playlist)
+			songs := playlist.ListSongsIn(&c.Client, request.Data.Playlist)
 			err = json.NewEncoder(w).Encode(songs)
 			config.Log(err)
 		}
