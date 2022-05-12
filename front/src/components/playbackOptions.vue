@@ -25,7 +25,7 @@
       />
     </div>
     <div class="space-x-2 flex flex-row justify-between items-center">
-      <label for="replaygain"> Replay gain :{{ storeGain }}</label>
+      <label for="replaygain"> Replay gain : {{ storeGain }}</label>
       <select
         name="replaygain"
         aria-label="replayGain"
@@ -50,18 +50,18 @@ import endpoints from "../endpoints.js";
 import { useStore } from "vuex";
 import { computed, reactive } from "vue";
 
-const options = reactive({ gain: "off", mixrampdb: 0, crossfade: 0 });
 const store = useStore();
 const storeGain = computed(() => store.state.settings.ReplayGain);
-const storeCrossfade = computed(() => store.state.status.xfade || "none");
+const storeCrossfade = computed(() => store.state.status.xfade || 0);
 const storeMixrampdb = computed(() => store.state.status.mixrampdb || 0);
+const options = reactive({ gain: storeGain.value, mixrampdb: storeMixrampdb.value, crossfade: storeCrossfade.value });
 const replayGainMods = ["off", "track", "album", "auto"];
 
 function setCrossfade() {
-  let second = Number(crossfade);
+  let second = Number(options.crossfade);
   if (second < 0) {
     second = 0;
-    crossfade = 0;
+    options.crossfade = 0;
   }
   sendCommand(endpoints.setting, "crossfade", { Start: second });
   store.dispatch("getSettings");

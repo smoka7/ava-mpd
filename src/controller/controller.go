@@ -64,9 +64,9 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
-	c.Client.Connect()
-	defer c.Client.Close()
 	if r.Method == http.MethodPost {
+		c.Client.Connect()
+		defer c.Client.Close()
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {

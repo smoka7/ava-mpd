@@ -153,7 +153,9 @@ func (c *Connection) UpdateDatabase() {
 }
 
 // returns the MPD database stats
-func (c *Connection) DatabaseStats() (stats mpd.Attrs) {
+func (c Connection) DatabaseStats() (stats mpd.Attrs) {
+	c.Connect()
+	defer c.Close()
 	stats, err := c.Client.Stats()
 	Log(err)
 
@@ -161,7 +163,9 @@ func (c *Connection) DatabaseStats() (stats mpd.Attrs) {
 }
 
 // returns the mpd outputs
-func (c *Connection) ListOutputs() (stats []mpd.Attrs) {
+func (c Connection) ListOutputs() (stats []mpd.Attrs) {
+	c.Connect()
+	defer c.Close()
 	stats, err := c.Client.ListOutputs()
 	Log(err)
 	return
@@ -206,8 +210,13 @@ func (c *Connection) ChangeReplayGain(id int) {
 }
 
 // returns the Gain status
-func (c *Connection) GetReplayGain() string {
+func (c Connection) GetReplayGain() string {
+	c.Connect()
+	defer c.Close()
 	status, err := c.Client.Command("replay_gain_status").Attrs()
+	if err != nil {
+		return ""
+	}
 	Log(err)
 	return status["replay_gain_mode"]
 }
