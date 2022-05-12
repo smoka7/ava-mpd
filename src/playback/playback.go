@@ -41,7 +41,7 @@ func Command(c config.Connection, cmd string, data int) {
 
 //  toggles the state between play and pause
 func toggle(c *config.Connection) {
-	status := song.GetStatus(c)
+	status := song.GetStatus(*c)
 	if status["state"] == "play" {
 		c.Client.Pause(true)
 		return
@@ -77,7 +77,7 @@ func seek(c *config.Connection, t int) {
 
 // toggles the Single state
 func single(c *config.Connection) {
-	status := song.GetStatus(c)
+	status := song.GetStatus(*c)
 	single := false
 	if status["single"] == "0" {
 		single = true
@@ -88,7 +88,7 @@ func single(c *config.Connection) {
 
 // toggles the Repeat state
 func repeat(c *config.Connection) {
-	status := song.GetStatus(c)
+	status := song.GetStatus(*c)
 	repeat := false
 	if status["repeat"] == "0" {
 		repeat = true
@@ -99,7 +99,7 @@ func repeat(c *config.Connection) {
 
 // toggles the Consume state
 func consume(c *config.Connection) {
-	status := song.GetStatus(c)
+	status := song.GetStatus(*c)
 	consume := false
 	if status["consume"] == "0" {
 		consume = true
@@ -110,7 +110,7 @@ func consume(c *config.Connection) {
 
 // toggles the random state
 func random(c *config.Connection) {
-	status := song.GetStatus(c)
+	status := song.GetStatus(*c)
 	repeat := false
 	if status["random"] == "0" {
 		repeat = true

@@ -60,7 +60,7 @@ func (m *Mpd) RecordPlayCount() {
 	}()
 	func() {
 		client.Connect()
-		status := song.GetStatus(&client)["state"]
+		status := song.GetStatus(client)["state"]
 		lastSong, err := client.Client.CurrentSong()
 		config.Log(err)
 		if status == "play" {
@@ -72,7 +72,7 @@ func (m *Mpd) RecordPlayCount() {
 				client.Connect()
 				currSong, err := client.Client.CurrentSong()
 				config.Log(err)
-				currStatus := song.GetStatus(&client)["state"]
+				currStatus := song.GetStatus(client)["state"]
 				if lastSong["file"] != currSong["file"] &&
 					currStatus == "play" {
 					song.IncrementPCount(&client, currSong["file"])

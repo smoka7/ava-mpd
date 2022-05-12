@@ -21,7 +21,9 @@ func NewSong() *Song {
 }
 
 // returns the server status
-func GetStatus(c *config.Connection) (status mpd.Attrs) {
+func GetStatus(c config.Connection) (status mpd.Attrs) {
+	c.Connect()
+	defer c.Close()
 	status, err = c.Client.Status()
 	config.Log(err)
 	return
