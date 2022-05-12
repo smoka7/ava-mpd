@@ -1,5 +1,5 @@
 <template>
-  <details>
+  <details :open="folders.data != null && folders.data.length > 0">
     <summary
       class="group flex justify-between rounded px-2 py-4 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
     >

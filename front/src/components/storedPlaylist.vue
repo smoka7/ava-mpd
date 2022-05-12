@@ -36,25 +36,29 @@
         />
       </span>
     </div>
-    <details v-for="(playlist, index) in storedPlaylist" :key="index">
+    <details
+      v-for="(playlist, index) in storedPlaylist"
+      :key="index"
+      :open="playlist.songs != null && playlist.songs.length > 0"
+    >
       <summary
-        class="r group mx-2 flex items-start justify-between rounded py-4 px-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
+        class="group mx-2 flex items-start justify-between rounded py-4 px-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
       >
         <span
           @click="getSongs(index)"
-          class="mr-1 flex w-1/2 cursor-pointer items-center overflow-x-hidden text-ellipsis"
+          class="mr-1 flex w-1/2 cursor-pointer items-center overflow-x-hidden text-ellipsis py-2"
         >
           <FontAwesomeIcon
             icon="angle-right"
             class="mr-1 transform-gpu duration-200"
-            :id="'icon-' + playlist.playlist"
+            :id="'icon-' + playlist.Name"
           />
-          {{ playlist.playlist }}
+          {{ playlist.Name }}
         </span>
         <span class="flex flex-col items-end space-x-2 text-sm">
           <span>
-            {{ playlist.songsCount }} song ({{
-              humanizeTime(playlist.duration)
+            {{ playlist.SongsCount }} song ({{
+              humanizeTime(playlist.Duration)
             }})
           </span>
           <span class="invisible flex group-hover:visible">
@@ -108,7 +112,6 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const store = useStore();
 
-
 const storedPlaylist = computed(() =>
   shallowReactive(store.state.storedPlaylist),
 );
@@ -125,29 +128,29 @@ const playlists = [
 ];
 
 async function getSongs(index) {
-  animate(this.storedPlaylist[index].playlist);
+  animate(storedPlaylist.value[index].Name);
   if (
-    this.storedPlaylist[index].songs &&
-    this.storedPlaylist[index].songs.length
+    storedPlaylist.value[index].songs &&
+    storedPlaylist.value[index].songs.length
   ) {
-    this.storedPlaylist[index].songs = [];
+    storedPlaylist.value[index].songs = [];
     return;
   }
-  this.storedPlaylist[index].songs = await sendCommand(
+  storedPlaylist.value[index].songs = await sendCommand(
     endpoints.storedPlaylists,
     "list",
-    { playlist: this.storedPlaylist[index].playlist },
+    { playlist: storedPlaylist.value[index].Name },
   );
 }
 
 function PlCommand(method, index) {
   if (index != null) {
-    this.storedPlaylist[index].selected = true;
+    storedPlaylist.value[index].selected = true;
   }
-  this.storedPlaylist.forEach((p) => {
+  storedPlaylist.value.forEach((p) => {
     if (p.selected) {
       const data = {
-        playlist: p.playlist,
+        playlist: p.Name,
       };
       sendCommand(endpoints.storedPlaylists, method, data);
     }
@@ -156,17 +159,17 @@ function PlCommand(method, index) {
 }
 
 function clearSelection() {
-  this.storedPlaylist.forEach((p) => {
+  storedPlaylist.value.forEach((p) => {
     p.selected = false;
   });
 }
 
 function toggleSelected(index) {
-  this.storedPlaylist[index].selected ?
+  storedPlaylist.value[index].selected ?
     state.selectedCount-- :
     state.selectedCount++;
-  state.renamePlaylist = this.storedPlaylist[index].playlist;
-  this.storedPlaylist[index].selected = !this.storedPlaylist[index].selected;
+  state.renamePlaylist = storedPlaylist.value[index].Name;
+  storedPlaylist.value[index].selected = !storedPlaylist.value[index].selected;
 }
 
 function animate(id) {
