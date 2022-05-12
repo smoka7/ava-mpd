@@ -30,16 +30,17 @@
       class="my-2 rounded border-2 border-green-500 p-2 text-green-500 hover:bg-green-500 hover:text-white"
       @click="updateDatabase"
     >
-      <font-awesome-icon icon="database"/> Update the MPD
-      database
+      <font-awesome-icon icon="database" /> Update the MPD database
     </button>
+    <p v-if="updating != null" class="animate-pulse">
+      updating the database...
+    </p>
     <button
       aria-label="delete-cache"
       class="my-2 rounded border-2 border-red-500 p-2 text-red-500 hover:bg-red-500 hover:text-white"
       @click="deleteCache"
     >
-      <font-awesome-icon icon="eraser"/> Delete the Cover Art
-      cache
+      <font-awesome-icon icon="eraser" /> Delete the Cover Art cache
     </button>
   </div>
 </template>
@@ -50,7 +51,8 @@ import endpoints from "../endpoints.js";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
-const stats=computed(()=>useStore().state.settings.DatabaseStats);
+const stats = computed(() => useStore().state.settings.DatabaseStats);
+const updating = computed(() => useStore().state.status.updating_db);
 
 function updateDatabase() {
   sendCommand(endpoints.setting, "updateDatabase");
@@ -59,5 +61,4 @@ function updateDatabase() {
 function deleteCache() {
   sendCommand(endpoints.setting, "deleteCache");
 }
-
 </script>
