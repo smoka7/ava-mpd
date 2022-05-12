@@ -220,10 +220,12 @@ func GetMostPlayed(c *config.Connection) (mostPlayed []string) {
 }
 
 // gets the file path of the Pos in Queue
-func GetSongFile(c *config.Connection, id int) string {
+func GetSongFile(c *config.Connection, id int) (string, error) {
 	song, err := c.Client.Command("playlistid %d", id).Attrs()
-	config.Log(err)
-	return song["file"]
+	if err != nil {
+		return "", err
+	}
+	return song["file"], nil
 }
 
 // shuffles an album given the position of the song in queue

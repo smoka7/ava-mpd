@@ -55,12 +55,7 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 		case "like":
 			song.ToggleLike(&c.Client, request.Data.Song)
 		case "info":
-			file := playlist.GetSongFile(&c.Client, request.Data.Start)
-			response := SongInfoResponse{
-				Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
-				Stickers: song.GetStickers(&c.Client, file),
-				AlbumArt: song.ServeAlbumArt(c.Client, file),
-			}
+			response := c.getSongResponse(request.Data.Start)
 			err := json.NewEncoder(w).Encode(response)
 			config.Log(err)
 		}
@@ -99,4 +94,17 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)
+}
+
+func (c *Mpd) getSongResponse(songPos int) SongInfoResponse {
+	file, err := playlist.GetSongFile(&c.Client, songPos)
+	if err != nil {
+		return SongInfoResponse{}
+	}
+
+	return SongInfoResponse{
+		Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
+		Stickers: song.GetStickers(&c.Client, file),
+		AlbumArt: song.ServeAlbumArt(c.Client, file),
+	}
 }

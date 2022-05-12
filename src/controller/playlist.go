@@ -64,7 +64,10 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		config.Log(err)
 		switch request.Command {
 		case "addsong":
-			file := playlist.GetSongFile(&c.Client, request.Data.Start)
+			file, err := playlist.GetSongFile(&c.Client, request.Data.Start)
+			if err != nil {
+				return
+			}
 			playlist.AddSongToPlaylist(&c.Client, request.Data.Playlist, file)
 		case "delete":
 			playlist.DeleteSong(&c.Client, request.Data.Start)
