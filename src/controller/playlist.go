@@ -36,13 +36,13 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 			playlist.PlayFolder(&c.Client, songs...)
 		case "addliked":
 			songs := playlist.GetLikedSongs(&c.Client)
-			playlist.AddFolder(&c.Client, songs...)
+			playlist.AddFolder(&c.Client, request.Data.Song, songs...)
 		case "playmost":
 			songs := playlist.GetMostPlayed(&c.Client)
 			playlist.PlayFolder(&c.Client, songs...)
 		case "addmost":
 			songs := playlist.GetMostPlayed(&c.Client)
-			playlist.AddFolder(&c.Client, songs...)
+			playlist.AddFolder(&c.Client, request.Data.Song, songs...)
 		case "list":
 			songs := playlist.ListSongsIn(&c.Client, request.Data.Playlist)
 			err = json.NewEncoder(w).Encode(songs)
@@ -99,7 +99,7 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 		config.Log(err)
 		switch request.Command {
 		case "add":
-			playlist.AddFolder(&c.Client, request.Data.Playlist)
+			playlist.AddFolder(&c.Client, request.Data.Song, request.Data.Playlist)
 		case "play":
 			playlist.PlayFolder(&c.Client, request.Data.Playlist)
 		case "list":

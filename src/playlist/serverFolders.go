@@ -1,6 +1,9 @@
 package playlist
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
 )
@@ -39,13 +42,35 @@ func PlayFolder(c *config.Connection, uris ...string) {
 }
 
 // adds the folder to the current queue
-func AddFolder(c *config.Connection, uris ...string) {
-	cm := c.Client.BeginCommandList()
-	for _, uri := range uris {
-		cm.Add(uri)
+func AddFolder(c *config.Connection, position string, uris ...string) {
+	add := func(p string) {
+		cm := c.Client.BeginCommandList()
+		for _, uri := range uris {
+			cm.Add(uri)
+			c.Client.Command("add %s %s", uris, p)
+		}
+		err := cm.End()
+		config.Log(err)
 	}
-	err := cm.End()
-	config.Log(err)
+	switch position {
+	case "currentSong":
+		add("+0")
+	case "endOfQueue":
+		add("")
+	case "currentAlbum":
+		cs, err := c.Client.CurrentSong()
+		if err != nil {
+			config.Log(err)
+			return
+		}
+		pos, err := strconv.Atoi(cs["pos"])
+		if err != nil {
+			config.Log(err)
+			return
+		}
+		_, endOfAlbum := findSongsAlbum(c, pos)
+		add(fmt.Sprint(endOfAlbum))
+	}
 }
 
 func newFolder(item mpd.Attrs) Folder {

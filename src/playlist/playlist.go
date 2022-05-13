@@ -233,12 +233,12 @@ func GetSongFile(c *config.Connection, id int) (string, error) {
 	return song["file"], nil
 }
 
-// shuffles an album given the position of the song in queue
-func ShuffleAlbum(c *config.Connection, pos int) {
+// returns the boundaries of song in Queue
+func findSongsAlbum(c *config.Connection, pos int) (int, int) {
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	if err != nil {
 		config.Log(err)
-		return
+		return 0, 0
 	}
 
 	lastSongIndex := pos
@@ -254,6 +254,12 @@ func ShuffleAlbum(c *config.Connection, pos int) {
 			break
 		}
 	}
+	return firstSongIndex, lastSongIndex
+}
+
+// shuffles an album given the position of the song in queue
+func ShuffleAlbum(c *config.Connection, pos int) {
+	firstSongIndex, lastSongIndex := findSongsAlbum(c, pos)
 
 	err = c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
 	config.Log(err)
