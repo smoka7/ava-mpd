@@ -12,7 +12,7 @@ import (
 type Connection struct {
 	DownloadCoverArt bool        `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
 	Address          string      `json:"address"`            // address of mpd server
-	Password         string      `json:"password:omitempty"` // password of mpd server
+	Password         string      `json:"password,omitempty"` // password of mpd server
 	AppPort          string      `json:"app_port"`           // port of current app
 	Client           *mpd.Client `json:"-"`                  // connected client
 }
@@ -160,6 +160,12 @@ func (c Connection) DatabaseStats() (stats mpd.Attrs) {
 	Log(err)
 
 	return
+}
+
+// toggles wheter to download missing covers
+func (c *Connection) ToggleDownloadCover() {
+	c.DownloadCoverArt = !c.DownloadCoverArt
+	c.SaveConfig()
 }
 
 // returns the mpd outputs

@@ -72,6 +72,8 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 		switch request.Command {
 		case "crossfade":
 			c.Client.ChangeCrossfade(request.Data.Start)
+		case "download":
+			c.Client.ToggleDownloadCover()
 		case "mixrampdb":
 			c.Client.ChangeMixRampdb(request.Data.Start)
 		case "enableOutput":
@@ -88,9 +90,10 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response := SettingsResponse{
-		DatabaseStats: c.Client.DatabaseStats(),
-		ReplayGain:    c.Client.GetReplayGain(),
-		Outputs:       c.Client.ListOutputs(),
+		DatabaseStats:    c.Client.DatabaseStats(),
+		ReplayGain:       c.Client.GetReplayGain(),
+		Outputs:          c.Client.ListOutputs(),
+		DownloadCoverArt: c.Client.DownloadCoverArt,
 	}
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)

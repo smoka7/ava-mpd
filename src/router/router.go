@@ -29,6 +29,7 @@ var (
 
 func init() {
 	cl = controller.NewClient()
+	cl.Client.SaveConfig()
 	wc = watcher.NewClient(cl.Client)
 	ip := getHostIP()
 	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.Client.AppPort)

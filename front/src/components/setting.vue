@@ -11,8 +11,11 @@
     <div class="card-class" v-if="connected">
       <playback-options />
     </div>
-    <div v-if="connected" class="card-class">
+    <div class="card-class" v-if="connected">
       <outputs />
+    </div>
+    <div class="card-class" v-if="connected">
+      <DownloadCover />
     </div>
   </div>
 </template>
@@ -21,6 +24,7 @@ import DatabaseInfo from "./databaseInfo.vue";
 import Outputs from "./outputs.vue";
 import PlaybackOptions from "./playbackOptions.vue";
 import ThemeSettings from "./themeSettings.vue";
+import DownloadCover from "./downloadCover.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
