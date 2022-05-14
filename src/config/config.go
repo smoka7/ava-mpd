@@ -20,13 +20,14 @@ type Connection struct {
 const (
 	MaxLogSize     = 20000 // maximm log size in bytes
 	LogFilePath    = "/ava-mpd/ava.log"
-	ConfigFilePath = "/ava-mpd/ava.json"
+	ConfigFilePath = "/ava-mpd/"
+	ConfigFileName = "ava.json"
 )
 
 var err error
 
 // Reads the MPD server connection from environment values
-func (c *Connection) ReadEnv() {
+func (c *Connection) readEnv() {
 	host := os.Getenv("MPD_HOST")
 	port := os.Getenv("MPD_PORT")
 	if host != "" && port != "" {
@@ -35,14 +36,41 @@ func (c *Connection) ReadEnv() {
 }
 
 // parse the MPD server connection from bin flag
-func (c *Connection) ReadFromFlags() {
-	var address string
-	flag.StringVar(&address, "address", "", "address of mpd server host:port")
-	flag.StringVar(&c.Password, "password", c.Password, "password of mpd server")
-	flag.StringVar(&c.AppPort, "port", "3001", "The port to run this app on it defaults to 3001")
+func (c *Connection) ReadConfigs() {
+	var configPath string
+	var flagConfig Connection
+
+	flag.StringVar(&flagConfig.Address, "address", "", "address of mpd server host:port")
+	flag.StringVar(&flagConfig.Password, "password", c.Password, "password of mpd server")
+	flag.StringVar(&flagConfig.AppPort, "port", "3001", "The port to run this app on it defaults to 3001")
+	flag.StringVar(&configPath, "config", "", "absolute path of config file")
 	flag.Parse()
-	if address != "" {
-		c.Address = address
+
+	c.readEnv()
+
+	if configPath != "" {
+		err := c.loadConfig(configPath)
+		if err != nil {
+			log.Println(err)
+			os.Exit(1)
+		}
+	}
+
+	if c.Address == "" {
+		c.Address = flagConfig.Address
+	}
+
+	if c.Password == "" {
+		c.Password = flagConfig.Password
+	}
+
+	if c.AppPort == "" {
+		c.AppPort = flagConfig.AppPort
+	}
+
+	if c.Address == "" {
+		log.Println("mpd server address is empty")
+		os.Exit(1)
 	}
 }
 
@@ -62,14 +90,14 @@ func (c *Connection) SaveConfig() {
 
 	configPath := configDir + ConfigFilePath
 	if _, err = os.Stat(configPath); os.IsNotExist(err) {
-		err = os.Mkdir(configDir+"/ava-mpd", 0777)
+		err = os.Mkdir(configPath, 0600)
 		if err != nil {
 			Log(err)
 			return
 		}
 	}
 
-	err = os.WriteFile(configPath, bytes, 0777)
+	err = os.WriteFile(configPath+ConfigFileName, bytes, 0600)
 	Log(err)
 }
 
@@ -81,7 +109,12 @@ func (c *Connection) loadConfig(configPath string) error {
 			Log(err)
 			return err
 		}
-		configPath = configDir + ConfigFilePath
+		configPath = configDir + ConfigFilePath + ConfigFileName
+	}
+
+	// if config file doesn't exist let it go
+	if _, err = os.Stat(configPath); os.IsNotExist(err) {
+		return nil
 	}
 
 	bytes, err := os.ReadFile(configPath)
@@ -127,7 +160,7 @@ func Log(err error) {
 		log.Println(e)
 		return
 	}
-	logFile, e := os.OpenFile(cache+LogFilePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	logFile, e := os.OpenFile(cache+LogFilePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o600)
 	if e != nil {
 		log.Println(e)
 		return
@@ -135,7 +168,7 @@ func Log(err error) {
 	stat, _ := logFile.Stat()
 	if stat.Size() > MaxLogSize {
 		logFile.Close()
-		logFile, e = os.OpenFile(cache+LogFilePath, os.O_TRUNC|os.O_WRONLY, 0600)
+		logFile, e = os.OpenFile(cache+LogFilePath, os.O_TRUNC|os.O_WRONLY, 0o600)
 		if e != nil {
 			log.Println(e)
 			return

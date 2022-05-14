@@ -2,9 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playback"
@@ -15,12 +13,7 @@ import (
 var request Request
 
 func NewClient() (cl Mpd) {
-	cl.Client.ReadEnv()
-	cl.Client.ReadFromFlags()
-	if cl.Client.Address == "" {
-		log.Println("mpd server address is empty")
-		os.Exit(1)
-	}
+	cl.Client.ReadConfigs()
 	return
 }
 
