@@ -57,7 +57,7 @@ const store = useStore();
 const AlbumArt = computed(() => store.state.albumArt);
 const status = computed(() => shallowReactive(store.state.status));
 const currentSong = computed(() =>
-  shallowReactive(store.state.currentSong.Info),
+  shallowReactive(store.state.currentSong),
 );
 
 function seek(time) {

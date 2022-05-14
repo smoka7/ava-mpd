@@ -30,9 +30,9 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	currentSong := song.GetCurrentSong(c.Client)
 	c.Client.Connect()
 	response := StatusResponse{
-		Status:      song.GetStatus(c.Client),
+		Status:      newStatus(song.GetStatus(c.Client)),
 		AlbumArt:    song.ServeAlbumArt(c.Client, currentSong.Info["file"]),
-		CurrentSong: currentSong,
+		CurrentSong: newCurrentSong(currentSong),
 	}
 	c.Client.Close()
 	err := json.NewEncoder(w).Encode(response)

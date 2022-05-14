@@ -74,7 +74,7 @@ import { sendCommand, toggleMediaController } from "../helpers";
 
 const store = useStore();
 const currentSong = computed(() =>
-  shallowReactive(store.state.currentSong.Info),
+  shallowReactive(store.state.currentSong),
 );
 
 const liked = computed(() => store.state.currentSong.Liked);

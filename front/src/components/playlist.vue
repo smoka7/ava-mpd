@@ -76,7 +76,7 @@ const state = reactive({
 
 const queue = computed(() => shallowReactive(store.state.queue));
 
-const currentSongPos = computed(() => store.state.currentSong.Info.Pos);
+const currentSongPos = computed(() => store.state.currentSong.Pos);
 
 const message = computed(() => {
   if (!store.state.connected) {

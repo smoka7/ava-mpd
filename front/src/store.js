@@ -5,8 +5,6 @@ const store = createStore({
   state: {
     connected: true,
     currentSong: {
-      Info: {},
-      Liked: false,
     },
     durationInterval: Number,
     status: {},
