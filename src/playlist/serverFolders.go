@@ -43,27 +43,36 @@ func PlayFolder(c *config.Connection, uris ...string) {
 
 // adds the folder to the current queue
 func AddFolder(c *config.Connection, position string, uris ...string) {
-	add := func(p string) {
-		cm := c.Client.BeginCommandList()
+	add := func(pos string) {
 		for _, uri := range uris {
-			cm.Add(uri)
-			c.Client.Command("add %s %s", uris, p)
+			err := c.Client.Command("add %s %s", uri, pos).OK()
+			config.Log(err)
 		}
-		err := cm.End()
-		config.Log(err)
 	}
 	switch position {
 	case "currentSong":
-		add("+0")
-	case "endOfQueue":
-		add("")
-	case "currentAlbum":
+		// check for empty queue
 		cs, err := c.Client.CurrentSong()
-		if err != nil {
+		if err != nil || cs != nil {
 			config.Log(err)
 			return
 		}
-		pos, err := strconv.Atoi(cs["pos"])
+
+		add("+0")
+	case "endOfQueue":
+		for _, uri := range uris {
+			err := c.Client.Add(uri)
+			config.Log(err)
+		}
+	case "currentAlbum":
+		// check for empty queue
+		cs, err := c.Client.CurrentSong()
+		if err != nil || cs != nil {
+			config.Log(err)
+			return
+		}
+
+		pos, err := strconv.Atoi(cs["Pos"])
 		if err != nil {
 			config.Log(err)
 			return

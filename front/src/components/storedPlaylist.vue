@@ -24,7 +24,8 @@
           :label="'add ' + playlist.name"
           icon="plus"
           @click="
-            sendCommand(endpoints.storedPlaylists, 'add' + playlist.method)
+            AddCmp.playlist = playlist.method;
+            AddCmp.open = true;
           "
         />
         <sidebar-button
@@ -98,6 +99,11 @@
       </div>
     </details>
     <rename-playlist v-if="state.renameOpen" :rename="state.renamePlaylist" />
+    <AddSongs
+      :open="AddCmp.open"
+      @close="AddCmp.open = false"
+      @add="addPlaylist($event)"
+    />
   </div>
 </template>
 <script setup>
@@ -108,12 +114,13 @@ import { shallowReactive, computed, reactive } from "vue";
 import PlaylistMenu from "./playlistMenu.vue";
 import SidebarButton from "./sidebarButton.vue";
 import RenamePlaylist from "./renamePlaylist.vue";
+import AddSongs from "./addSongs.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const store = useStore();
 
 const storedPlaylist = computed(() =>
-  shallowReactive(store.state.storedPlaylist),
+  shallowReactive(store.state.storedPlaylist)
 );
 
 const state = reactive({
@@ -127,6 +134,18 @@ const playlists = [
   { name: "Most Played Songs", icon: "chart-area", method: "most" },
 ];
 
+const AddCmp = reactive({
+  open: false,
+  playlist: "",
+});
+
+function addPlaylist(position) {
+  const data = {
+    song: position,
+  };
+  const command = "add" + AddCmp.playlist;
+  sendCommand(endpoints.storedPlaylists, command, data);
+}
 async function getSongs(index) {
   animate(storedPlaylist.value[index].Name);
   if (
@@ -139,7 +158,7 @@ async function getSongs(index) {
   storedPlaylist.value[index].songs = await sendCommand(
     endpoints.storedPlaylists,
     "list",
-    { playlist: storedPlaylist.value[index].Name },
+    { playlist: storedPlaylist.value[index].Name }
   );
 }
 
@@ -165,9 +184,9 @@ function clearSelection() {
 }
 
 function toggleSelected(index) {
-  storedPlaylist.value[index].selected ?
-    state.selectedCount-- :
-    state.selectedCount++;
+  storedPlaylist.value[index].selected
+    ? state.selectedCount--
+    : state.selectedCount++;
   state.renamePlaylist = storedPlaylist.value[index].Name;
   storedPlaylist.value[index].selected = !storedPlaylist.value[index].selected;
 }

@@ -11,7 +11,7 @@
         {{ folderName() }}
       </span>
       <span class="invisible space-x-2 text-sm group-hover:visible">
-        <sidebar-button label="add" icon="plus" @click="FolderCommand('add')" />
+        <sidebar-button label="add" icon="plus" @click="AddOpen = !AddOpen" />
         <sidebar-button
           label="play"
           icon="play"
@@ -32,17 +32,24 @@
         />
       </div>
     </transition>
+    <AddSongs
+      :open="AddOpen"
+      @close="AddOpen = false"
+      @add="FolderCommand('add', $event)"
+    />
   </details>
 </template>
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { sendCommand } from "../helpers.js";
 import endpoints from "../endpoints.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
+import AddSongs from "./addSongs.vue";
 
 const props = defineProps(["data"]);
 const folders = reactive({ data: [] });
+const AddOpen = ref(false);
 
 async function listFolders() {
   // if its not a folder do nothing and if folder list exists delete it
@@ -57,9 +64,10 @@ async function listFolders() {
   folders.data = [...response.Folders, ...response.Files];
 }
 
-function FolderCommand(command) {
+function FolderCommand(command, position) {
   const data = {
     playlist: props.data.Directory || props.data.File,
+    song: position,
   };
   sendCommand(endpoints.folders, command, data);
 }
