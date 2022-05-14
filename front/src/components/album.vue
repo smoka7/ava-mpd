@@ -40,12 +40,12 @@
           {{ song.Track }}
         </span>
         <span
-          class="col-start-3 col-end-9 overflow-x-hidden text-ellipsis md:col-start-2"
+          class="col-start-3 col-end-9 overflow-x-hidden text-ellipsis md:col-start-2 justify-start"
         >
           {{ song.Title }}
         </span>
         <button
-          class="col-start-9 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-12"
+          class="col-start-9 col-end-13 flex cursor-pointer items-center justify-end space-x-2 md:col-start-11"
         >
           <FontAwesomeIcon
             label="select song"

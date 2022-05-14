@@ -21,7 +21,7 @@
       id="albumArt"
       class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2"
     />
-    <volume-control :volume="status.volume" />
+    <volume-control :v-if="status != null" :volume="status.volume" />
     <PlaybackCommands />
     <div class="flex w-full flex-col justify-start" v-if="status.elapsed">
       <p class="flex justify-between">

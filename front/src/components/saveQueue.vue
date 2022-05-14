@@ -2,7 +2,7 @@
   <button
     aria-label="save-queue"
     @click="InputIsOpen = true"
-    class="tooltip rounded-full p-2 px-3 text-white md:p-0 md:hover:text-accent"
+    class="tooltip scale-125 transform bg-transparent p-2 hover:text-accent"
   >
     <font-awesome-icon icon="save" size="lg" />
     <span class="tooltiptext">save current queue</span>
@@ -24,7 +24,7 @@ import endpoints from "../endpoints.js";
 import { useStore } from "vuex";
 import { ref } from "vue";
 
-const store=useStore();
+const store = useStore();
 const InputIsOpen = ref(false);
 
 function saveQueue(name) {

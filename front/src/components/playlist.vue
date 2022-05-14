@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full w-full flex-col">
-    <div class="mb-10 space-y-1 overflow-y-auto md:mb-6 md:px-2">
+    <div class="mb-10 space-y-1 overflow-y-auto overflow-x-hidden md:mb-6 md:px-2">
       <albumCmp
         v-for="(album, index) in queue.Albums"
         :key="index"
@@ -82,7 +82,7 @@ const message = computed(() => {
   if (!store.state.connected) {
     return "Couldn't Connect to server!!";
   }
-  if (queue.Length == 0) {
+  if (queue.value.Length == 0) {
     return "Queue is empty!";
   }
   return "";
