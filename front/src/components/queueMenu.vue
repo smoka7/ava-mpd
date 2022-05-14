@@ -10,7 +10,7 @@
       class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
     />
     <div
-      class="rounded drop-blur-3xl absolute mx-auto top-1/4 left-1/4 right-1/4 md:left-auto md:top-1/3 md:right-12 flex w-48 flex-col divide-y bg-white dark:bg-gray-800 dark:text-white"
+      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-48 flex-col divide-y rounded bg-white dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
     >
       <button
         class="menuItem"
@@ -25,12 +25,12 @@
           add to playlist
         </summary>
         <button
-          @click="addSongTo(pl.playlist)"
+          @click="addSongTo(pl.Name)"
           class="menuItem"
           v-for="pl in storedPlaylist"
-          :key="pl.playlist"
+          :key="pl.Name"
         >
-          {{ pl.playlist }}
+          {{ pl.Name }}
         </button>
       </details>
     </div>
@@ -66,17 +66,18 @@ const actions = [
 
 function deleteSong() {
   props.selectedIds.forEach((id) => {
-    sendCommand(endpoints.queue, "delete", { Start: id });
+    sendCommand(endpoints.queue, "delete", { Start: Number(id) });
   });
 
   sendCommand(endpoints.queue, "delete", { Start: props.song.id });
+  emit("clearSelection");
   emit("close");
 }
 
 function addSongTo(playlist) {
   props.selectedIds.forEach((id) => {
     sendCommand(endpoints.queue, "addsong", {
-      Start: id,
+      Start: Number(id),
       playlist: playlist,
     });
   });
