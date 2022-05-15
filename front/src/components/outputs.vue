@@ -24,15 +24,17 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import endpoints from "../endpoints.js";
 
-const outputs=computed(()=>useStore().state.settings.Outputs);
-
+const store = useStore();
+const outputs = computed(() => store.state.settings.Outputs);
 
 function toggleOutput(index) {
-  const id = Number(outputs[index]["outputid"]);
-  if (outputs[index]["outputenabled"] == 1) {
-    sendCommand(endpoints.setting, "disableOutput", { Start: id });
+  const id = Number(outputs.value[index]["outputid"]);
+  if (outputs.value[index]["outputenabled"] == 1) {
+    sendCommand(endpoints.setting, "disableOutput", { Value: id });
+    store.dispatch("getSettings");
     return;
   }
-  sendCommand(endpoints.setting, "enableOutput", { Start: id });
+  sendCommand(endpoints.setting, "enableOutput", { Value: id });
+  store.dispatch("getSettings");
 }
 </script>

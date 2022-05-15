@@ -36,39 +36,3 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)
 }
-
-func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		c.Client.Connect()
-		defer c.Client.Close()
-		err := json.NewDecoder(r.Body).Decode(&request)
-		config.Log(err)
-		switch request.Command {
-		case "crossfade":
-			c.Client.ChangeCrossfade(request.Data.Start)
-		case "download":
-			c.Client.ToggleDownloadCover()
-		case "mixrampdb":
-			c.Client.ChangeMixRampdb(request.Data.Start)
-		case "enableOutput":
-			c.Client.EnableOutput(request.Data.Start)
-		case "disableOutput":
-			c.Client.DisableOutput(request.Data.Start)
-		case "deleteCache":
-			config.DeleteCache()
-		case "setGain":
-			c.Client.ChangeReplayGain(request.Data.Start)
-		case "updateDatabase":
-			c.Client.UpdateDatabase()
-		}
-		return
-	}
-	response := SettingsResponse{
-		DatabaseStats:    c.Client.DatabaseStats(),
-		ReplayGain:       c.Client.GetReplayGain(),
-		Outputs:          c.Client.ListOutputs(),
-		DownloadCoverArt: c.Client.DownloadCoverArt,
-	}
-	err := json.NewEncoder(w).Encode(response)
-	config.Log(err)
-}

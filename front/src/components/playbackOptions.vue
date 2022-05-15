@@ -63,18 +63,18 @@ function setCrossfade() {
     second = 0;
     options.crossfade = 0;
   }
-  sendCommand(endpoints.setting, "crossfade", { Start: second });
+  sendCommand(endpoints.setting, "crossfade", { Value: second });
   store.dispatch("getSettings");
 }
 
 function setMixrampdb() {
-  sendCommand(endpoints.setting, "mixrampdb", { Start: Number(options.mixrampdb) });
+  sendCommand(endpoints.setting, "mixrampdb", { Value: Number(options.mixrampdb) });
   store.dispatch("getSettings");
 }
 
 function setReplayGain() {
   const index = replayGainMods.indexOf(options.gain);
-  sendCommand(endpoints.setting, "setGain", { Start: Number(index) });
+  sendCommand(endpoints.setting, "setGain", { Value: Number(index) });
   store.dispatch("getSettings");
 }
 </script>

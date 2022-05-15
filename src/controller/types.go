@@ -65,13 +65,6 @@ type SearchResponse struct {
 	Error error
 }
 
-type SettingsResponse struct {
-	Outputs          []mpd.Attrs
-	DatabaseStats    mpd.Attrs
-	ReplayGain       string
-	DownloadCoverArt bool
-}
-
 var err error
 
 func newCurrentSong(song song.Song) CurrentSongResponse {
