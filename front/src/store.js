@@ -82,7 +82,7 @@ const store = createStore({
     },
     async getServerFolders() {
       const response = await sendCommand(endpoints.folders, "list", {
-        playlist: "",
+        File: "",
       });
       store.commit("setServerFolders", response);
     },

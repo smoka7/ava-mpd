@@ -90,23 +90,3 @@ func (c *Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(playlist)
 	config.Log(err)
 }
-
-func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		c.Client.Connect()
-		err = json.NewDecoder(r.Body).Decode(&request)
-		config.Log(err)
-		switch request.Command {
-		case "add":
-			playlist.AddFolder(&c.Client, request.Data.Song, request.Data.Playlist)
-		case "play":
-			playlist.PlayFolder(&c.Client, request.Data.Playlist)
-		case "list":
-			folders := playlist.ListFolders(&c.Client, request.Data.Playlist)
-			err = json.NewEncoder(w).Encode(folders)
-			config.Log(err)
-		}
-		c.Client.Close()
-		return
-	}
-}

@@ -2,11 +2,9 @@
   <details :open="folders.data != null && folders.data.length > 0">
     <summary
       class="group flex justify-between rounded px-2 py-4 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
+      @click="listFolders()"
     >
-      <span
-        class="w-4/6 overflow-x-hidden text-ellipsis"
-        @click.self="listFolders()"
-      >
+      <span class="w-4/6 overflow-x-hidden text-ellipsis">
         <FontAwesomeIcon :icon="data.Directory ? 'folder' : 'music'" />
         {{ folderName() }}
       </span>
@@ -59,15 +57,15 @@ async function listFolders() {
     return;
   }
   const response = await sendCommand(endpoints.folders, "list", {
-    playlist: props.data.Directory,
+    File: props.data.Directory,
   });
   folders.data = [...response.Folders, ...response.Files];
 }
 
 function FolderCommand(command, position) {
   const data = {
-    playlist: props.data.Directory || props.data.File,
-    song: position,
+    File: props.data.Directory || props.data.File,
+    Pos: position,
   };
   sendCommand(endpoints.folders, command, data);
 }
