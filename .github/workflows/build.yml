@@ -13,7 +13,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '16'
-        cache: 'pnpm'
     - run: cd front && pnpm install --frozen-lockfile
     - run: cd front && pnpm build
     - uses: wangyoucao577/go-release-action@v1.28
