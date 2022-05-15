@@ -21,8 +21,8 @@ const InputIsOpen=ref(true);
 
 function renamePlaylist(name) {
   sendCommand(endpoints.storedPlaylists, "rename", {
-    playlist: props.rename,
-    song: name,
+    Playlist: props.rename,
+    NewPlaylist: name,
   });
   store.dispatch("getStoredPlaylist");
 };

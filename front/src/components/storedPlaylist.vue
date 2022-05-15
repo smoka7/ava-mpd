@@ -120,7 +120,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 const store = useStore();
 
 const storedPlaylist = computed(() =>
-  shallowReactive(store.state.storedPlaylist)
+  shallowReactive(store.state.storedPlaylist),
 );
 
 const state = reactive({
@@ -141,7 +141,7 @@ const AddCmp = reactive({
 
 function addPlaylist(position) {
   const data = {
-    song: position,
+    Pos: position,
   };
   const command = "add" + AddCmp.playlist;
   sendCommand(endpoints.storedPlaylists, command, data);
@@ -158,7 +158,7 @@ async function getSongs(index) {
   storedPlaylist.value[index].songs = await sendCommand(
     endpoints.storedPlaylists,
     "list",
-    { playlist: storedPlaylist.value[index].Name }
+    { Playlist: storedPlaylist.value[index].Name },
   );
 }
 
@@ -169,7 +169,7 @@ function PlCommand(method, index) {
   storedPlaylist.value.forEach((p) => {
     if (p.selected) {
       const data = {
-        playlist: p.Name,
+        Playlist: p.Name,
       };
       sendCommand(endpoints.storedPlaylists, method, data);
     }
@@ -184,9 +184,9 @@ function clearSelection() {
 }
 
 function toggleSelected(index) {
-  storedPlaylist.value[index].selected
-    ? state.selectedCount--
-    : state.selectedCount++;
+  storedPlaylist.value[index].selected ?
+    state.selectedCount-- :
+    state.selectedCount++;
   state.renamePlaylist = storedPlaylist.value[index].Name;
   storedPlaylist.value[index].selected = !storedPlaylist.value[index].selected;
 }
