@@ -53,7 +53,6 @@ type Status struct {
 type StatusResponse struct {
 	Status      Status
 	CurrentSong CurrentSongResponse
-	AlbumArt    string
 }
 
 type SearchRequest struct {
@@ -69,7 +68,10 @@ type SearchResponse struct {
 type SongInfoResponse struct {
 	Info     mpd.Attrs
 	Stickers []mpd.Sticker
-	AlbumArt string
+}
+
+type CoverArtResponse struct {
+	Url string
 }
 
 type SettingsResponse struct {

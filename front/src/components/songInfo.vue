@@ -54,23 +54,23 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import likeSong from './likeSong.vue';
-import albumArt from './albumArt.vue';
-import endpoints from '../endpoints.js';
-import { sendCommand } from '../helpers';
-import { reactive, onMounted } from 'vue';
-const props = defineProps(['song']);
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import likeSong from "./likeSong.vue";
+import albumArt from "./albumArt.vue";
+import endpoints from "../endpoints.js";
+import { sendCommand } from "../helpers";
+import { reactive, onMounted } from "vue";
+const props = defineProps(["song"]);
 const state = reactive({
   info: {},
   stickers: {},
-  albumArt: '',
+  albumArt: "",
   liked: false,
 });
 
 function isItLiked() {
   const index = state.stickers.findIndex((stick) => {
-    if (stick.Name == 'liked' && stick.Value == 'true') return true;
+    if (stick.Name == "liked" && stick.Value == "true") return true;
   });
   if (index > -1) {
     state.liked = true;
@@ -78,12 +78,15 @@ function isItLiked() {
 }
 
 async function getInfo() {
-  const song = await sendCommand(endpoints.song, 'info', {
+  const song = await sendCommand(endpoints.song, "info", {
+    start: props.song,
+  });
+  const albumArt = await sendCommand(endpoints.song, "albumArt", {
     start: props.song,
   });
   state.info = song.Info;
   state.stickers = song.Stickers;
-  state.albumArt = song.AlbumArt;
+  state.albumArt = albumArt.Url;
   isItLiked();
 }
 

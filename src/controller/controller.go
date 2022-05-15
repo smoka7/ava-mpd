@@ -31,7 +31,6 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	c.Client.Connect()
 	response := StatusResponse{
 		Status:      newStatus(song.GetStatus(c.Client)),
-		AlbumArt:    song.ServeAlbumArt(c.Client, currentSong.Info["file"]),
 		CurrentSong: newCurrentSong(currentSong),
 	}
 	c.Client.Close()
@@ -49,6 +48,10 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 			song.ToggleLike(&c.Client, request.Data.Song)
 		case "info":
 			response := c.getSongResponse(request.Data.Start)
+			err := json.NewEncoder(w).Encode(response)
+			config.Log(err)
+		case "albumArt":
+			response := c.getSongCover(request.Data.Start)
 			err := json.NewEncoder(w).Encode(response)
 			config.Log(err)
 		}
@@ -101,6 +104,19 @@ func (c *Mpd) getSongResponse(songPos int) SongInfoResponse {
 	return SongInfoResponse{
 		Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
 		Stickers: song.GetStickers(&c.Client, file),
-		AlbumArt: song.ServeAlbumArt(c.Client, file),
+	}
+}
+
+func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
+	file, err := playlist.GetSongFile(&c.Client, songPos)
+	if err != nil {
+		config.Log(err)
+		return CoverArtResponse{
+			Url: "default",
+		}
+	}
+
+	return CoverArtResponse{
+		Url: song.ServeAlbumArt(c.Client, file),
 	}
 }

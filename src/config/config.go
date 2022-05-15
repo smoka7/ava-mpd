@@ -48,12 +48,10 @@ func (c *Connection) ReadConfigs() {
 
 	c.readEnv()
 
-	if configPath != "" {
-		err := c.loadConfig(configPath)
-		if err != nil {
-			log.Println(err)
-			os.Exit(1)
-		}
+	err := c.loadConfig(configPath)
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
 	}
 
 	if c.Address == "" {
@@ -106,7 +104,6 @@ func (c *Connection) loadConfig(configPath string) error {
 	if configPath == "" {
 		configDir, err := os.UserConfigDir()
 		if err != nil {
-			Log(err)
 			return err
 		}
 		configPath = configDir + ConfigFilePath + ConfigFileName

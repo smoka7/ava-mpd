@@ -1,11 +1,11 @@
 import { createStore } from "vuex";
 import { fetchOrFail, sendCommand } from "./helpers";
 import endpoints from "./endpoints";
+
 const store = createStore({
   state: {
     connected: true,
-    currentSong: {
-    },
+    currentSong: {},
     durationInterval: Number,
     status: {},
     albumArt: "default",
@@ -66,13 +66,19 @@ const store = createStore({
   actions: {
     async getCurrentSong(store) {
       const response = await fetchOrFail(endpoints.status);
-      if (response.Status != null || response.CurrentSong != null || response.AlbumArt != null) {
+      if (response.Status != null || response.CurrentSong != null) {
         store.commit("setCurrentSong", response.CurrentSong);
         store.commit("setStatus", response.Status);
-        store.commit("setAlbumArt", response.AlbumArt);
+        store.dispatch("getCurrentSongAlbumart");
         return;
       }
       store.dispatch("getCurrentSong");
+    },
+    async getCurrentSongAlbumart() {
+      const albumArt = await sendCommand(endpoints.song, "albumArt", {
+        start: Number(store.state.currentSong.Id),
+      });
+      store.commit("setAlbumArt", albumArt.Url);
     },
     async getServerFolders() {
       const response = await sendCommand(endpoints.folders, "list", {
