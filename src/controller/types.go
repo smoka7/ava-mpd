@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
-	"github.com/smoka7/ava/src/playlist"
 	"github.com/smoka7/ava/src/song"
 )
 
@@ -53,16 +52,6 @@ type Status struct {
 type StatusResponse struct {
 	Status      Status
 	CurrentSong CurrentSongResponse
-}
-
-type SearchRequest struct {
-	Terms   []string `json:"terms"`
-	Command string   `json:"command"`
-}
-
-type SearchResponse struct {
-	Songs playlist.SearchResult
-	Error error
 }
 
 var err error
