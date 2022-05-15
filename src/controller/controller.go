@@ -6,7 +6,6 @@ import (
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/playback"
-	"github.com/smoka7/ava/src/playlist"
 	"github.com/smoka7/ava/src/song"
 )
 
@@ -36,27 +35,6 @@ func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	c.Client.Close()
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)
-}
-
-func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		err := json.NewDecoder(r.Body).Decode(&request)
-		config.Log(err)
-		c.Client.Connect()
-		switch request.Command {
-		case "like":
-			song.ToggleLike(&c.Client, request.Data.Song)
-		case "info":
-			response := c.getSongResponse(request.Data.Start)
-			err := json.NewEncoder(w).Encode(response)
-			config.Log(err)
-		case "albumArt":
-			response := c.getSongCover(request.Data.Start)
-			err := json.NewEncoder(w).Encode(response)
-			config.Log(err)
-		}
-		c.Client.Close()
-	}
 }
 
 func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
@@ -93,30 +71,4 @@ func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)
-}
-
-func (c *Mpd) getSongResponse(songPos int) SongInfoResponse {
-	file, err := playlist.GetSongFile(&c.Client, songPos)
-	if err != nil {
-		return SongInfoResponse{}
-	}
-
-	return SongInfoResponse{
-		Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
-		Stickers: song.GetStickers(&c.Client, file),
-	}
-}
-
-func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
-	file, err := playlist.GetSongFile(&c.Client, songPos)
-	if err != nil {
-		config.Log(err)
-		return CoverArtResponse{
-			Url: "default",
-		}
-	}
-
-	return CoverArtResponse{
-		Url: song.ServeAlbumArt(c.Client, file),
-	}
 }

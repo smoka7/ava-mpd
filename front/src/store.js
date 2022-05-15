@@ -76,7 +76,7 @@ const store = createStore({
     },
     async getCurrentSongAlbumart() {
       const albumArt = await sendCommand(endpoints.song, "albumArt", {
-        start: Number(store.state.currentSong.Id),
+        ID: Number(store.state.currentSong.Id),
       });
       store.commit("setAlbumArt", albumArt.Url);
     },

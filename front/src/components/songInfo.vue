@@ -79,10 +79,10 @@ function isItLiked() {
 
 async function getInfo() {
   const song = await sendCommand(endpoints.song, "info", {
-    start: props.song,
+    ID: props.song,
   });
   const albumArt = await sendCommand(endpoints.song, "albumArt", {
-    start: props.song,
+    ID: props.song,
   });
   state.info = song.Info;
   state.stickers = song.Stickers;

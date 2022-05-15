@@ -65,15 +65,6 @@ type SearchResponse struct {
 	Error error
 }
 
-type SongInfoResponse struct {
-	Info     mpd.Attrs
-	Stickers []mpd.Sticker
-}
-
-type CoverArtResponse struct {
-	Url string
-}
-
 type SettingsResponse struct {
 	Outputs          []mpd.Attrs
 	DatabaseStats    mpd.Attrs
