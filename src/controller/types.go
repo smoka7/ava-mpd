@@ -32,7 +32,7 @@ type CurrentSongResponse struct {
 	Id     string
 	Pos    string
 	Title  string
-	file   string
+	File   string
 	Liked  bool
 }
 
@@ -83,7 +83,7 @@ func newCurrentSong(song song.Song) CurrentSongResponse {
 		Id:     song.Info["Id"],
 		Pos:    song.Info["Pos"],
 		Title:  song.Info["Title"],
-		file:   song.Info["file"],
+		File:   song.Info["file"],
 		Liked:  song.Liked,
 	}
 }

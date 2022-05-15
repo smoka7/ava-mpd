@@ -24,7 +24,7 @@ const classes = {
 const btnClass = ref([classes.normal]);
 
 function likeSong() {
-  sendCommand(endpoints.song, "like", { song: props.file });
+  sendCommand(endpoints.song, "like", { File: props.file });
   btnClass.value = [classes.normal, classes.scale, classes.right];
   setTimeout(() => {
     btnClass.value = [classes.normal, classes.scale, classes.left];
