@@ -7,10 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js 
-      uses: actions/setup-node@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 6.32.9
+    - uses: actions/setup-node@v3
       with:
         node-version: '16'
+        cache: 'pnpm'
     - run: cd front && pnpm install --frozen-lockfile
     - run: cd front && pnpm build
     - uses: wangyoucao577/go-release-action@v1.28
