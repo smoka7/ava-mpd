@@ -28,7 +28,7 @@ const store = useStore();
 const InputIsOpen = ref(false);
 
 function saveQueue(name) {
-  sendCommand(endpoints.queue, "save", { playlist: name });
+  sendCommand(endpoints.queue, "save", { Playlist: name });
   store.dispatch("getStoredPlaylist");
 }
 </script>

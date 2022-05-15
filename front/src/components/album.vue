@@ -86,7 +86,7 @@ const props = defineProps([
 
 function play(id) {
   const data = {
-    Start: Number(id),
+    ID: Number(id),
   };
   sendCommand(endpoints.queue, "play", data);
 }

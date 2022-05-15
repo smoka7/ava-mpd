@@ -66,10 +66,10 @@ const actions = [
 
 function deleteSong() {
   props.selectedIds.forEach((id) => {
-    sendCommand(endpoints.queue, "delete", { Start: Number(id) });
+    sendCommand(endpoints.queue, "delete", { ID: Number(id) });
   });
 
-  sendCommand(endpoints.queue, "delete", { Start: props.song.id });
+  sendCommand(endpoints.queue, "delete", { ID: props.song.id });
   emit("clearSelection");
   emit("close");
 }
@@ -77,13 +77,13 @@ function deleteSong() {
 function addSongTo(playlist) {
   props.selectedIds.forEach((id) => {
     sendCommand(endpoints.queue, "addsong", {
-      Start: Number(id),
-      playlist: playlist,
+      ID: Number(id),
+      Playlist: playlist,
     });
   });
   sendCommand(endpoints.queue, "addsong", {
-    Start: props.song.id,
-    playlist: playlist,
+    ID: props.song.id,
+    Playlist: playlist,
   });
   emit("close");
 }
