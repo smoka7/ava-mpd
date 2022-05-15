@@ -6,16 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js 
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '16'
-    - run: cd front && npm i
-    - run: cd front && npm run build --if-present
-    - uses: nida/go-release-action@v3.2.6
+    - run: cd front && pnpm install --frozen-lockfile
+    - run: cd front && pnpm build
+    - uses: wangyoucao577/go-release-action@v1.28
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: linux
-        goversion: 1.16
+        goversion: 1.18
         goarch: amd64
