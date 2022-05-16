@@ -327,8 +327,13 @@ func (q *Queue) getQueueInPage(c config.Connection, queue []mpd.Attrs, page stri
 	q.LastPage = uint(len(queue)/ClientQueueLimit + 1)
 
 	// returns the part of queue that page number requested
-	parsedPage, err := strconv.ParseUint(page, 10, 32)
-	q.CurrentPage = uint(parsedPage)
+	parsedPage, err := strconv.Atoi(page)
+	if parsedPage == -1 {
+		q.CurrentPage = q.CurrentSongPage
+	} else {
+		q.CurrentPage = uint(parsedPage)
+	}
+
 	if q.CurrentPage > q.LastPage {
 		q.CurrentPage = q.LastPage
 	} else if q.CurrentPage <= 0 {

@@ -90,7 +90,7 @@ const store = createStore({
       const response = await fetchOrFail(endpoints.storedPlaylists);
       store.commit("setStoredPlaylist", response);
     },
-    async getQueue(_, page = 1) {
+    async getQueue(_, page = -1) {
       const response = await fetchOrFail(endpoints.queue + "?page=" + page);
       store.commit("setQueue", response);
     },
