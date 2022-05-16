@@ -1,6 +1,7 @@
 package playlist
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 
@@ -34,8 +35,9 @@ func GetQueue(c config.Connection, page string) (q Queue) {
 }
 
 // loads the playlist after the current song in queue
-func AddAfterCurrent(c *config.Connection, name string) {
-	err = c.Client.Command("load %s 0: +0", name).OK()
+func addAfterPos(c *config.Connection, name, pos string) {
+	// 0: means load whole playlist
+	err = c.Client.Command("load %s 0: %s", name, pos).OK()
 }
 
 // removes duplicate songs based on their file address from the playlist name
@@ -156,9 +158,18 @@ func DeletePlaylist(c *config.Connection, playlist string) {
 }
 
 // adds the playlist to the current queue
-func LoadPlaylist(c *config.Connection, playlist string) {
-	err := c.Client.PlaylistLoad(playlist, -1, -1)
-	config.Log(err)
+func LoadPlaylist(c *config.Connection, playlist, position string) {
+	switch position {
+	case "currentSong":
+		addAfterPos(c, playlist, "+0")
+	case "endOfQueue":
+		err := c.Client.PlaylistLoad(playlist, -1, -1)
+		config.Log(err)
+	case "currentAlbum":
+		pos := getCurrentSongPos(c)
+		_, endOfAlbum := findSongsAlbum(c, pos)
+		addAfterPos(c, playlist, fmt.Sprint(endOfAlbum))
+	}
 }
 
 // clears the current queue and plays the playlist
@@ -255,6 +266,23 @@ func findSongsAlbum(c *config.Connection, pos int) (int, int) {
 		}
 	}
 	return firstSongIndex, lastSongIndex
+}
+
+// returns the current song position in queue
+func getCurrentSongPos(c *config.Connection) int {
+	cs, err := c.Client.CurrentSong()
+	// check for empty queue
+	if err != nil || cs == nil {
+		config.Log(err)
+		return 0
+	}
+
+	pos, err := strconv.Atoi(cs["Pos"])
+	if err != nil {
+		config.Log(err)
+		return 0
+	}
+	return pos
 }
 
 // shuffles an album given the position of the song in queue

@@ -35,7 +35,6 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 defineEmits([
-  "addafter",
   "delete",
   "clearSelection",
   "clear",
@@ -44,11 +43,6 @@ defineEmits([
   "removeInvalid",
 ]);
 const actions = [
-  {
-    name: "Add after current",
-    icon: "plus",
-    method: "addafter",
-  },
   {
     name: "Delete Playlists",
     icon: "trash",

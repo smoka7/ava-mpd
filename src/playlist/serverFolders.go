@@ -2,7 +2,6 @@ package playlist
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
@@ -65,18 +64,7 @@ func AddFolder(c *config.Connection, position string, uris ...string) {
 			config.Log(err)
 		}
 	case "currentAlbum":
-		// check for empty queue
-		cs, err := c.Client.CurrentSong()
-		if err != nil || cs != nil {
-			config.Log(err)
-			return
-		}
-
-		pos, err := strconv.Atoi(cs["Pos"])
-		if err != nil {
-			config.Log(err)
-			return
-		}
+		pos := getCurrentSongPos(c)
 		_, endOfAlbum := findSongsAlbum(c, pos)
 		add(fmt.Sprint(endOfAlbum))
 	}

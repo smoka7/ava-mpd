@@ -2,11 +2,10 @@
   <div class="relative flex flex-col overflow-x-hidden pt-6 pb-2">
     <playlist-menu
       v-if="state.selectedCount > 0"
-      @addafter="PlCommand('addafter')"
-      @delete="PlCommand('delete')"
-      @clear="PlCommand('clear')"
-      @removeDuplicate="PlCommand('removeduplicate')"
-      @removeInvalid="PlCommand('removeinvalid')"
+      @delete="playlistCommand('delete')"
+      @clear="playlistCommand('clear')"
+      @removeDuplicate="playlistCommand('removeduplicate')"
+      @removeInvalid="playlistCommand('removeinvalid')"
       @clearSelection="clearSelection()"
       @rename="state.renameOpen = true"
     />
@@ -66,12 +65,15 @@
             <sidebar-button
               label="add"
               icon="plus"
-              @click="PlCommand('load', index)"
+              @click="
+                AddCmp.index = index;
+                AddCmp.open = true;
+              "
             />
             <sidebar-button
               label="play"
               icon="play"
-              @click="PlCommand('play', index)"
+              @click="playlistCommand('play', index)"
             />
             <sidebar-button
               label="select playlist"
@@ -137,12 +139,18 @@ const playlists = [
 const AddCmp = reactive({
   open: false,
   playlist: "",
+  index: -1,
 });
 
 function addPlaylist(position) {
   const data = {
     Pos: position,
   };
+  if (AddCmp.index > -1) {
+    playlistCommand("load", AddCmp.index, position);
+    AddCmp.index = -1;
+    return;
+  }
   const command = "add" + AddCmp.playlist;
   sendCommand(endpoints.storedPlaylists, command, data);
 }
@@ -162,7 +170,7 @@ async function getSongs(index) {
   );
 }
 
-function PlCommand(method, index) {
+function playlistCommand(method, index, position) {
   if (index != null) {
     storedPlaylist.value[index].selected = true;
   }
@@ -170,6 +178,7 @@ function PlCommand(method, index) {
     if (p.selected) {
       const data = {
         Playlist: p.Name,
+        Pos: position,
       };
       sendCommand(endpoints.storedPlaylists, method, data);
     }

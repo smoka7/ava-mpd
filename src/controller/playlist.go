@@ -27,15 +27,13 @@ func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 		config.Log(err)
 		switch request.Command {
 		case "load":
-			playlist.LoadPlaylist(&c.Client, request.Data.Playlist)
+			playlist.LoadPlaylist(&c.Client, request.Data.Playlist, request.Data.Pos)
 		case "clear":
 			playlist.ClearPlaylist(&c.Client, request.Data.Playlist)
 		case "delete":
 			playlist.DeletePlaylist(&c.Client, request.Data.Playlist)
 		case "play":
 			playlist.PlayPlaylist(&c.Client, request.Data.Playlist)
-		case "addafter":
-			playlist.AddAfterCurrent(&c.Client, request.Data.Playlist)
 		case "removeduplicate":
 			playlist.RemoveDuplicatesongs(&c.Client, request.Data.Playlist)
 		case "removeinvalid":
