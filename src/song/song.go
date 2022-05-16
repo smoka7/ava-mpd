@@ -70,7 +70,9 @@ func GetStickers(c *config.Connection, file string) (status []mpd.Sticker) {
 // return the sticker name of a song
 func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
 	status, err = c.Client.StickerGet(file, name)
-	config.Log(err)
+	if err != nil && err.Error() != "command 'sticker' failed: no such sticker" {
+		config.Log(err)
+	}
 	return
 }
 
