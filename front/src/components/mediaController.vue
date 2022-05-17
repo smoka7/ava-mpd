@@ -32,11 +32,15 @@
           {{ humanizeTime(status.duration) }}
         </span>
       </p>
-      <progress-bar
-        v-if="status.elapsed"
-        :data="{ value: status.elapsed, max: status.duration }"
-        v-on:seek="seek"
-      />
+      <div class="tooltip">
+        <progress-bar
+          v-if="status.elapsed"
+          :data="{ value: status.elapsed, max: status.duration }"
+          v-on:seek="seek"
+          @sendhover="sethoverProgress"
+        />
+        <span class="tooltiptext">{{ humanizeTime(hoverProgress) }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +50,7 @@ import albumArt from "./albumArt.vue";
 import progressBar from "./progressBar.vue";
 import volumeControl from "./volumeControl.vue";
 import PlaybackCommands from "./playbackCommands.vue";
-import { shallowReactive, computed } from "vue";
+import { shallowReactive, computed, ref } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
 import { useStore } from "vuex";
@@ -56,11 +60,14 @@ defineEmits(["openSetting"]);
 const store = useStore();
 const AlbumArt = computed(() => store.state.albumArt);
 const status = computed(() => shallowReactive(store.state.status));
-const currentSong = computed(() =>
-  shallowReactive(store.state.currentSong),
-);
+const currentSong = computed(() => shallowReactive(store.state.currentSong));
+const hoverProgress = ref(0);
 
 function seek(time) {
   sendCommand(endpoints.playback, "seek", { start: Number(time) });
+}
+
+function sethoverProgress(e) {
+  hoverProgress.value = e;
 }
 </script>

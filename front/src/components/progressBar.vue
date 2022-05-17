@@ -4,36 +4,38 @@
     max="100"
     ref="progress"
     @click="seek"
-    @mousedown.prevent="MouseDown"
-    @mouseup.prevent="MouseUp"
+    @mousemove="sendHover"
     :value="progressedPercentage"
   />
 </template>
-<script>
-export default {
-  props: {
-    data: Object,
-  },
-  emits: ["seek"],
-  methods: {
-    MouseDown() {
-      this.$refs.progress.addEventListener("mousemove", this.seek);
-    },
-    MouseUp() {
-      this.$refs.progress.removeEventListener("mousemove", this.seek);
-    },
-    seek(e) {
-      const percent = e.offsetX / this.$refs.progress.offsetWidth;
-      const seek = Math.floor(percent * this.data.max);
-      this.$emit("seek", seek);
-    },
-  },
-  computed: {
-    progressedPercentage() {
-      return (this.data.value / this.data.max) * 100 || 0;
-    },
-  },
-};
+<script setup>
+import { computed, ref } from "vue";
+
+const progress = ref(null);
+
+const props = defineProps({
+  data: Object,
+});
+const emit = defineEmits(["seek", "sendhover"]);
+
+function seek(e) {
+  const seek = findSeekValue(e);
+  emit("seek", seek);
+}
+
+function sendHover(e) {
+  const seek = findSeekValue(e);
+  emit("sendhover", seek);
+}
+
+function findSeekValue(e) {
+  const percent = e.offsetX / progress.value.offsetWidth;
+  return Math.floor(percent * props.data.max);
+}
+
+const progressedPercentage = computed(
+  () => (props.data.value / props.data.max) * 100 || 0,
+);
 </script>
 <style>
 progress {
