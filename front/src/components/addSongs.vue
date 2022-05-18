@@ -18,6 +18,17 @@
         >
           {{ texts[index] }}
         </button>
+        <div class="flex flex-col space-y-1" v-if="storedPlaylist != null">
+          <h2>Playlists</h2>
+          <button
+            v-for="(playlist, index) in storedPlaylist"
+            :key="index"
+            @click="addToPlaylist(playlist.Name)"
+            class="rounded border-2 border-primary p-1 text-lg text-primary hover:bg-primary hover:text-white focus:bg-primary focus:text-white dark:border-accent dark:text-accent hover:dark:bg-accent hover:dark:text-primary focus:dark:bg-accent focus:dark:text-primary"
+          >
+            {{ playlist.Name }}
+          </button>
+        </div>
         <button
           @click="$emit('close')"
           class="rounded border-2 border-red-500 p-2 text-lg text-red-500 hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white"
@@ -31,13 +42,18 @@
 <script setup>
 import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
 
-defineProps(["open"]);
-const emit = defineEmits(["close", "add"]);
+defineProps(["open", "storedPlaylist"]);
+const emit = defineEmits(["close", "add", "addToPlaylist"]);
 const postitions = ["currentSong", "endOfQueue", "currentAlbum"];
 const texts = ["After Current Song", "End Of Queue", "After Current Album"];
 
 function add(position) {
   emit("add", position);
+  emit("close");
+}
+
+function addToPlaylist(playlist) {
+  emit("addToPlaylist", playlist);
   emit("close");
 }
 </script>

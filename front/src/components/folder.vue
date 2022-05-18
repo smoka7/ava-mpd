@@ -9,11 +9,11 @@
         {{ folderName() }}
       </span>
       <span class="invisible space-x-2 text-sm group-hover:visible">
-        <sidebar-button label="add" icon="plus" @click="AddOpen = !AddOpen" />
+        <sidebar-button label="add" icon="plus" @click.stop="openAdd" />
         <sidebar-button
           label="play"
           icon="play"
-          @click="FolderCommand('play')"
+          @click.stop="FolderCommand('play')"
         />
       </span>
     </summary>
@@ -32,8 +32,10 @@
     </transition>
     <AddSongs
       :open="AddOpen"
+      :storedPlaylist="storedPlaylist"
       @close="AddOpen = false"
       @add="FolderCommand('add', $event)"
+      @addPlaylist="FolderCommand('addToPlaylist', $event)"
     />
   </details>
 </template>
@@ -44,10 +46,15 @@ import endpoints from "../endpoints.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import SidebarButton from "./sidebarButton.vue";
 import AddSongs from "./addSongs.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 const props = defineProps(["data"]);
 const folders = reactive({ data: [] });
 const AddOpen = ref(false);
+
+const store = useStore();
+const storedPlaylist = computed(() => store.state.storedPlaylist);
 
 async function listFolders() {
   // if its not a folder do nothing and if folder list exists delete it
@@ -75,5 +82,10 @@ function folderName() {
   const index = name.lastIndexOf("/");
   if (index > -1) return name.substring(index + 1);
   return name;
+}
+function openAdd() {
+  AddOpen.value = !AddOpen.value;
+  if (storedPlaylist.length) return;
+  store.dispatch("getStoredPlaylist");
 }
 </script>
