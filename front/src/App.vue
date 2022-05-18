@@ -48,7 +48,7 @@ setColorScheme();
 }
 @supports (-moz-appearance: none) {
   .fbg {
-    @apply bg-white/70 dark:bg-gray-700 !important;
+    @apply bg-white/70 dark:bg-gray-700/70 !important;
   }
 }
 </style>

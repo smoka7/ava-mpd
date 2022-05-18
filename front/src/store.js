@@ -56,11 +56,11 @@ const store = createStore({
     },
     setCounter(state) {
       clearInterval(state.durationInterval);
-      state.durationInterval = setInterval(() => {
-        if (state.status.state == "play") {
-          state.status.elapsed = Number(state.status.elapsed) + 0.1;
-        }
-      }, 100);
+      if (state.status.state == "play") {
+        state.durationInterval = setInterval(() => {
+          state.status.elapsed = Number(state.status.elapsed) + 1;
+        }, 1000);
+      }
     },
   },
   actions: {
@@ -69,6 +69,7 @@ const store = createStore({
       if (response.Status != null || response.CurrentSong != null) {
         store.commit("setCurrentSong", response.CurrentSong);
         store.commit("setStatus", response.Status);
+        store.commit("setCounter");
         store.dispatch("getCurrentSongAlbumart");
         return;
       }
@@ -103,6 +104,7 @@ const store = createStore({
       socket.onmessage = () => {
         store.dispatch("getCurrentSong");
         store.dispatch("getQueue");
+        store.commit("setCounter");
       };
       socket.onerror = (err) => {
         store.commit("setConnected", false);

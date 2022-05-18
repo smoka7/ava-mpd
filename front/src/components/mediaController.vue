@@ -9,11 +9,8 @@
       <span class="text-ellipsis">
         {{ currentSong.Title }}
       </span>
-      <span>
-        {{ currentSong.Artist }} - {{ currentSong.Album }} ({{
-          currentSong.Date
-        }})
-      </span>
+      <span> {{ currentSong.Album }} </span>
+      <span> {{ currentSong.Artist }} ({{ currentSong.Date }}) </span>
     </div>
     <album-art
       :url="AlbumArt"
