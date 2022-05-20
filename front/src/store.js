@@ -101,10 +101,19 @@ const store = createStore({
     connectToSocket() {
       const hostname = new URL(window.location.href).host;
       const socket = new WebSocket("ws://" + hostname + "/update");
-      socket.onmessage = () => {
-        store.dispatch("getCurrentSong");
-        store.dispatch("getQueue");
-        store.commit("setCounter");
+
+      socket.onmessage = (message) => {
+        const data = JSON.parse(message.data);
+        const event = data.Subsystem;
+
+        if (event == "player" || event == "options" || event == "stickers") {
+          store.dispatch("getCurrentSong");
+          store.commit("setCounter");
+        }
+
+        if (event == "playlist") {
+          store.dispatch("getQueue");
+        }
       };
       socket.onerror = (err) => {
         store.commit("setConnected", false);
