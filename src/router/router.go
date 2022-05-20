@@ -27,19 +27,27 @@ var (
 	wc watcher.Mpd
 )
 
-func init() {
-	cl = controller.NewClient()
-	wc = watcher.NewClient(cl.Client)
+func InitConnections(frontDist fs.FS, config config.Connection) {
+	cl = controller.NewClient(config)
+	wc = watcher.NewClient(config)
+
 	ip := getHostIP()
 	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.Client.AppPort)
-}
 
-func Router(frontDist *fs.FS) {
-	frontEnd := http.FileServer(http.FS(*frontDist))
-	serveCoverArts()
 	go wc.RecordPlayCount()
 
+	frontEnd := http.FileServer(http.FS(frontDist))
 	http.Handle("/", cacheControl(frontEnd))
+
+	serveCoverArts()
+	serveRoutes()
+
+	log.Panic(
+		http.ListenAndServe(":"+cl.Client.AppPort, nil),
+	)
+}
+
+func serveRoutes() {
 	http.Handle("/update", websocket.Handler(wc.Serve))
 	http.HandleFunc("/api/playback", cl.Playback)
 	http.HandleFunc("/api/status", cl.Status)
@@ -49,9 +57,6 @@ func Router(frontDist *fs.FS) {
 	http.HandleFunc("/api/search", cl.SearchServer)
 	http.HandleFunc("/api/song", cl.Song)
 	http.HandleFunc("/api/setting", cl.Settings)
-	log.Panic(
-		http.ListenAndServe(":"+cl.Client.AppPort, nil),
-	)
 }
 
 // implements http.ResponseWriter

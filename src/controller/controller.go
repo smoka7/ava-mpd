@@ -56,8 +56,8 @@ type Data struct {
 
 var err error
 
-func NewClient() (cl Mpd) {
-	cl.Client.ReadConfigs()
+func NewClient(c config.Connection) (cl Mpd) {
+	cl.Client = c
 	return
 }
 

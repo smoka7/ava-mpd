@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -26,6 +27,31 @@ const (
 
 var err error
 
+// return a connection with default values
+func newDefaultConfig() Connection {
+	return Connection{
+		Address:          "localhost:6600",
+		AppPort:          "3001",
+		DownloadCoverArt: false,
+		Password:         "",
+	}
+}
+
+// copies the config from to connection to struct and ignores the empty values
+func (c *Connection) copyConfig(newConfig Connection) {
+	if newConfig.Address != "" {
+		c.Address = newConfig.Address
+	}
+
+	if newConfig.Password != "" {
+		c.Password = newConfig.Password
+	}
+
+	if newConfig.AppPort != "" {
+		c.AppPort = newConfig.AppPort
+	}
+}
+
 // Reads the MPD server connection from environment values
 func (c *Connection) readEnv() {
 	host := os.Getenv("MPD_HOST")
@@ -35,41 +61,29 @@ func (c *Connection) readEnv() {
 	}
 }
 
-// parse the MPD server connection from bin flag
-func (c *Connection) ReadConfigs() {
-	var configPath string
-	var flagConfig Connection
+func (c *Connection) parseFlags() (configPath string) {
+	var flags Connection
 
-	flag.StringVar(&flagConfig.Address, "address", "", "address of mpd server host:port")
-	flag.StringVar(&flagConfig.Password, "password", c.Password, "password of mpd server")
-	flag.StringVar(&flagConfig.AppPort, "port", "3001", "The port to run this app on it defaults to 3001")
+	flag.StringVar(&flags.Address, "address", "", "address of mpd server host:port")
+	flag.StringVar(&flags.Password, "password", "", "password of mpd server")
+	flag.StringVar(&flags.AppPort, "port", "", "The port to run this app on it defaults to 3001")
 	flag.StringVar(&configPath, "config", "", "absolute path of config file")
+
 	flag.Parse()
+	c.copyConfig(flags)
+	return
+}
+
+// parse the MPD server connection from bin flag
+func ReadConfigs() Connection {
+	c := newDefaultConfig()
 
 	c.readEnv()
 
-	err := c.loadConfig(configPath)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
+	configPath := c.parseFlags()
 
-	if c.Address == "" {
-		c.Address = flagConfig.Address
-	}
-
-	if c.Password == "" {
-		c.Password = flagConfig.Password
-	}
-
-	if c.AppPort == "" {
-		c.AppPort = flagConfig.AppPort
-	}
-
-	if c.Address == "" {
-		log.Println("mpd server address is empty")
-		os.Exit(1)
-	}
+	c.loadConfigFile(configPath)
+	return c
 }
 
 // saves the app configurations to file
@@ -99,32 +113,36 @@ func (c *Connection) SaveConfig() {
 	Log(err)
 }
 
-func (c *Connection) loadConfig(configPath string) error {
+func (c *Connection) loadConfigFile(configPath string) {
 	// when config path is omited use the default one
+	var config Connection
 	if configPath == "" {
 		configDir, err := os.UserConfigDir()
 		if err != nil {
-			return err
+			log.Println(err)
+			os.Exit(1)
 		}
 		configPath = configDir + ConfigFilePath + ConfigFileName
 	}
 
 	// if config file doesn't exist let it go
 	if _, err = os.Stat(configPath); os.IsNotExist(err) {
-		return nil
+		return
 	}
 
 	bytes, err := os.ReadFile(configPath)
 	if err != nil {
-		return err
+		log.Println(err)
+		os.Exit(1)
 	}
 
-	err = json.Unmarshal(bytes, &c)
+	err = json.Unmarshal(bytes, &config)
 	if err != nil {
-		return err
+		fmt.Println("faild to parse config file at : ", configPath)
+		log.Println(err)
+		os.Exit(1)
 	}
-
-	return nil
+	c.copyConfig(config)
 }
 
 // connects to server

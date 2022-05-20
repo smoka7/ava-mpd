@@ -14,5 +14,5 @@ var front embed.FS
 func main() {
 	frontDist, err := fs.Sub(front, "front/dist")
 	config.Log(err)
-	router.Router(&frontDist)
+	router.InitConnections(frontDist, config.ReadConfigs())
 }
