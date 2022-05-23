@@ -54,6 +54,10 @@ type Data struct {
 	Start int `json:"start"`
 }
 
+type ErorrResponse struct {
+	Error string `json:"error"`
+}
+
 var err error
 
 func NewClient(c config.Connection) (cl Mpd) {
@@ -66,7 +70,8 @@ func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		playback.Command(c.Client, request.Command, request.Data.Start)
+		err = playback.Command(c.Client, request.Command, request.Data.Start)
+		sendErrorResponse(w, err)
 	}
 }
 
@@ -110,5 +115,14 @@ func newStatus(status mpd.Attrs) Status {
 		Volume:     status["volume"],
 		Xfade:      status["xfade"],
 		UpdatingDB: status["updating_db"],
+	}
+}
+
+// checks if the request is valid and returns an error if not
+func sendErrorResponse(w http.ResponseWriter, err error) {
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		err := json.NewEncoder(w).Encode(ErorrResponse{err.Error()})
+		config.Log(err)
 	}
 }

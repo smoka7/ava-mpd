@@ -10,73 +10,82 @@ import (
 
 var err error
 
-func Command(c config.Connection, cmd string, data int) {
+type Commands map[string]func(c *config.Connection) error
+
+var commands = Commands{
+	"clear":    clearQueue,
+	"consume":  consume,
+	"next":     nextSong,
+	"previous": prevSong,
+	"random":   random,
+	"repeat":   repeat,
+	"single":   single,
+	"stop":     stop,
+	"toggle":   toggle,
+}
+
+func Command(c config.Connection, cmd string, data int) error {
 	c.Connect()
 	defer c.Close()
-	switch cmd {
-	case "next":
-		nextSong(&c)
-	case "previous":
-		prevSong(&c)
-	case "toggle":
-		toggle(&c)
-	case "stop":
-		stop(&c)
-	case "single":
-		single(&c)
-	case "repeat":
-		repeat(&c)
-	case "random":
-		random(&c)
-	case "consume":
-		consume(&c)
-	case "clear":
-		clearQueue(&c)
-	case "seek":
-		seek(&c, data)
-	case "changeVolume":
-		changeVolume(&c, data)
+	if cmd, ok := commands[cmd]; ok {
+		err := cmd(&c)
+		return err
 	}
+
+	switch cmd {
+	case "seek":
+		err = seek(&c, data)
+	case "changeVolume":
+		err = changeVolume(&c, data)
+	default:
+		return fmt.Errorf("invalid command")
+	}
+	return err
 }
 
 //  toggles the state between play and pause
-func toggle(c *config.Connection) {
+func toggle(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	if status["state"] == "play" {
-		c.Client.Pause(true)
-		return
+		err = c.Client.Pause(true)
+		return err
 	}
-	c.Client.Play(-1)
+	err = c.Client.Play(-1)
+	return err
 }
 
 // stops the current queue
-func stop(c *config.Connection) {
+func stop(c *config.Connection) error {
 	err = c.Client.Stop()
 	config.Log(err)
+	return err
 }
 
 // goes to next song in queue
-func nextSong(c *config.Connection) {
+func nextSong(c *config.Connection) error {
 	err = c.Client.Next()
 	config.Log(err)
+	return err
 }
 
 // goes to Previous song in queue
-func prevSong(c *config.Connection) {
+func prevSong(c *config.Connection) error {
 	err = c.Client.Previous()
 	config.Log(err)
+	return err
 }
 
 // seeks t second in current song
-func seek(c *config.Connection, t int) {
+func seek(c *config.Connection, t int) error {
 	seekDuration, err := time.ParseDuration(fmt.Sprintf("%ds", t))
 	config.Log(err)
 	err = c.Client.SeekCur(seekDuration, false)
 	config.Log(err)
+	return err
 }
 
 // toggles the Single state
-func single(c *config.Connection) {
+func single(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	single := false
 	if status["single"] == "0" {
@@ -84,10 +93,11 @@ func single(c *config.Connection) {
 	}
 	err = c.Client.Single(single)
 	config.Log(err)
+	return err
 }
 
 // toggles the Repeat state
-func repeat(c *config.Connection) {
+func repeat(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	repeat := false
 	if status["repeat"] == "0" {
@@ -95,10 +105,11 @@ func repeat(c *config.Connection) {
 	}
 	err = c.Client.Repeat(repeat)
 	config.Log(err)
+	return err
 }
 
 // toggles the Consume state
-func consume(c *config.Connection) {
+func consume(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	consume := false
 	if status["consume"] == "0" {
@@ -106,10 +117,11 @@ func consume(c *config.Connection) {
 	}
 	err = c.Client.Consume(consume)
 	config.Log(err)
+	return err
 }
 
 // toggles the random state
-func random(c *config.Connection) {
+func random(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	repeat := false
 	if status["random"] == "0" {
@@ -117,16 +129,19 @@ func random(c *config.Connection) {
 	}
 	err = c.Client.Random(repeat)
 	config.Log(err)
+	return err
 }
 
 // sets the volume
-func changeVolume(c *config.Connection, volume int) {
+func changeVolume(c *config.Connection, volume int) error {
 	err = c.Client.SetVolume(volume)
 	config.Log(err)
+	return err
 }
 
 // clears the current queue
-func clearQueue(c *config.Connection) {
+func clearQueue(c *config.Connection) error {
 	err = c.Client.Clear()
 	config.Log(err)
+	return err
 }
