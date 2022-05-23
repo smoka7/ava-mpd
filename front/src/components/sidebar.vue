@@ -90,7 +90,7 @@ const search = defineAsyncComponent({
 const tabClasses = {
   active: "bg-accent text-primary",
   normal:
-    "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-gray-800/70 dark:hover:text-white rounded",
+    "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-secondary dark:hover:text-white rounded hover:scale-105 duration-300",
 };
 
 const tabs = {

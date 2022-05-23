@@ -12,7 +12,7 @@
     <div
       v-for="playlist in playlists"
       :key="playlist.name"
-      class="group mx-2 flex items-center justify-between rounded p-2 text-primary hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
+      class="group mx-2 flex items-center justify-between rounded p-2 text-primary duration-300 hover:scale-[101%] hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
     >
       <span>
         <font-awesome-icon :icon="['fas', playlist.icon]" />
@@ -42,7 +42,7 @@
       :open="playlist.songs != null && playlist.songs.length > 0"
     >
       <summary
-        class="group mx-2 flex items-start justify-between rounded py-4 px-2 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
+        class="group mx-2 flex items-start justify-between rounded py-4 px-2 duration-300 hover:scale-[101%] hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
       >
         <span
           @click="getSongs(index)"
@@ -84,16 +84,14 @@
           </span>
         </span>
       </summary>
-      <div
-        class="ml-4 flex flex-col divide-y divide-primary border-l-2 border-primary dark:divide-gray-400"
-      >
+      <div class="mx-4 flex flex-col rounded bg-gray-600/20">
         <p
-          class="px-2 dark:text-white"
+          class="flex p-2 even:bg-gray-600/40 dark:text-white md:flex-row justify-between"
           v-for="(song, index) in playlist.songs"
           :key="index"
         >
-          {{ song.Title }}<br />
-          <span class="text-sm text-gray-800 dark:text-gray-400">
+          <span>{{ song.Title }}</span>
+          <span class="text-sm text-gray-800 dark:text-gray-200">
             {{ song.Artist }} -
             {{ song.Album }}
           </span>

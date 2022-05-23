@@ -1,7 +1,7 @@
 <template>
   <details :open="currentAlbum">
     <summary
-      class="bg-lightest dark:text-primary sticky top-0 flex cursor-pointer items-center px-8 py-2 md:rounded"
+      class="sticky top-0 flex cursor-pointer items-center bg-lightest px-8 py-2 duration-300 hover:scale-[101%] dark:text-primary md:rounded"
     >
       <FontAwesomeIcon
         :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
@@ -10,63 +10,60 @@
       />
       {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
     </summary>
-      <div
-        v-for="song in album.Songs"
-        :key="song.Pos"
-        draggable="true"
-        @dragover.prevent
-        @dragenter.prevent
-        @drop="moveSong($event, song.Pos)"
-        @dragstart="startMoveSong($event, song.Id)"
-        class="group grid grid-cols-12 items-center py-2 px-4 text-black even:bg-gray-600/10 hover:bg-white/60 dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
-        :id="song.Pos !== currentSongPos ? '' : 'currentSong'"
+    <div
+      v-for="song in album.Songs"
+      :key="song.Pos"
+      draggable="true"
+      @dragover.prevent
+      @dragenter.prevent
+      @drop="moveSong($event, song.Pos)"
+      @dragstart="startMoveSong($event, song.Id)"
+      class="group grid grid-cols-12 items-center py-2 px-4 text-black duration-300 even:bg-gray-600/10 hover:scale-[101%] hover:bg-white/60 dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
+      :id="song.Pos !== currentSongPos ? '' : 'currentSong'"
+    >
+      <span
+        class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
+        @click.stop="play(song.Id)"
       >
-        <span
-          class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
-          @click.stop="play(song.Id)"
-        >
-          <FontAwesomeIcon
-            :id="song.Pos"
-            :class="
-              song.Pos !== currentSongPos
-                ? 'invisible mr-2 text-green-500 group-hover:visible'
-                : 'mr-2 text-red-500'
-            "
-            :icon="[
-              'fas',
-              song.Pos !== currentSongPos ? 'play' : 'compact-disc',
-            ]"
-          />
-          {{ song.Track }}
+        <FontAwesomeIcon
+          :id="song.Pos"
+          :class="
+            song.Pos !== currentSongPos
+              ? 'invisible mr-2 text-green-500 group-hover:visible'
+              : 'mr-2 text-red-500'
+          "
+          :icon="['fas', song.Pos !== currentSongPos ? 'play' : 'compact-disc']"
+        />
+        {{ song.Track }}
+      </span>
+      <span
+        class="col-start-3 col-end-9 justify-start overflow-x-hidden text-ellipsis md:col-start-2"
+      >
+        {{ song.Title }}
+      </span>
+      <button
+        class="col-start-9 col-end-13 flex cursor-pointer items-center justify-end space-x-2 md:col-start-11"
+      >
+        <FontAwesomeIcon
+          label="select song"
+          icon="check-circle"
+          :class="
+            isSelected(song.Id)
+              ? 'visible text-green-500 dark:text-green-400'
+              : 'invisible text-primary group-hover:visible dark:text-white'
+          "
+          @click="$emit('select', song.Id)"
+        />
+        <FontAwesomeIcon
+          @click="$emit('showMenu', song.Pos, song.Id, $event)"
+          class="invisible mr-2 text-primary group-hover:visible dark:text-white"
+          icon="ellipsis-h"
+        />
+        <span>
+          {{ humanizeTime(song.Duration) }}
         </span>
-        <span
-          class="col-start-3 col-end-9 overflow-x-hidden text-ellipsis md:col-start-2 justify-start"
-        >
-          {{ song.Title }}
-        </span>
-        <button
-          class="col-start-9 col-end-13 flex cursor-pointer items-center justify-end space-x-2 md:col-start-11"
-        >
-          <FontAwesomeIcon
-            label="select song"
-            icon="check-circle"
-            :class="
-              isSelected(song.Id)
-                ? 'visible text-green-500 dark:text-green-400'
-                : 'text-primary invisible group-hover:visible dark:text-white'
-            "
-            @click="$emit('select', song.Id)"
-          />
-          <FontAwesomeIcon
-            @click="$emit('showMenu', song.Pos, song.Id, $event)"
-            class="text-primary invisible mr-2 group-hover:visible dark:text-white"
-            icon="ellipsis-h"
-          />
-          <span>
-            {{ humanizeTime(song.Duration) }}
-          </span>
-        </button>
-      </div>
+      </button>
+    </div>
   </details>
 </template>
 <script setup>

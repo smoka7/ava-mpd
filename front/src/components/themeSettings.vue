@@ -21,7 +21,7 @@
           <div
             :class="[
               { 'rounded bg-blue-200 text-primary': checked },
-              'flex cursor-pointer flex-col space-y-2 p-2 duration-200',
+                'flex cursor-pointer flex-col space-y-2 p-2 duration-300 hover:scale-105',
             ]"
           >
             <div class="flex items-center justify-between">

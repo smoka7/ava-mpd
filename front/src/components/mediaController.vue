@@ -16,7 +16,7 @@
       :url="AlbumArt"
       :altText="currentSong.Title + 'cover'"
       id="albumArt"
-      class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2"
+            class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2 hover:scale-125 duration-300"
     />
     <volume-control :v-if="status != null" :volume="status.volume" />
     <PlaybackCommands />

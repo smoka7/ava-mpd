@@ -29,7 +29,7 @@
     <button
       aria-label="previous-song"
       @click="Command('previous')"
-      class="scale-110 hover:text-accent"
+      class="hover:scale-125 hover:text-accent"
     >
       <font-awesome-icon icon="step-backward" size="2x" />
     </button>
@@ -39,25 +39,25 @@
       @click="Command('toggle')"
       :class="[
         status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-        'flex items-center justify-center rounded-full px-12 md:px-10 text-white hover:text-primary',
+          'flex items-center justify-center rounded-full px-10 text-white hover:text-primary md:px-8 hover:scale-105',
       ]"
     >
       <font-awesome-icon
         :icon="['fas', status.state === 'play' ? 'pause' : 'play']"
-        size="lg"
+        size="2x"
       />
     </button>
     <button
       aria-label="stop-song"
       @click="Command('stop')"
-      class="scale-110 hover:text-accent"
+      class="hover:scale-125 hover:text-accent"
     >
       <font-awesome-icon icon="stop" size="2x" />
     </button>
     <button
       aria-label="next-song"
       @click="Command('next')"
-      class="scale-110 hover:text-accent"
+      class="hover:scale-125 hover:text-accent"
     >
       <font-awesome-icon icon="step-forward" size="2x" />
     </button>
@@ -84,7 +84,7 @@ const status = computed(() => shallowReactive(store.state.status));
 const btnClass = {
   active: "text-green-500 bg-transparent",
   normal: "bg-transparent hover:text-accent",
-  base: "p-2 tooltip transform scale-125",
+  base: "p-2 tooltip transform scale-125 hover:scale-[135%]",
 };
 
 const playbackCommands = computed(() => [

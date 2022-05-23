@@ -15,7 +15,8 @@ const props = defineProps({
 });
 
 const classes = {
-  normal: "px-2 md:p-0 text-red-500 transition-all duration-200 transform",
+  normal:
+    "px-2 md:p-0 text-red-500 transition-all duration-200 transform hover:scale-125",
   scale: "scale-105",
   right: "rotate-45",
   left: "-rotate-45",

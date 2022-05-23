@@ -1,6 +1,6 @@
 <template>
   <progress
-    class="h-2 w-full cursor-pointer rounded bg-lightest transition-all duration-100 ease-in hover:h-3"
+    class="h-2 w-full cursor-pointer rounded bg-lightest transition-all duration-200 ease-in-out hover:h-4"
     max="100"
     ref="progress"
     @click="seek"
