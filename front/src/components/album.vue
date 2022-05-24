@@ -1,14 +1,24 @@
 <template>
   <details :open="currentAlbum">
     <summary
-      class="sticky top-0 flex cursor-pointer items-center bg-lightest px-8 py-2 duration-300 hover:scale-[101%] dark:text-primary md:rounded"
+      class="group sticky top-0 flex cursor-pointer items-center justify-between bg-lightest px-8 py-2 duration-300 hover:scale-[101%] dark:text-primary md:rounded"
     >
-      <FontAwesomeIcon
-        :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
-        class="mr-2 transform-gpu duration-200"
-        :id="'icon-' + album.Songs[0].Pos"
-      />
-      {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
+      <span>
+        <FontAwesomeIcon
+          :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
+          class="mr-2 transform-gpu duration-200"
+          :id="'icon-' + album.Songs[0].Pos"
+        />
+        {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
+      </span>
+      <button class="cursor-pointer">
+        <FontAwesomeIcon
+          label="select Album"
+          icon="check-circle"
+          class="invisible text-primary group-hover:visible"
+          @click.stop="$emit('selectAlbum', album.Album)"
+        />
+      </button>
     </summary>
     <div
       v-for="song in album.Songs"
@@ -42,7 +52,7 @@
         {{ song.Title }}
       </span>
       <button
-        class="col-start-9 col-end-13 flex cursor-pointer items-center justify-end space-x-2 md:col-start-11"
+        class="col-start-9 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-11"
       >
         <FontAwesomeIcon
           label="select song"
@@ -67,12 +77,11 @@
   </details>
 </template>
 <script setup>
-import { ref } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-defineEmits(["showMenu", "select"]);
+defineEmits(["showMenu", "select", "selectAlbum"]);
 
 const props = defineProps([
   "album",

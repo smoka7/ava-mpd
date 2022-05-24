@@ -9,6 +9,7 @@
         :selectedIds="state.selectedIds"
         :currentSongPos="currentSongPos"
         @showMenu="showMenu"
+        @selectAlbum="selectAlbum"
         @select="selectSong"
       />
     </div>
@@ -100,6 +101,18 @@ function showMenu(pos, id) {
 
 function hideMenu() {
   state.menu = false;
+}
+
+function selectAlbum(name) {
+  const album = queue.value.Albums.find((album) => {
+    return album.Album == name;
+  });
+
+  if (album !== null) {
+    album.Songs.forEach((song) => {
+      selectSong(song.Id);
+    });
+  }
 }
 
 function selectSong(id) {
