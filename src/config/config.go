@@ -153,7 +153,9 @@ func (c *Connection) Connect() {
 
 // closes the connection to server
 func (c *Connection) Close() {
-	c.Client.Close()
+	if c.Client != nil {
+		c.Client.Close()
+	}
 }
 
 // deletes the albumArts cache
