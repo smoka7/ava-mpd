@@ -92,16 +92,14 @@ func serveCoverArts() {
 }
 
 // returns current host IP in LAN
-func getHostIP() net.IP {
+func getHostIP() string {
 	conn, err := net.Dial("udp", "192.168.1.1:80")
 	config.Log(err)
 	if err != nil {
-		return nil
+		return "localhost"
 	}
 	defer conn.Close()
-	localAddr, ok := conn.LocalAddr().(*net.UDPAddr)
-	if !ok {
-		return nil
-	}
-	return localAddr.IP
+	localAddr := conn.LocalAddr()
+
+	return localAddr.String()
 }
