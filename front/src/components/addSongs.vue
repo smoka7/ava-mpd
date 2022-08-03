@@ -13,7 +13,7 @@
         <button
           v-for="(position, index) in postitions"
           :key="position"
-          @click="add(position)"
+          @click="add('add', position)"
           class="rounded border-2 border-primary p-2 text-lg text-primary hover:bg-primary hover:text-white focus:bg-primary focus:text-white dark:border-accent dark:text-accent hover:dark:bg-accent hover:dark:text-primary focus:dark:bg-accent focus:dark:text-primary"
         >
           {{ texts[index] }}
@@ -23,7 +23,7 @@
           <button
             v-for="(playlist, index) in storedPlaylist"
             :key="index"
-            @click="addToPlaylist(playlist.Name)"
+            @click="add('addToPlaylist', playlist.Name)"
             class="rounded border-2 border-primary p-1 text-lg text-primary hover:bg-primary hover:text-white focus:bg-primary focus:text-white dark:border-accent dark:text-accent hover:dark:bg-accent hover:dark:text-primary focus:dark:bg-accent focus:dark:text-primary"
           >
             {{ playlist.Name }}
@@ -47,13 +47,8 @@ const emit = defineEmits(["close", "add", "addToPlaylist"]);
 const postitions = ["currentSong", "endOfQueue", "currentAlbum"];
 const texts = ["After Current Song", "End Of Queue", "After Current Album"];
 
-function add(position) {
-  emit("add", position);
-  emit("close");
-}
-
-function addToPlaylist(playlist) {
-  emit("addToPlaylist", playlist);
+function add(command, position) {
+  emit(command, position);
   emit("close");
 }
 </script>
