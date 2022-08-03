@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col space-y-2">
-        <h2 class="mb-2 text-2xl">Playback Options</h2>
-    <div class="space-x-2 flex flex-row justify-between items-center">
+    <h2 class="card-header">Playback Options</h2>
+    <div class="flex flex-row items-center justify-between space-x-2">
       <label for="crossfade"> Crossfade : {{ storeCrossfade }} </label>
       <input
         class="rounded border border-blue-500 p-2 dark:bg-gray-700"
@@ -13,10 +13,12 @@
         v-model="options.crossfade"
       />
     </div>
-    <div class="space-x-2 flex flex-row justify-between items-center">
-      <label for="mixrampdb" class="w-full">MixRampdb: {{ storeMixrampdb }}</label>
+    <div class="flex flex-row items-center justify-between space-x-2">
+      <label for="mixrampdb" class="w-full"
+        >MixRampdb: {{ storeMixrampdb }}
+      </label>
       <input
-        class="rounded border border-blue-500 p-2 dark:bg-gray-700 w-1/2"
+        class="w-1/2 rounded border border-blue-500 p-2 dark:bg-gray-700"
         name="mixrampdb"
         type="number"
         aria-label="mixrampdb"
@@ -24,7 +26,7 @@
         v-model="options.mixrampdb"
       />
     </div>
-    <div class="space-x-2 flex flex-row justify-between items-center">
+    <div class="flex flex-row items-center justify-between space-x-2">
       <label for="replaygain"> Replay gain : {{ storeGain }}</label>
       <select
         name="replaygain"
@@ -75,6 +77,11 @@ function setMixrampdb() {
 function setReplayGain() {
   const index = replayGainMods.indexOf(options.gain);
   sendCommand(endpoints.setting, "setGain", { Value: Number(index) });
+  store.dispatch("getSettings");
+}
+
+function sendComm(command, data) {
+  sendCommand(endpoints.setting, command, data);
   store.dispatch("getSettings");
 }
 </script>

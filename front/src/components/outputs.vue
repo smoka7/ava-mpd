@@ -1,5 +1,5 @@
 <template>
-  <h2 class="mb-2 text-2xl">List of Outputs</h2>
+  <h2 class="card-header">List of Outputs</h2>
   <div
     v-for="(output, index) in outputs"
     :key="index"
@@ -8,7 +8,7 @@
   >
     <input
       type="checkbox"
-      class="accent-primary dark:accent-lightest"
+      class="accent-secondary"
       :checked="output['outputenabled'] == 1"
       :name="output['outputname']"
       :aria-label="output['outputname']"
@@ -29,12 +29,12 @@ const outputs = computed(() => store.state.settings.Outputs);
 
 function toggleOutput(index) {
   const id = Number(outputs.value[index]["outputid"]);
+
+  let command = "enableOutput";
   if (outputs.value[index]["outputenabled"] == 1) {
-    sendCommand(endpoints.setting, "disableOutput", { Value: id });
-    store.dispatch("getSettings");
-    return;
+    command = "disableOutput";
   }
-  sendCommand(endpoints.setting, "enableOutput", { Value: id });
+  sendCommand(endpoints.setting, command, { Value: id });
   store.dispatch("getSettings");
 }
 </script>

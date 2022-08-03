@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-center text-3xl">Database stats</h2>
+  <h2 class="card-header">Database stats</h2>
   <ul class="-mx-4 mt-2">
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
       songs : <span>{{ stats.songs }}</span>
@@ -15,6 +15,7 @@
       <span>{{ humanizeTime(stats.db_playtime) }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
+      Last database update:
       <span>{{ new Date(stats.db_update * 1000).toString() }}</span>
     </li>
     <li class="p-2 odd:bg-blue-100 dark:odd:bg-gray-800">
@@ -51,8 +52,9 @@ import endpoints from "../endpoints.js";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
-const stats = computed(() => useStore().state.settings.DatabaseStats);
-const updating = computed(() => useStore().state.status.updating_db);
+const store = useStore();
+const stats = computed(() => store.state.settings.DatabaseStats);
+const updating = computed(() => store.state.status.updating_db);
 
 function updateDatabase() {
   sendCommand(endpoints.setting, "updateDatabase");
