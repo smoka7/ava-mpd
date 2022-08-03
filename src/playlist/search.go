@@ -6,26 +6,36 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+var tags = map[string]bool{
+	"file": true, "Artist": true, "Album": true,
+	"Genre": true, "Date": true, "Title": true,
+}
+
 // search for songs in the server
-func SearchServer(c *config.Connection, term ...string) (result SearchResult, err error) {
+func SearchServer(c *config.Connection, term ...string) (SearchResult, error) {
 	err = validFilter(term...)
 	config.Log(err)
 	if err != nil {
 		return nil, err
 	}
-	filter := term[0]
-	result = make(map[string]Files)
+	// search the server
 	query, err := c.Client.Search(term...)
 	config.Log(err)
 	if err != nil {
 		return nil, err
 	}
-	if len(query) >= 100 {
-		query = query[:100]
+
+	// only show Limited amount of results
+	if len(query) >= ClientQueueLimit {
+		query = query[:ClientQueueLimit]
 	}
+
+	// group the results by their searched Tag
+	tag := term[0]
+	result := make(map[string]Files, 0)
 	for _, song := range query {
 
-		index := song[filter]
+		index := song[tag]
 
 		if _, duplicate := result[index]; !duplicate {
 			result[index] = make(Files, 0)
@@ -33,7 +43,7 @@ func SearchServer(c *config.Connection, term ...string) (result SearchResult, er
 
 		result[index] = append(result[index], newFile(song))
 	}
-	return
+	return result, nil
 }
 
 // searchs for the term in server and adds them to current queue
@@ -69,19 +79,23 @@ func searchAdd(c *config.Connection, term ...string) error {
 	return err
 }
 
-func validFilter(filter ...string) error {
-	v := map[string]bool{
-		"file": true, "Artist": true, "Album": true,
-		"Genre": true, "Date": true, "Title": true,
-	}
-	if len(filter) < 2 {
+func validFilter(filters ...string) error {
+	if len(filters) < 2 {
 		return errors.New("you have to enter a term")
 	}
-	if _, ok := v[filter[0]]; !ok {
-		return errors.New("valid filters are : File,Artist,Album,Genre,Date and Title")
+
+	if len(filters)%2 != 0 {
+		return errors.New("you have to write a value for every Tag")
 	}
-	if len(filter[1]) == 0 {
-		return errors.New("You have to enter something to query about")
+
+	for i := 0; i < len(filters); i += 2 {
+		if _, ok := tags[filters[i]]; !ok {
+			return errors.New("valid Tags are : File,Artist,Album,Genre,Date and Title")
+		}
+
+		if len(filters[i+1]) == 0 {
+			return errors.New("You have to fill every Tag")
+		}
 	}
 	return nil
 }
