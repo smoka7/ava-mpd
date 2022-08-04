@@ -10,7 +10,7 @@
       class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
     />
     <div
-      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-48 flex-col divide-y rounded bg-white dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
+      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-52 flex-col divide-y rounded bg-white p-1 hover:divide-transparent dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
     >
       <button
         class="menuItem"
@@ -116,6 +116,6 @@ function getStoredPlaylist() {
 </script>
 <style>
 .menuItem {
-  @apply w-full overflow-x-hidden text-ellipsis p-2 text-left  hover:bg-blue-100 dark:hover:bg-blue-100 dark:hover:text-black;
+  @apply w-full overflow-x-hidden text-ellipsis rounded p-2  text-left hover:bg-blue-100 dark:hover:bg-blue-100 dark:hover:text-black;
 }
 </style>

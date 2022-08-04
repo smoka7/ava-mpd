@@ -1,13 +1,13 @@
 <template>
   <details :open="currentAlbum">
     <summary
-      class="group sticky top-0 flex cursor-pointer items-center justify-between bg-lightest px-8 py-2 duration-300 hover:scale-[101%] dark:text-primary md:rounded"
+      class="group sticky top-0 flex cursor-pointer items-center justify-between bg-lightest px-8 py-2 duration-300 hover:-mx-1 hover:py-3 dark:text-primary md:rounded"
     >
       <span>
         <FontAwesomeIcon
           :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
           class="mr-2 transform-gpu duration-200"
-          :id="'icon-' + album.Songs[0].Pos"
+          size="lg"
         />
         {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
       </span>
@@ -15,6 +15,7 @@
         <FontAwesomeIcon
           label="select Album"
           icon="check-circle"
+          size="lg"
           class="invisible text-primary group-hover:visible"
           @click.stop="$emit('selectAlbum', album.Album)"
         />
@@ -28,7 +29,7 @@
       @dragenter.prevent
       @drop="moveSong($event, song.Pos)"
       @dragstart="startMoveSong($event, song.Id)"
-      class="group grid grid-cols-12 items-center py-2 px-4 text-black duration-300 even:bg-gray-600/10 hover:scale-[101%] hover:bg-white/60 dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
+      class="group grid grid-cols-12 items-center py-2 px-4 text-black duration-300 even:bg-gray-600/10 hover:-mx-1 hover:bg-white/60 hover:py-[0.6rem] dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
       :id="song.Pos !== currentSongPos ? '' : 'currentSong'"
     >
       <span
@@ -117,7 +118,7 @@ function moveSong(event, position) {
 }
 </script>
 <style scoped>
-details[open] > summary > svg {
+details[open] > summary > span > svg {
   @apply rotate-90;
 }
 details[open] summary ~ * {
