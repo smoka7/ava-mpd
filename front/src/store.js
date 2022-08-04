@@ -105,8 +105,12 @@ const store = createStore({
       socket.onmessage = (message) => {
         const data = JSON.parse(message.data);
         const event = data.Subsystem;
-
-        if (event == "player" || event == "options" || event == "stickers") {
+        if (
+          event == "player" ||
+          event == "options" ||
+          event == "stickers" ||
+          event == "update"
+        ) {
           store.dispatch("getCurrentSong");
           store.commit("setCounter");
         }
