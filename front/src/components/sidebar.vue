@@ -14,7 +14,10 @@
         as="template"
       >
         <button :class="[tabClasses.normal, selected ? tabClasses.active : '']">
-          <font-awesome-icon :icon="['fas', tab.icon]" />
+          <font-awesome-icon
+            :icon="['fas', tab.icon]"
+            class="group-hover:text-secondary"
+          />
           <span class="hidden md:block">
             {{ name }}
           </span>
@@ -90,7 +93,7 @@ const search = defineAsyncComponent({
 const tabClasses = {
   active: "bg-accent text-primary",
   normal:
-    "flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-secondary dark:hover:text-white rounded hover:scale-105 duration-300",
+    " group flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-lighter dark:hover:text-white rounded hover:px-4 duration-300",
 };
 
 const tabs = {
