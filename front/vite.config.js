@@ -9,5 +9,6 @@ export default defineConfig({
       "/api": "http://localhost:3001",
       "/coverart": "http://localhost:3001",
     },
+    host: "0.0.0.0",
   },
 });

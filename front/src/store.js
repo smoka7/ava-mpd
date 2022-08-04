@@ -99,7 +99,12 @@ const store = createStore({
       store.commit("setCounter");
     },
     connectToSocket() {
-      const hostname = new URL(window.location.href).host;
+      let hostname = new URL(window.location.href).host;
+
+      if (import.meta.env.DEV && import.meta.env["VITE_SERVER_URL"] != "") {
+        hostname = import.meta.env["VITE_SERVER_URL"];
+      }
+
       const socket = new WebSocket("ws://" + hostname + "/update");
 
       socket.onmessage = (message) => {
