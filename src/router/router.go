@@ -96,10 +96,10 @@ func getHostIP() string {
 	conn, err := net.Dial("udp", "192.168.1.1:80")
 	config.Log(err)
 	if err != nil {
-		return "localhost"
+		return "127.0.0.1"
 	}
 	defer conn.Close()
-	localAddr := conn.LocalAddr()
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
 
-	return localAddr.String()
+	return localAddr.IP.String()
 }
