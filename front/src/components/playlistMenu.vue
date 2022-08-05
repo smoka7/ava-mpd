@@ -1,39 +1,44 @@
 <template>
-  <div
-    class="absolute top-0 z-50 flex max-h-fit w-full max-w-full items-center justify-between py-1 px-4"
+  <button class="ml-auto p-2" @click="open = !open">
+    <FontAwesomeIcon icon="ellipsis-h" />
+  </button>
+  <Dialog
+    :open="open"
+    @close="open = false"
+    class="fixed inset-0 z-10 overflow-y-auto"
   >
-    <Menu>
-      <MenuButton class="ml-auto p-2">
-        <FontAwesomeIcon icon="ellipsis-h" />
-      </MenuButton>
-      <transition name="fade">
-        <MenuItems
-          class="absolute right-12 top-10 z-50 flex cursor-default flex-col rounded bg-white/60 text-left shadow-md backdrop-blur-3xl focus:outline-none dark:bg-gray-700/60 md:right-2"
+    <DialogOverlay
+      v-show="open"
+      class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
+    />
+
+    <transition name="fade">
+      <div
+                class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-52 flex-col divide-y rounded bg-white p-1 hover:divide-transparent dark:bg-gray-800 dark:text-white md:left-auto md:w-52 md:top-20 md:right-12"
+      >
+        <button
+          v-for="action in actions"
+          :key="action.name"
+          @click="
+            $emit(action.method);
+            open = false;
+          "
+          class="menuItem flex items-center justify-start space-x-2"
         >
-          <MenuItem
-            v-slot="{ active }"
-            v-for="action in actions"
-            :key="action.name"
-            @click="$emit(action.method)"
-          >
-            <div
-              :class="{
-                'bg-blue-100 text-primary': active,
-                'flex items-center space-x-2 p-2 first:rounded-t last:rounded-b': true,
-              }"
-            >
-              <FontAwesomeIcon :icon="['fas', action.icon]" />
-              <span>{{ action.name }}</span>
-            </div>
-          </MenuItem>
-        </MenuItems>
-      </transition>
-    </Menu>
-  </div>
+          <FontAwesomeIcon :icon="action.icon" class="text-accent" />
+          <span>{{ action.name }}</span>
+        </button>
+      </div>
+    </transition>
+  </Dialog>
 </template>
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { Dialog, DialogOverlay } from "@headlessui/vue";
+
+import { ref } from "vue";
+const open = ref(false);
+
 defineEmits([
   "delete",
   "clearSelection",

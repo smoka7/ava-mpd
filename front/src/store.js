@@ -133,6 +133,10 @@ const store = createStore({
       const response = await fetchOrFail(endpoints.setting);
       store.commit("setSettings", response);
     },
+    async sendCommandToSetting(_, payload) {
+      sendCommand(endpoints.setting, payload.command, payload.data);
+      store.dispatch("getSettings");
+    },
   },
 });
 export default store;

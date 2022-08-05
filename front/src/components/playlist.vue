@@ -1,6 +1,8 @@
 <template>
   <div class="flex h-full w-full flex-col">
-    <div class="mb-10 space-y-1 overflow-y-auto overflow-x-hidden md:mb-6 md:px-2">
+    <div
+      class="mb-10 space-y-1 overflow-y-auto overflow-x-hidden md:mb-6 md:px-2"
+    >
       <albumCmp
         v-for="(album, index) in queue.Albums"
         :key="index"
@@ -36,7 +38,7 @@
     </div>
     <div
       v-if="!state.songInfo"
-      class="h-content absolute right-0 bottom-0 left-0 flex w-full flex-wrap-reverse items-center justify-between space-x-4 space-y-2 rounded-b bg-secondary px-4 text-base text-primary md:text-sm"
+      class="h-content absolute right-0 bottom-0 left-0 flex w-full flex-wrap-reverse items-center justify-between space-y-2 rounded-b bg-secondary px-4 text-base text-primary md:space-x-4 md:space-y-0 md:py-1 md:text-sm"
     >
       <span>
         {{ queue.Length }} Tracks / duration:
