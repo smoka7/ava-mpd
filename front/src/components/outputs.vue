@@ -19,10 +19,8 @@
   </div>
 </template>
 <script setup>
-import { sendCommand } from "../helpers.js";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import endpoints from "../endpoints.js";
 
 const store = useStore();
 const outputs = computed(() => store.state.settings.Outputs);
@@ -34,7 +32,10 @@ function toggleOutput(index) {
   if (outputs.value[index]["outputenabled"] == 1) {
     command = "disableOutput";
   }
-  sendCommand(endpoints.setting, command, { Value: id });
-  store.dispatch("getSettings");
+
+  store.dispatch("sendCommandToSetting", {
+    command: command,
+    data: { Value: id },
+  });
 }
 </script>

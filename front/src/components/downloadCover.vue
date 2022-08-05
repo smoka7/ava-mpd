@@ -32,8 +32,6 @@
 import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { sendCommand } from "../helpers";
-import endpoints from "../endpoints";
 
 const store = useStore();
 const download = computed({
@@ -41,8 +39,9 @@ const download = computed({
     return store.state.settings.DownloadCoverArt;
   },
   set() {
-    sendCommand(endpoints.setting, "download");
-    store.dispatch("getSettings");
+    store.dispatch("sendCommandToSetting", {
+      command: "download",
+    });
   },
 });
 </script>
