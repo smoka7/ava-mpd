@@ -22,12 +22,11 @@
         :selected-ids="state.selectedIds"
         @close="hideMenu"
         @clearSelection="state.selectedIds = []"
-        @showInfo="state.songInfo = true"
+        @showInfo="showInfo"
       />
     </teleport>
     <songInfo
       v-if="state.songInfo"
-      :song="state.selected.id"
       @close="state.songInfo = false"
     />
     <div
@@ -92,6 +91,11 @@ function showMenu(pos, id) {
 
 function hideMenu() {
   state.menu = false;
+}
+
+async function showInfo() {
+  await store.dispatch("getSongInfo", state.selected.id);
+  state.songInfo = true;
 }
 
 function selectAlbum(name) {

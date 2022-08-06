@@ -53,40 +53,5 @@
   </div>
 </template>
 <script setup>
-import endpoints from "../endpoints.js";
-import { sendCommand } from "../helpers";
-
-const props = defineProps(["song"]);
-const state = reactive({
-  info: {},
-  stickers: {},
-  albumArt: "",
-  liked: false,
-});
-
-function isItLiked() {
-  const index = state.stickers.findIndex((stick) => {
-    if (stick.Name == "liked" && stick.Value == "true") return true;
-  });
-  if (index > -1) {
-    state.liked = true;
-  }
-}
-
-async function getInfo() {
-  const song = await sendCommand(endpoints.song, "info", {
-    ID: props.song,
-  });
-  const albumArt = await sendCommand(endpoints.song, "albumArt", {
-    ID: props.song,
-  });
-  state.info = song.Info;
-  state.stickers = song.Stickers;
-  state.albumArt = albumArt.Url;
-  isItLiked();
-}
-
-onMounted(() => {
-  getInfo();
-});
+const state = computed(() => useStore().state.song);
 </script>

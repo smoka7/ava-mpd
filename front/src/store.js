@@ -15,6 +15,12 @@ const store = createStore({
       Length: 0,
       Duration: 0,
     },
+    song: {
+      info: {},
+      stickers: {},
+      albumArt: "",
+      liked: false,
+    },
     serverFolders: [],
     settings: {
       Outputs: {},
@@ -128,6 +134,23 @@ const store = createStore({
         store.commit("setConnected", false);
         console.log(err);
       };
+    },
+    async getSongInfo(_, songId) {
+      const song = await sendCommand(endpoints.song, "info", {
+        ID: songId,
+      });
+      const albumArt = await sendCommand(endpoints.song, "albumArt", {
+        ID: songId,
+      });
+
+      store.state.song.info = song.Info;
+      store.state.song.stickers = song.Stickers;
+      store.state.song.albumArt = albumArt.Url;
+
+      const index = song.Stickers.findIndex((stick) => {
+        return stick.Name == "liked" && stick.Value == "true";
+      });
+      store.state.song.liked = index > -1;
     },
     async getSettings() {
       const response = await fetchOrFail(endpoints.setting);
