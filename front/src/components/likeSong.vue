@@ -4,9 +4,6 @@
   </button>
 </template>
 <script setup>
-import endpoints from "../endpoints.js";
-import { sendCommand } from "../helpers";
-
 const props = defineProps({
   pLiked: Boolean,
   file: String,
@@ -21,13 +18,17 @@ const classes = {
 };
 
 const btnClass = ref([classes.normal]);
+const store = useStore();
 
 function likeSong() {
-  sendCommand(endpoints.song, "like", { File: props.file });
+  store.dispatch("toggleLike", { File: props.file });
+
   btnClass.value = [classes.normal, classes.scale, classes.right];
+
   setTimeout(() => {
     btnClass.value = [classes.normal, classes.scale, classes.left];
   }, 150);
+
   setTimeout(() => {
     btnClass.value = classes.normal;
   }, 300);

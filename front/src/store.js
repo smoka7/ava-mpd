@@ -113,7 +113,7 @@ const store = createStore({
         if (
           event == "player" ||
           event == "options" ||
-          event == "stickers" ||
+          event == "sticker" ||
           event == "update"
         ) {
           store.dispatch("getCurrentSong");
@@ -136,6 +136,9 @@ const store = createStore({
     async sendCommandToSetting(_, payload) {
       sendCommand(endpoints.setting, payload.command, payload.data);
       store.dispatch("getSettings");
+    },
+    async toggleLike(_, data) {
+      sendCommand(endpoints.song, "like", data);
     },
   },
 });
