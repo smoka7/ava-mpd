@@ -14,7 +14,7 @@
 
     <transition name="fade">
       <div
-                class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-52 flex-col divide-y rounded bg-white p-1 hover:divide-transparent dark:bg-gray-800 dark:text-white md:left-auto md:w-52 md:top-20 md:right-12"
+        class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-52 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-20 md:right-12 md:w-56"
       >
         <button
           v-for="action in actions"
@@ -23,7 +23,7 @@
             $emit(action.method);
             open = false;
           "
-          class="menuItem flex items-center justify-start space-x-2"
+          class="menuItem"
         >
           <FontAwesomeIcon :icon="action.icon" class="text-accent" />
           <span>{{ action.name }}</span>

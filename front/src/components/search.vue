@@ -10,7 +10,7 @@
         </ListboxButton>
         <transition name="fade">
           <ListboxOptions
-            class="fixed mt-14 cursor-pointer rounded bg-white/60 text-left backdrop-blur-3xl dark:bg-gray-700/60"
+            class="fixed mt-14 cursor-pointer space-y-1 rounded bg-white/60 p-1 text-left backdrop-blur-3xl dark:bg-gray-700/60"
           >
             <ListboxOption
               v-for="tag in searchTags"
@@ -21,7 +21,7 @@
             >
               <li
                 :class="{
-                  'p-2 hover:bg-blue-200 dark:hover:text-primary': true,
+                  'rounded p-2 hover:bg-blue-200 dark:hover:text-primary': true,
                   'bg-lightest dark:text-primary': selected,
                 }"
               >

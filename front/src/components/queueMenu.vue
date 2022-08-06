@@ -10,7 +10,7 @@
       class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
     />
     <div
-      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-52 flex-col divide-y rounded bg-white p-1 hover:divide-transparent dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
+      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-56 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
     >
       <button
         class="menuItem"
@@ -18,11 +18,13 @@
         v-for="action in actions"
         :key="action.title"
       >
-        {{ action.title }}
+        <FontAwesomeIcon :icon="action.icon" class="text-accent" />
+        <span>{{ action.title }}</span>
       </button>
       <details>
-        <summary @click="getStoredPlaylist" class="menuItem flex">
-          add to playlist
+        <summary @click="getStoredPlaylist" class="menuItem">
+          <FontAwesomeIcon icon="plus" class="text-accent" />
+          <span>Add to playlist </span>
         </summary>
         <button
           @click="addSongTo(pl.Name)"
@@ -54,11 +56,11 @@ const props = defineProps({
 });
 
 const actions = [
-  { title: "Delete", func: deleteSong },
-  { title: "Show Song Info", func: showInfo },
-  { title: "Shuffle Album", func: shuffleAlbum },
-  { title: "Remove Duplicate songs", func: removeDuplicate },
-  { title: "Clear Selection", func: clearSelection },
+  { title: "Delete", icon: "trash", func: deleteSong },
+  { title: "Show Song Info", icon: "info-circle", func: showInfo },
+  { title: "Shuffle Album", icon: "random", func: shuffleAlbum },
+  { title: "Remove Duplicate songs", icon: "eraser", func: removeDuplicate },
+  { title: "Clear Selection", icon: "check-circle", func: clearSelection },
 ];
 
 function deleteSong() {
@@ -113,6 +115,6 @@ function getStoredPlaylist() {
 </script>
 <style>
 .menuItem {
-  @apply w-full overflow-x-hidden text-ellipsis rounded p-2  text-left hover:bg-blue-100 dark:hover:bg-blue-100 dark:hover:text-black;
+  @apply flex w-full items-center justify-start space-x-2  overflow-x-hidden text-ellipsis rounded p-2 text-left hover:bg-blue-100 focus:outline-none focus:ring focus:ring-accent dark:hover:bg-blue-100 dark:hover:text-black;
 }
 </style>

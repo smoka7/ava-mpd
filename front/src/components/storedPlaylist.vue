@@ -1,6 +1,6 @@
 <template>
   <div class="relative flex flex-col overflow-x-hidden pt-6 pb-2">
-    <playlist-menu
+    <PlaylistMenu
       v-if="state.selectedCount > 0"
       @delete="playlistCommand('delete')"
       @clear="playlistCommand('clear')"
@@ -181,6 +181,7 @@ function clearSelection() {
   storedPlaylist.value.forEach((p) => {
     p.selected = false;
   });
+  state.selectedCount = 0;
 }
 
 function toggleSelected(index) {
