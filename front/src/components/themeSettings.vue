@@ -42,51 +42,46 @@
     </RadioGroup>
   </div>
 </template>
-<script>
+<script setup>
 import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
-export default {
-  data() {
-    return {
-      isDark: localStorage.getItem("theme") == "dark",
-      colorScheme: localStorage.getItem("colorScheme") || "first",
-      colorSchemes: colorSchemes,
-    };
-  },
-  methods: {
-    toggleDarkMode() {
-      if (!this.isDark) {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-        return;
-      }
-      localStorage.setItem("theme", "dark");
-      document.documentElement.classList.add("dark");
-    },
-    changeColorScheme() {
-      localStorage.setItem("colorScheme", this.colorScheme);
-      setColorScheme();
-    },
-    renderScheme(scheme) {
-      let style = "background-image: linear-gradient(90deg,";
-      let percent = 0;
 
-      scheme.forEach((element) => {
-        const rgb = getRGB(element);
-        style += rgb + " " + percent + "%,";
-        percent += 20;
-        style += rgb + " " + percent + "%,";
-      });
+const colorScheme = ref(localStorage.getItem("colorScheme") || "first");
+const isDark = ref(localStorage.getItem("theme") == "dark");
 
-      return style + getRGB(scheme[4]) + " 100%);";
-    },
-  },
-  watch: {
-    colorScheme(newCS) {
-      this.changeColorScheme(newCS);
-    },
-    isDark() {
-      this.toggleDarkMode();
-    },
-  },
-};
+function toggleDarkMode() {
+  if (!isDark.value) {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("theme", "light");
+    return;
+  }
+  localStorage.setItem("theme", "dark");
+  document.documentElement.classList.add("dark");
+}
+
+function changeColorScheme() {
+  localStorage.setItem("colorScheme", colorScheme.value);
+  setColorScheme();
+}
+
+function renderScheme(scheme) {
+  let style = "background-image: linear-gradient(90deg,";
+  let percent = 0;
+
+  scheme.forEach((element) => {
+    const rgb = getRGB(element);
+    style += rgb + " " + percent + "%,";
+    percent += 20;
+    style += rgb + " " + percent + "%,";
+  });
+
+  return style + getRGB(scheme[4]) + " 100%);";
+}
+
+watch(colorScheme, (newCS) => {
+  changeColorScheme(newCS);
+});
+
+watch(isDark, () => {
+  toggleDarkMode();
+});
 </script>
