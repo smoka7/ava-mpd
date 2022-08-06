@@ -12,8 +12,6 @@
   </div>
 </template>
 <script setup>
-import MediaController from "./components/mediaController.vue";
-import Sidebar from "./components/sidebar.vue";
 import { setColorScheme } from "./colors.js";
 import { useStore } from "vuex";
 

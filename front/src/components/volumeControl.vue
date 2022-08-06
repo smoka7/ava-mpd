@@ -11,8 +11,6 @@
   </div>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import progressBar from "./progressBar.vue";
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
 

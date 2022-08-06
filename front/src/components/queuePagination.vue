@@ -30,7 +30,6 @@
 </template>
 <script setup>
 import { useStore } from "vuex";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed } from "vue";
 
 const store = useStore();

@@ -48,8 +48,6 @@
   </TabGroup>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { toggleMediaController } from "../helpers.js";
 import { defineAsyncComponent } from "vue";
 import { useStore } from "vuex";

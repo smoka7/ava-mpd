@@ -17,8 +17,6 @@
   </text-input>
 </template>
 <script setup>
-import TextInput from "./textInput.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
 import { useStore } from "vuex";

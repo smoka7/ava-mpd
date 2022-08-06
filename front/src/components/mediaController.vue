@@ -13,7 +13,7 @@
       <span> {{ currentSong.Artist }} ({{ currentSong.Date }}) </span>
     </div>
     <album-art
-      :url="AlbumArt"
+      :url="AlbumArtUrl"
       :altText="currentSong.Title + 'cover'"
       id="albumArt"
       class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2"
@@ -43,10 +43,6 @@
 </template>
 
 <script setup>
-import albumArt from "./albumArt.vue";
-import progressBar from "./progressBar.vue";
-import volumeControl from "./volumeControl.vue";
-import PlaybackCommands from "./playbackCommands.vue";
 import { shallowReactive, computed, ref } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
@@ -55,7 +51,7 @@ import { useStore } from "vuex";
 defineEmits(["openSetting"]);
 
 const store = useStore();
-const AlbumArt = computed(() => store.state.albumArt);
+const AlbumArtUrl = computed(() => store.state.albumArt);
 const status = computed(() => shallowReactive(store.state.status));
 const currentSong = computed(() => shallowReactive(store.state.currentSong));
 const hoverProgress = ref(0);

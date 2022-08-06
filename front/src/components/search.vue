@@ -78,16 +78,8 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import Folder from "./folder.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import SidebarButton from "./sidebarButton.vue";
 import endpoints from "../endpoints.js";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/vue";
+
 const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];
 const tag = ref("file");
 const term = ref("");

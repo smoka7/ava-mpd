@@ -40,8 +40,6 @@
   </Dialog>
 </template>
 <script setup>
-import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-
 defineProps(["open", "storedPlaylist"]);
 const emit = defineEmits(["close", "add", "addToPlaylist"]);
 const postitions = ["currentSong", "endOfQueue", "currentAlbum"];

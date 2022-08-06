@@ -64,11 +64,8 @@
   </div>
 </template>
 <script setup>
-import likeSong from "./likeSong.vue";
-import saveQueue from "./saveQueue.vue";
 import { useStore } from "vuex";
 import { shallowReactive, computed } from "vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import endpoints from "../endpoints.js";
 import { sendCommand, toggleMediaController } from "../helpers";
 

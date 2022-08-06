@@ -80,7 +80,6 @@
 <script setup>
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 defineEmits(["showMenu", "select", "selectAlbum"]);
 

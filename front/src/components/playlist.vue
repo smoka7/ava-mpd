@@ -3,7 +3,7 @@
     <div
       class="mb-10 space-y-1 overflow-y-auto overflow-x-hidden md:mb-6 md:px-2"
     >
-      <albumCmp
+      <Album
         v-for="(album, index) in queue.Albums"
         :key="index"
         :album="album"
@@ -62,8 +62,6 @@ import {
   computed,
   onMounted,
 } from "vue";
-import albumCmp from "./album.vue";
-import queuePagination from "./queuePagination.vue";
 
 const songInfo = defineAsyncComponent(() => import("./songInfo.vue"));
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));

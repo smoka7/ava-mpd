@@ -33,9 +33,6 @@
   </Dialog>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Dialog, DialogOverlay } from "@headlessui/vue";
-
 import { ref } from "vue";
 const open = ref(false);
 

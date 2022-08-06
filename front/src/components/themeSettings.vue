@@ -43,26 +43,8 @@
   </div>
 </template>
 <script>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-  RadioGroup,
-  RadioGroupLabel,
-  RadioGroupOption,
-  Switch,
-  SwitchGroup,
-  SwitchLabel,
-} from "@headlessui/vue";
 import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
 export default {
-  components: {
-    FontAwesomeIcon,
-    RadioGroup,
-    RadioGroupLabel,
-    RadioGroupOption,
-    Switch,
-    SwitchGroup,
-    SwitchLabel,
-  },
   data() {
     return {
       isDark: localStorage.getItem("theme") == "dark",

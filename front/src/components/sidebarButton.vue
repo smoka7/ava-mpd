@@ -8,7 +8,6 @@
   </button>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 defineProps({
   label: String,
   icon: String,

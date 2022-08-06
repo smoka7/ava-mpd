@@ -46,7 +46,6 @@
   </div>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { sendCommand, humanizeTime } from "../helpers.js";
 import endpoints from "../endpoints.js";
 import { useStore } from "vuex";

@@ -6,7 +6,6 @@
 <script setup>
 import { shallowReactive, computed } from "vue";
 import { useStore } from "vuex";
-import Folder from "./folder.vue";
 
 const store = useStore();
 const serverRoot = computed(() =>

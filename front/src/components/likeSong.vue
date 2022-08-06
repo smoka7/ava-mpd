@@ -4,7 +4,6 @@
   </button>
 </template>
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import endpoints from "../endpoints.js";
 import { sendCommand } from "../helpers";
 import { ref } from "vue";

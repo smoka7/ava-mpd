@@ -9,7 +9,6 @@
   </text-input>
 </template>
 <script setup>
-import TextInput from "./textInput.vue";
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
 import { ref } from "vue";

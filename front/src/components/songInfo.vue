@@ -52,14 +52,11 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import likeSong from "./likeSong.vue";
-import albumArt from "./albumArt.vue";
 import endpoints from "../endpoints.js";
 import { sendCommand } from "../helpers";
 import { reactive, onMounted } from "vue";
+
 const props = defineProps(["song"]);
 const state = reactive({
   info: {},

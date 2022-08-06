@@ -46,9 +46,6 @@
 import { reactive, ref } from "vue";
 import { sendCommand } from "../helpers.js";
 import endpoints from "../endpoints.js";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import SidebarButton from "./sidebarButton.vue";
-import AddSongs from "./addSongs.vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
 

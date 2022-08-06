@@ -20,11 +20,6 @@
   </div>
 </template>
 <script setup>
-import DatabaseInfo from "./databaseInfo.vue";
-import Outputs from "./outputs.vue";
-import PlaybackOptions from "./playbackOptions.vue";
-import ThemeSettings from "./themeSettings.vue";
-import DownloadCover from "./downloadCover.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
 

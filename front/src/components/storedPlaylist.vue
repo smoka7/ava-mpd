@@ -111,11 +111,6 @@ import endpoints from "../endpoints";
 import { useStore } from "vuex";
 import { humanizeTime, sendCommand } from "../helpers.js";
 import { shallowReactive, computed, reactive } from "vue";
-import PlaylistMenu from "./playlistMenu.vue";
-import SidebarButton from "./sidebarButton.vue";
-import RenamePlaylist from "./renamePlaylist.vue";
-import AddSongs from "./addSongs.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const store = useStore();
 
