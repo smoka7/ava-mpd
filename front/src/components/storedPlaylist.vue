@@ -108,9 +108,7 @@
 </template>
 <script setup>
 import endpoints from "../endpoints";
-import { useStore } from "vuex";
 import { humanizeTime, sendCommand } from "../helpers.js";
-import { shallowReactive, computed, reactive } from "vue";
 
 const store = useStore();
 

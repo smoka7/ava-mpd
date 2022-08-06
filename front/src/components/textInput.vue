@@ -37,9 +37,6 @@
   </Dialog>
 </template>
 <script setup>
-import { Dialog, DialogOverlay, DialogTitle } from "@headlessui/vue";
-import { ref } from "vue";
-
 defineEmits(["close", "finish"]);
 defineProps(["isOpen"]);
 const inputText = ref("");

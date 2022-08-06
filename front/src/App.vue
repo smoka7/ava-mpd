@@ -13,7 +13,6 @@
 </template>
 <script setup>
 import { setColorScheme } from "./colors.js";
-import { useStore } from "vuex";
 
 const store = useStore();
 

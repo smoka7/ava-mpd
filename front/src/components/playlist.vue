@@ -52,16 +52,7 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
 import { humanizeTime } from "../helpers.js";
-import {
-  defineAsyncComponent,
-  shallowReactive,
-  reactive,
-  watch,
-  computed,
-  onMounted,
-} from "vue";
 
 const songInfo = defineAsyncComponent(() => import("./songInfo.vue"));
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));

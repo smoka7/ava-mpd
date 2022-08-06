@@ -19,8 +19,6 @@
 <script setup>
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
-import { useStore } from "vuex";
-import { ref } from "vue";
 
 const store = useStore();
 const InputIsOpen = ref(false);

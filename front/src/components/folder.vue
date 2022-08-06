@@ -43,11 +43,8 @@
   </details>
 </template>
 <script setup>
-import { reactive, ref } from "vue";
 import { sendCommand } from "../helpers.js";
 import endpoints from "../endpoints.js";
-import { computed } from "vue";
-import { useStore } from "vuex";
 
 const props = defineProps(["data"]);
 const folders = reactive({ data: [] });

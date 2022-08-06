@@ -43,10 +43,8 @@
 </template>
 
 <script setup>
-import { shallowReactive, computed, ref } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
-import { useStore } from "vuex";
 
 defineEmits(["openSetting"]);
 

@@ -77,7 +77,6 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
 import endpoints from "../endpoints.js";
 
 const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];

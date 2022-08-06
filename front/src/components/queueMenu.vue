@@ -37,10 +37,7 @@
   </Dialog>
 </template>
 <script setup>
-import { computed } from "vue";
-import { useStore } from "vuex";
 import { sendCommand } from "../helpers.js";
-import { Dialog, DialogOverlay } from "@headlessui/vue";
 import endpoints from "../endpoints.js";
 
 const store = useStore();

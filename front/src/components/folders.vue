@@ -4,9 +4,6 @@
   </div>
 </template>
 <script setup>
-import { shallowReactive, computed } from "vue";
-import { useStore } from "vuex";
-
 const store = useStore();
 const serverRoot = computed(() =>
   shallowReactive(store.state.serverFolders),

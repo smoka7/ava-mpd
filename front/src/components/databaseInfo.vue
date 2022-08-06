@@ -48,8 +48,6 @@
 <script setup>
 import { sendCommand, humanizeTime } from "../helpers.js";
 import endpoints from "../endpoints.js";
-import { useStore } from "vuex";
-import { computed } from "vue";
 
 const store = useStore();
 const stats = computed(() => store.state.settings.DatabaseStats);

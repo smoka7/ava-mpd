@@ -6,7 +6,6 @@
 <script setup>
 import endpoints from "../endpoints.js";
 import { sendCommand } from "../helpers";
-import { ref } from "vue";
 
 const props = defineProps({
   pLiked: Boolean,

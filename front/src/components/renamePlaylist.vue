@@ -11,8 +11,6 @@
 <script setup>
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
-import { ref } from "vue";
-import { useStore } from "vuex";
 
 const store=useStore();
 const props=defineProps(["rename"]);

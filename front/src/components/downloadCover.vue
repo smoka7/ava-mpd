@@ -29,10 +29,6 @@
   </div>
 </template>
 <script setup>
-import { Switch, SwitchGroup, SwitchLabel } from "@headlessui/vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
-
 const store = useStore();
 const download = computed({
   get() {

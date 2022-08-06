@@ -49,8 +49,6 @@
 </template>
 <script setup>
 import { toggleMediaController } from "../helpers.js";
-import { defineAsyncComponent } from "vue";
-import { useStore } from "vuex";
 
 const store = useStore();
 

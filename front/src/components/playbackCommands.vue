@@ -64,8 +64,6 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { shallowReactive, computed } from "vue";
 import endpoints from "../endpoints.js";
 import { sendCommand, toggleMediaController } from "../helpers";
 

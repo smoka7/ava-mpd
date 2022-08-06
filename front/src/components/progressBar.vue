@@ -9,8 +9,6 @@
   />
 </template>
 <script setup>
-import { computed, ref } from "vue";
-
 const progress = ref(null);
 
 const props = defineProps({

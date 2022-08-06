@@ -55,7 +55,6 @@
 <script setup>
 import endpoints from "../endpoints.js";
 import { sendCommand } from "../helpers";
-import { reactive, onMounted } from "vue";
 
 const props = defineProps(["song"]);
 const state = reactive({

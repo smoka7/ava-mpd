@@ -29,9 +29,6 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { computed } from "vue";
-
 const store = useStore();
 const queue = computed(() => store.state.queue);
 defineEmits(["goToCurrent"]);

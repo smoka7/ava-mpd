@@ -20,9 +20,6 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { computed } from "vue";
-
 const store = useStore();
 const connected = computed(() => store.state.connected);
 
