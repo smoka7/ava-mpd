@@ -12,16 +12,17 @@
   </div>
 </template>
 <script setup>
-import { setColorScheme } from "./colors.js";
+import { loadTheme, setColorScheme } from "./colors.js";
 
 const store = useStore();
 
 store.dispatch("connectToSocket");
 store.dispatch("getCurrentSong");
 store.dispatch("startCounter");
+loadTheme();
 setColorScheme();
 </script>
-<style>
+<style lang="postcss">
 .tooltip {
   @apply relative inline-block;
 }

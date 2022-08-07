@@ -35,19 +35,21 @@ export function writeColors(colors = colorSchemes.first) {
     ";}";
 }
 
+export function loadTheme() {
+  if (
+    localStorage.theme === "dark" ||
+    (!("theme" in localStorage) &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    document.documentElement.classList.add("dark");
+  }
+}
+
 export function setColorScheme() {
   const scheme = localStorage.getItem("colorScheme");
-  switch (scheme) {
-    case "second":
-      writeColors(colorSchemes.second);
-      break;
-    case "third":
-      writeColors(colorSchemes.third);
-      break;
-    case "fourth":
-      writeColors(colorSchemes.fourth);
-      break;
-    default:
-      writeColors(colorSchemes.first);
+  if (colorSchemes[scheme]) {
+    writeColors(colorSchemes[scheme]);
+    return;
   }
+  writeColors(colorSchemes["first"]);
 }
