@@ -15,20 +15,15 @@
         @select="selectSong"
       />
     </div>
-    <teleport to="#app">
-      <queue-menu
-        :open="state.menu"
-        :song="state.selected"
-        :selected-ids="state.selectedIds"
-        @close="hideMenu"
-        @clearSelection="state.selectedIds = []"
-        @showInfo="showInfo"
-      />
-    </teleport>
-    <songInfo
-      v-if="state.songInfo"
-      @close="state.songInfo = false"
+    <queue-menu
+      :open="state.menu"
+      :song="state.selected"
+      :selected-ids="state.selectedIds"
+      @close="hideMenu"
+      @clearSelection="state.selectedIds = []"
+      @showInfo="showInfo"
     />
+    <songInfo v-if="state.songInfo" @close="state.songInfo = false" />
     <div
       v-if="queue.Length == 0"
       class="flex h-full w-full items-center justify-center p-4 text-7xl underline decoration-accent md:text-9xl"

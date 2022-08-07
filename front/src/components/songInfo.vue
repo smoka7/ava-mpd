@@ -1,10 +1,10 @@
 <template>
   <div
-    class="absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll bg-lightest p-8"
+    class="absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll bg-lightest p-4 md:p-8"
   >
-    <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-col-reverse items-center justify-start md:flex-row">
       <h1
-        class="mr-2 flex items-center space-x-4 text-ellipsis text-4xl font-bold text-primary underline decoration-accent"
+        class="flex items-center space-x-4 text-ellipsis text-3xl font-bold text-primary underline decoration-accent md:mr-2"
       >
         <span>
           {{ state.info.Title }}
@@ -14,7 +14,7 @@
       <button
         aria-label="close-info"
         @click="$emit('close')"
-        class="rounded-full px-4 py-2"
+        class="ml-auto rounded-full px-4 py-2"
       >
         <font-awesome-icon class="text-red-500" icon="times" size="2x" />
       </button>
