@@ -1,17 +1,23 @@
 <template>
-  <details :open="currentAlbum">
+  <details :open="currentAlbum" class="album">
     <summary
-      class="group sticky top-0 flex cursor-pointer items-center justify-between bg-lightest px-8 py-2 duration-300 hover:-mx-1 hover:py-3 dark:text-primary md:rounded"
+      :class="[currentAlbum ? 'current-album-header' : 'album-header', 'group']"
     >
       <span>
         <FontAwesomeIcon
           :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
-          class="mr-2 transform-gpu duration-200"
+          :class="[
+            currentAlbum ? 'text-red-500' : '',
+            'mr-2 transform-gpu duration-200',
+          ]"
           size="lg"
         />
-        {{ album.Artist }} - {{ album.Album }} ({{ album.Date }})
+        {{ album.Artist }} | {{ album.Album }}
       </span>
-      <button class="cursor-pointer">
+      <button
+        class="w-fit shrink-0 cursor-pointer"
+        aria-label="select-the-album"
+      >
         <FontAwesomeIcon
           label="select Album"
           icon="check-circle"
@@ -19,6 +25,7 @@
           class="invisible text-primary group-hover:visible"
           @click.stop="$emit('selectAlbum', album.Album)"
         />
+        {{ album.Date }}
       </button>
     </summary>
     <div
@@ -29,51 +36,62 @@
       @dragenter.prevent
       @drop="moveSong($event, song.Pos)"
       @dragstart="startMoveSong($event, song.Id)"
-      class="group grid grid-cols-12 items-center py-2 px-4 text-black duration-300 even:bg-gray-600/10 hover:-mx-1 hover:bg-white/60 hover:py-[0.6rem] dark:text-white dark:even:bg-gray-800/50 dark:hover:bg-gray-800/70 dark:hover:even:bg-gray-800/70 md:m-1 md:rounded md:py-1"
-      :id="song.Pos !== currentSongPos ? '' : 'currentSong'"
+      class="song group"
+      tabindex="0"
+      :id="isCurrSong(song.Pos) ? 'currentSong' : ''"
     >
-      <span
-        class="col-start-1 col-end-3 cursor-pointer px-2 md:col-end-2"
-        @click.stop="play(song.Id)"
+      <div
+        class="mr-2 flex flex-grow-0 space-x-4 overflow-x-clip text-ellipsis"
       >
-        <FontAwesomeIcon
-          :id="song.Pos"
-          :class="
-            song.Pos !== currentSongPos
-              ? 'invisible mr-2 text-green-500 group-hover:visible'
-              : 'mr-2 text-red-500'
-          "
-          :icon="['fas', song.Pos !== currentSongPos ? 'play' : 'compact-disc']"
-        />
-        {{ song.Track }}
-      </span>
-      <span
-        class="col-start-3 col-end-9 justify-start overflow-x-hidden text-ellipsis md:col-start-2"
+        <span class="group relative cursor-pointer" @click.stop="play(song.Id)">
+          <FontAwesomeIcon
+            :id="song.Pos"
+            :class="
+              isCurrSong(song.Pos)
+                ? 'text-red-500'
+                : 'invisible text-green-500 group-hover:visible'
+            "
+            :icon="['fas', isCurrSong(song.Pos) ? 'compact-disc' : 'play']"
+          />
+          <span
+            :class="[
+              isCurrSong(song.Pos)
+                ? 'hidden'
+                : 'absolute inset-0 group-hover:invisible',
+            ]"
+          >
+            {{ song.Track }}
+          </span>
+        </span>
+        <span class="">
+          {{ song.Title }}
+        </span>
+      </div>
+      <div
+        class="flex flex-shrink-0 cursor-pointer items-center justify-between space-x-2 md:w-2/12"
       >
-        {{ song.Title }}
-      </span>
-      <button
-        class="col-start-9 col-end-13 flex cursor-pointer items-center justify-between space-x-2 md:col-start-11"
-      >
-        <FontAwesomeIcon
-          label="select song"
-          icon="check-circle"
+        <button
+          @click="$emit('select', song.Id)"
+          aria-label="select-the-song"
           :class="
             isSelected(song.Id)
               ? 'visible text-green-500 dark:text-green-400'
               : 'invisible text-primary group-hover:visible dark:text-white'
           "
-          @click="$emit('select', song.Id)"
-        />
-        <FontAwesomeIcon
+        >
+          <FontAwesomeIcon icon="check-circle" />
+        </button>
+        <button
+          aria-label="show-menu"
           @click="$emit('showMenu', song.Pos, song.Id, $event)"
           class="invisible mr-2 text-primary group-hover:visible dark:text-white"
-          icon="ellipsis-h"
-        />
+        >
+          <FontAwesomeIcon icon="ellipsis-h" />
+        </button>
         <span>
           {{ humanizeTime(song.Duration) }}
         </span>
-      </button>
+      </div>
     </div>
   </details>
 </template>
@@ -97,6 +115,10 @@ function play(id) {
   sendCommand(endpoints.queue, "play", data);
 }
 
+function isCurrSong(pos) {
+  return pos === props.currentSongPos;
+}
+
 function isSelected(id) {
   return props.selectedIds.indexOf(id) > -1;
 }
@@ -116,13 +138,39 @@ function moveSong(event, position) {
   sendCommand(endpoints.queue, "move", data);
 }
 </script>
-<style scoped>
+<style lang="postcss">
 details[open] > summary > span > svg {
   @apply rotate-90;
 }
 details[open] summary ~ * {
   animation: sweep 0.2s ease-in-out;
 }
+
+.album[open] {
+  @apply rounded bg-white/40 p-1 dark:bg-gray-600/50;
+}
+
+.album-header {
+  @apply sticky top-0 flex cursor-pointer items-center justify-between rounded px-4 py-2;
+  @apply transition-transform duration-200;
+  @apply hover:bg-lightest hover:py-3 hover:text-primary dark:text-white dark:hover:text-primary;
+}
+
+.current-album-header {
+  @apply album-header;
+  @apply bg-lightest text-primary hover:py-2 !important;
+}
+
+.song {
+  @apply my-1 flex w-full justify-between p-1 duration-300;
+  @apply hover:bg-white/60 hover:py-1.5 dark:text-white dark:hover:bg-gray-800/70;
+  @apply md:rounded md:px-3;
+}
+
+#currentSong {
+  @apply bg-red-300 hover:py-1 dark:text-primary !important;
+}
+
 @keyframes sweep {
   0% {
     @apply mt-2 opacity-0;

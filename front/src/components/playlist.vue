@@ -126,8 +126,3 @@ watch(currentSongPos, () => {
   scrollToCurrentSong();
 });
 </script>
-<style>
-#currentSong {
-  @apply bg-red-300 dark:text-primary !important;
-}
-</style>
