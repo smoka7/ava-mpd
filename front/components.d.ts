@@ -32,6 +32,7 @@ declare module '@vue/runtime-core' {
     ProgressBar: typeof import('./src/components/progressBar.vue')['default']
     QueueMenu: typeof import('./src/components/queueMenu.vue')['default']
     QueuePagination: typeof import('./src/components/queuePagination.vue')['default']
+    QueueStats: typeof import('./src/components/queueStats.vue')['default']
     RadioGroup: typeof import('@headlessui/vue')['RadioGroup']
     RadioGroupLabel: typeof import('@headlessui/vue')['RadioGroupLabel']
     RadioGroupOption: typeof import('@headlessui/vue')['RadioGroupOption']

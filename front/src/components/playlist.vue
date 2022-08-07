@@ -30,24 +30,16 @@
     >
       {{ message }}
     </div>
-    <div
+    <QueueStats
       v-if="!state.songInfo"
-      class="h-content absolute right-0 bottom-0 left-0 flex w-full flex-wrap-reverse items-center justify-between space-y-2 rounded-b bg-secondary px-4 text-base text-primary md:space-x-4 md:space-y-0 md:py-1 md:text-sm"
-    >
-      <span>
-        {{ queue.Length }} Tracks / duration:
-        {{ humanizeTime(queue.Duration) }}
-      </span>
-      <span v-if="state.selectedIds.length > 0">
-        {{ state.selectedIds.length }} selected
-      </span>
-      <queuePagination @goToCurrent="scrollToCurrentSong" />
-    </div>
+      @scrollToCurrentSong="scrollToCurrentSong"
+      :length="queue.Length"
+      :duration="queue.Duration"
+      :selectedLength="state.selectedIds.length"
+    />
   </div>
 </template>
 <script setup>
-import { humanizeTime } from "../helpers.js";
-
 const songInfo = defineAsyncComponent(() => import("./songInfo.vue"));
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));
 
