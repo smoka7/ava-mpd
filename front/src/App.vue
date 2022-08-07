@@ -13,6 +13,7 @@
 </template>
 <script setup>
 import { loadTheme, setColorScheme } from "./colors.js";
+import { handleKey } from "./keymap";
 
 const store = useStore();
 
@@ -21,6 +22,16 @@ store.dispatch("getCurrentSong");
 store.dispatch("startCounter");
 loadTheme();
 setColorScheme();
+
+const Key = document.addEventListener("keydown", (event) => {
+  if (event && event.target.tagName.toUpperCase() !== "INPUT") {
+    handleKey(event.key);
+  }
+});
+
+onUnmounted(() => {
+  document.removeEventListener(Key);
+});
 </script>
 <style lang="postcss">
 .tooltip {

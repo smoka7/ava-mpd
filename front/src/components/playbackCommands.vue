@@ -64,9 +64,6 @@
   </div>
 </template>
 <script setup>
-import endpoints from "../endpoints.js";
-import { sendCommand, toggleMediaController } from "../helpers";
-
 const store = useStore();
 const currentSong = computed(() =>
   shallowReactive(store.state.currentSong),
@@ -111,6 +108,6 @@ const playbackCommands = computed(() => [
 ]);
 
 function Command(command) {
-  sendCommand(endpoints.playback, command);
+  store.dispatch("sendPlaybackCommand", command);
 }
 </script>
