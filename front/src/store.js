@@ -123,6 +123,7 @@ const store = createStore({
           event == "player" ||
           event == "options" ||
           event == "sticker" ||
+          event == "mixer" ||
           event == "update"
         ) {
           store.dispatch("getCurrentSong");

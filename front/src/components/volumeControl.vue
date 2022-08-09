@@ -7,7 +7,7 @@
       <font-awesome-icon :icon="['fas', icon()]" size="lg" />
     </button>
     <progressBar :data="{ value: volume, max: 100 }" @seek="changeVolume" />
-    <span class="tooltiptext">volume{{ volume }}%</span>
+    <span class="tooltiptext">volume {{ volume }}%</span>
   </div>
 </template>
 <script setup>
