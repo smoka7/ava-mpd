@@ -13,6 +13,8 @@ const PlaybackKeyMaps = {
   c: { name: "clear", action: "clear" },
   f: { name: "seek forward", action: "seekForward" },
   b: { name: "seek backward", action: "seekBackward" },
+  9: { name: "Decrease Volume by 5%", action: "volumeDown" },
+  0: { name: "Increase Volume by 5%", action: "volumeUp" },
 };
 
 export function handleKey(key) {

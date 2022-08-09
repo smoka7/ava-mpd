@@ -2,6 +2,7 @@ package playback
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/smoka7/ava/src/config"
@@ -25,6 +26,8 @@ var commands = Commands{
 	"play":         play,
 	"seekForward":  seekForward,
 	"seekBackward": seekBackward,
+	"volumeDown":   volumeDown,
+	"volumeUp":     volumeUp,
 }
 
 func Command(c config.Connection, cmd string, data int) error {
@@ -158,7 +161,38 @@ func random(c *config.Connection) error {
 
 // sets the volume
 func changeVolume(c *config.Connection, volume int) error {
+	if volume > 100 {
+		volume = 100
+	}
+	if volume < 0 {
+		volume = 0
+	}
+
 	err = c.Client.SetVolume(volume)
+	config.Log(err)
+	return err
+}
+
+// returns the volume
+func getVolume(c *config.Connection) int {
+	volAttr, err := c.Client.Command("getvol").Attrs()
+	config.Log(err)
+	volume, _ := strconv.Atoi(volAttr["volume"])
+	return volume
+}
+
+// Increases the  Volume by 5%
+func volumeUp(c *config.Connection) error {
+	volume := getVolume(c)
+	err = changeVolume(c, volume+5)
+	config.Log(err)
+	return err
+}
+
+// Decreases the Volume by 5%
+func volumeDown(c *config.Connection) error {
+	volume := getVolume(c)
+	err = changeVolume(c, volume-5)
 	config.Log(err)
 	return err
 }
