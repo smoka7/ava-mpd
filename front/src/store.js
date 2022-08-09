@@ -20,6 +20,7 @@ const store = createStore({
       stickers: {},
       albumArt: "",
       liked: false,
+      show: false,
     },
     serverFolders: [],
     settings: {
@@ -150,11 +151,15 @@ const store = createStore({
       store.state.song.info = song.Info;
       store.state.song.stickers = song.Stickers;
       store.state.song.albumArt = albumArt.Url;
+      store.state.song.show = true;
 
       const index = song.Stickers.findIndex((stick) => {
         return stick.Name == "liked" && stick.Value == "true";
       });
       store.state.song.liked = index > -1;
+    },
+    clearSongInfo() {
+      store.state.song.show = false;
     },
     async getSettings() {
       const response = await fetchOrFail(endpoints.setting);

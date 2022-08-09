@@ -23,7 +23,7 @@
       @clearSelection="state.selectedIds = []"
       @showInfo="showInfo"
     />
-    <songInfo v-if="state.songInfo" @close="state.songInfo = false" />
+    <songInfo v-if="showSongInfo" @close="closeInfo" />
     <div
       v-if="queue.Length == 0"
       class="flex h-full w-full items-center justify-center p-4 text-7xl underline decoration-accent md:text-9xl"
@@ -31,7 +31,7 @@
       {{ message }}
     </div>
     <QueueStats
-      v-if="!state.songInfo"
+      v-if="!showSongInfo"
       @scrollToCurrentSong="scrollToCurrentSong"
       :length="queue.Length"
       :duration="queue.Duration"
@@ -47,7 +47,6 @@ const store = useStore();
 
 const state = reactive({
   menu: false,
-  songInfo: false,
   selected: { id: -1, pos: -1 },
   selectedIds: [],
 });
@@ -55,6 +54,8 @@ const state = reactive({
 const queue = computed(() => shallowReactive(store.state.queue));
 
 const currentSongPos = computed(() => store.state.currentSong.Pos);
+
+const showSongInfo = computed(() => store.state.song.show);
 
 const message = computed(() => {
   if (!store.state.connected) {
@@ -82,7 +83,10 @@ function hideMenu() {
 
 async function showInfo() {
   await store.dispatch("getSongInfo", state.selected.id);
-  state.songInfo = true;
+}
+
+async function closeInfo() {
+  await store.dispatch("clearSongInfo");
 }
 
 function selectAlbum(name) {
