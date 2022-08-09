@@ -1,6 +1,8 @@
 <template>
   <TabGroup
     as="div"
+    :selectedIndex="selectedTab"
+    @change="changeTab"
     class="fbg relative flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
   >
     <TabList
@@ -85,6 +87,12 @@ const search = defineAsyncComponent({
   loader: () => import("./search.vue"),
   delay: 200,
 });
+
+const selectedTab = computed(() => store.state.activeTabIndex);
+
+function changeTab(index) {
+  store.commit("setActiveTab", index);
+}
 
 const tabClasses = {
   active: "bg-accent text-primary",

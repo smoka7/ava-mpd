@@ -6,6 +6,7 @@ const store = createStore({
   state: {
     connected: true,
     currentSong: {},
+    activeTabIndex: 0,
     durationInterval: Number,
     status: {},
     albumArt: "default",
@@ -39,6 +40,9 @@ const store = createStore({
   mutations: {
     setCurrentSong(state, song) {
       state.currentSong = song;
+    },
+    setActiveTab(state, tab) {
+      state.activeTabIndex = tab;
     },
     setStatus(state, status) {
       state.status = status;

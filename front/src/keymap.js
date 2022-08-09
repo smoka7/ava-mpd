@@ -21,6 +21,14 @@ const otherMaps = {
   i: { name: "show playing song info", func: showInfo },
 };
 
+const tabMappings = {
+  1: { name: "show queue tab" },
+  2: { name: "show setting Tab" },
+  3: { name: "show playlists Tab" },
+  4: { name: "show server folders Tab" },
+  5: { name: "show folder tab" },
+};
+
 export function handleKey(key) {
   if (PlaybackKeyMaps[key]) {
     store.dispatch("sendPlaybackCommand", PlaybackKeyMaps[key].action);
@@ -31,10 +39,18 @@ export function handleKey(key) {
     otherMaps[key].func();
     return;
   }
+
+  if (tabMappings[key]) {
+    changeActiveTab(key);
+  }
 }
 
 function like() {
   store.dispatch("toggleLike", { File: "" });
+}
+
+function changeActiveTab(tab) {
+  store.commit("setActiveTab", tab - 1);
 }
 
 function showInfo() {
