@@ -22,6 +22,7 @@ var commands = Commands{
 	"single":   single,
 	"stop":     stop,
 	"toggle":   toggle,
+	"play":     play,
 }
 
 func Command(c config.Connection, cmd string, data int) error {
@@ -43,7 +44,7 @@ func Command(c config.Connection, cmd string, data int) error {
 	return err
 }
 
-//  toggles the state between play and pause
+// toggles the state between play and pause
 func toggle(c *config.Connection) error {
 	status := song.GetStatus(*c)
 	if status["state"] == "play" {
@@ -51,6 +52,13 @@ func toggle(c *config.Connection) error {
 		return err
 	}
 	err = c.Client.Play(-1)
+	return err
+}
+
+// play starts playing the current song in queue
+func play(c *config.Connection) error {
+	err = c.Client.Play(-1)
+	config.Log(err)
 	return err
 }
 

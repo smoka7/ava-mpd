@@ -2,6 +2,7 @@ import store from "./store";
 
 const PlaybackKeyMaps = {
   p: { name: "toggle", action: "toggle" },
+  Backspace: { name: "play", action: "play" },
   ",": { name: "previous", action: "previous" },
   ".": { name: "next", action: "next" },
   s: { name: "stop", action: "stop" },
