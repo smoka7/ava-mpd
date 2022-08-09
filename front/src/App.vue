@@ -23,15 +23,17 @@ store.dispatch("startCounter");
 loadTheme();
 setColorScheme();
 
-const Key = document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", listenKeyEvents);
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", listenKeyEvents);
+});
+
+function listenKeyEvents(event) {
   if (event && event.target.tagName.toUpperCase() !== "INPUT") {
     handleKey(event.key);
   }
-});
-
-onUnmounted(() => {
-  document.removeEventListener(Key);
-});
+}
 </script>
 <style lang="postcss">
 .tooltip {
