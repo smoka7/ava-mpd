@@ -19,4 +19,7 @@ export function handleKey(key) {
   if (PlaybackKeyMaps[key]) {
     store.dispatch("sendPlaybackCommand", PlaybackKeyMaps[key].action);
   }
+  if (key === "l") {
+    store.dispatch("toggleLike", { File: "" });
+  }
 }

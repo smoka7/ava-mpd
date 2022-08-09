@@ -97,6 +97,11 @@ func SetLastPlayed(c *config.Connection, uri string) {
 
 // toggles like state of song
 func ToggleLike(c *config.Connection, uri string) {
+	// when uri is empty toggle current song
+	if uri == "" {
+		uri = GetCurrentSong(*c).Info["file"]
+	}
+
 	liked := GetSticker(c, uri, "liked")
 	if liked != nil && liked.Value == "true" {
 		SetSticker(c, uri, "liked", "false")
