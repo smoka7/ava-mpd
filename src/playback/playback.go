@@ -13,16 +13,18 @@ var err error
 type Commands map[string]func(c *config.Connection) error
 
 var commands = Commands{
-	"clear":    clearQueue,
-	"consume":  consume,
-	"next":     nextSong,
-	"previous": prevSong,
-	"random":   random,
-	"repeat":   repeat,
-	"single":   single,
-	"stop":     stop,
-	"toggle":   toggle,
-	"play":     play,
+	"clear":        clearQueue,
+	"consume":      consume,
+	"next":         nextSong,
+	"previous":     prevSong,
+	"random":       random,
+	"repeat":       repeat,
+	"single":       single,
+	"stop":         stop,
+	"toggle":       toggle,
+	"play":         play,
+	"seekForward":  seekForward,
+	"seekBackward": seekBackward,
 }
 
 func Command(c config.Connection, cmd string, data int) error {
@@ -88,6 +90,20 @@ func seek(c *config.Connection, t int) error {
 	seekDuration, err := time.ParseDuration(fmt.Sprintf("%ds", t))
 	config.Log(err)
 	err = c.Client.SeekCur(seekDuration, false)
+	config.Log(err)
+	return err
+}
+
+// seeks 15 seconds forward in current song
+func seekForward(c *config.Connection) error {
+	err = c.Client.SeekCur(15*time.Second, true)
+	config.Log(err)
+	return err
+}
+
+// seeks 15 seconds backward in current song
+func seekBackward(c *config.Connection) error {
+	err = c.Client.SeekCur(-15*time.Second, true)
 	config.Log(err)
 	return err
 }

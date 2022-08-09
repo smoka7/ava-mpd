@@ -11,6 +11,8 @@ const PlaybackKeyMaps = {
   r: { name: "repeat", action: "repeat" },
   z: { name: "random", action: "random" },
   c: { name: "clear", action: "clear" },
+  f: { name: "seek forward", action: "seekForward" },
+  b: { name: "seek backward", action: "seekBackward" },
 };
 
 export function handleKey(key) {
