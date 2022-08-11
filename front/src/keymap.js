@@ -1,42 +1,42 @@
 import store from "./store";
 
-const PlaybackKeyMaps = {
-  p: { name: "toggle", action: "toggle" },
+export const playbackMappings = {
+  p: { name: "toggle playback (play/pause)", action: "toggle" },
   Backspace: { name: "play", action: "play" },
-  ",": { name: "previous", action: "previous" },
-  ".": { name: "next", action: "next" },
+  ",": { name: "previous song", action: "previous" },
+  ".": { name: "next song", action: "next" },
   s: { name: "stop", action: "stop" },
   u: { name: "consume", action: "consume" },
   y: { name: "single", action: "single" },
   r: { name: "repeat", action: "repeat" },
   z: { name: "random", action: "random" },
-  c: { name: "clear", action: "clear" },
-  f: { name: "seek forward", action: "seekForward" },
-  b: { name: "seek backward", action: "seekBackward" },
+  c: { name: "clear queue", action: "clear" },
+  f: { name: "seek forward 15s", action: "seekForward" },
+  b: { name: "seek backward 15s", action: "seekBackward" },
   9: { name: "Decrease Volume by 5%", action: "volumeDown" },
   0: { name: "Increase Volume by 5%", action: "volumeUp" },
 };
-const otherMaps = {
+export const otherMappings = {
   l: { name: "like playing song", func: like },
   i: { name: "show playing song info", func: showInfo },
 };
 
-const tabMappings = {
+export const tabMappings = {
   1: { name: "show queue tab" },
-  2: { name: "show setting Tab" },
-  3: { name: "show playlists Tab" },
-  4: { name: "show server folders Tab" },
+  2: { name: "show setting tab" },
+  3: { name: "show playlists tab" },
+  4: { name: "show server folders tab" },
   5: { name: "show folder tab" },
 };
 
 export function handleKey(key) {
-  if (PlaybackKeyMaps[key]) {
-    store.dispatch("sendPlaybackCommand", PlaybackKeyMaps[key].action);
+  if (playbackMappings[key]) {
+    store.dispatch("sendPlaybackCommand", playbackMappings[key].action);
     return;
   }
 
-  if (otherMaps[key]) {
-    otherMaps[key].func();
+  if (otherMappings[key]) {
+    otherMappings[key].func();
     return;
   }
 

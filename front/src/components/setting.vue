@@ -17,6 +17,9 @@
     <div class="card-class" v-if="connected">
       <DownloadCover />
     </div>
+    <div class="card-class">
+      <MappingHelp />
+    </div>
   </div>
 </template>
 <script setup>
