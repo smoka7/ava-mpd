@@ -30,21 +30,21 @@
       />
       <ul
         :class="{
-          'flex w-full flex-col rounded bg-white dark:bg-gray-700': true,
+          'flex w-full flex-col rounded bg-white dark:bg-gray-700 list': true,
           'md:w-1/2': state.albumArt != 'default',
         }"
       >
         <li
           v-for="(value, index) in state.info"
           :key="index"
-          class="p-2 first:rounded-t last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
+          class="p-2 first:rounded-t last:rounded-b"
         >
           {{ index }} : {{ value }}
         </li>
         <li
           v-for="(sticker, index) in state.stickers"
           :key="index"
-          class="p-2 last:rounded-b even:bg-blue-50 dark:even:bg-gray-800"
+          class="p-2 last:rounded-b"
         >
           {{ sticker.Name }} : {{ sticker.Value }}
         </li>
