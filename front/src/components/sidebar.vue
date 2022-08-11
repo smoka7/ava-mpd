@@ -132,12 +132,12 @@ const tabs = {
 }
 
 .active-tab {
-  @apply bg-accent text-primary !important;
+  @apply bg-lighter text-primary !important;
 }
 
 .normal-tab {
   @apply flex cursor-pointer items-center space-x-1 rounded p-3 duration-300;
-  @apply hover:bg-white/60 hover:px-4 focus:outline-none focus:ring focus:ring-lighter;
+  @apply hover:bg-white/60 hover:px-4 focus:outline-none focus:ring focus:ring-lightest;
   @apply dark:hover:bg-gray-800/70;
   @apply md:p-2;
 }

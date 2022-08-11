@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between space-x-2">
       <label for="crossfade">Crossfade:</label>
       <input
-        class="rounded border border-blue-500 p-2 dark:bg-gray-700"
+        class="rounded border border-accent p-2 dark:bg-gray-700"
         name="crossfade"
         type="number"
         min="0"
@@ -15,7 +15,7 @@
     <div class="flex items-center justify-between space-x-2">
       <label for="mixrampdb" class="w-full">MixRampdb: </label>
       <input
-        class="w-1/2 rounded border border-blue-500 p-2 dark:bg-gray-700"
+        class="w-1/2 rounded border border-accent p-2 dark:bg-gray-700"
         name="mixrampdb"
         type="number"
         aria-label="mixrampdb"
@@ -27,7 +27,7 @@
       <select
         name="replaygain"
         aria-label="replayGain"
-        class="mt-2 rounded border border-blue-500 bg-white p-2 dark:bg-gray-700"
+        class="mt-2 rounded border border-accent bg-white p-2 dark:bg-gray-700"
         v-model="replayGain"
       >
         <option

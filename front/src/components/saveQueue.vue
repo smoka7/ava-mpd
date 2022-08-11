@@ -2,7 +2,7 @@
   <button
     aria-label="save-queue"
     @click="InputIsOpen = true"
-    class="tooltip scale-125 transform bg-transparent p-2 hover:text-accent"
+    class="tooltip playback-btn"
   >
     <font-awesome-icon icon="save" size="lg" />
     <span class="tooltiptext">save current queue</span>

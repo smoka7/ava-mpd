@@ -7,7 +7,7 @@
         <FontAwesomeIcon
           :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
           :class="[
-            currentAlbum ? 'text-red-500' : '',
+            currentAlbum ? 'text-accent' : '',
             'mr-2 transform-gpu duration-200',
           ]"
           size="lg"
@@ -48,7 +48,7 @@
             :id="song.Pos"
             :class="
               isCurrSong(song.Pos)
-                ? 'text-red-500'
+                ? 'text-accent'
                 : 'invisible text-green-500 group-hover:visible'
             "
             :icon="['fas', isCurrSong(song.Pos) ? 'compact-disc' : 'play']"
@@ -168,7 +168,7 @@ details[open] summary ~ * {
 }
 
 #currentSong {
-  @apply bg-red-300 hover:py-1 dark:text-primary !important;
+  @apply bg-white/60 dark:bg-gray-800/70;
 }
 
 @keyframes sweep {

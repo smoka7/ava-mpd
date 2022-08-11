@@ -7,10 +7,10 @@
         :key="command.icon"
         :aria-label="command.command"
         @click="Command(command.command)"
-        :class="[
-          command.status == '1' ? btnClass.active : btnClass.normal,
-          btnClass.base,
-        ]"
+        :class="{
+          'playback-active': command.status == '1',
+          'playback-btn tooltip': true,
+        }"
       >
         <span class="tooltiptext">{{ command.command }}</span>
         <font-awesome-icon :icon="command.icon" size="lg" />
@@ -18,7 +18,7 @@
       <button
         aria-label="setting"
         @click="toggleMediaController"
-        :class="[btnClass.normal, btnClass.base, 'md:hidden']"
+        class="playback-btn tooltip md:hidden"
       >
         <span class="tooltiptext">queue...</span>
         <font-awesome-icon icon="list-ul" size="lg" />
@@ -29,7 +29,7 @@
     <button
       aria-label="previous-song"
       @click="Command('previous')"
-      class="hover:scale-125 hover:text-accent"
+      class="hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="step-backward" size="2x" />
     </button>
@@ -38,8 +38,8 @@
       aria-label="toggle-playback"
       @click="Command('toggle')"
       :class="[
-        status.state === 'pause' ? 'bg-green-400' : 'bg-accent',
-          'flex items-center justify-center rounded-full px-10 text-white hover:text-primary md:px-8 hover:scale-105',
+        status.state === 'pause' ? 'bg-secondary' : 'bg-accent',
+        'flex items-center justify-center rounded-full px-10 text-white hover:scale-105 hover:text-lightest md:px-8',
       ]"
     >
       <font-awesome-icon
@@ -50,14 +50,14 @@
     <button
       aria-label="stop-song"
       @click="Command('stop')"
-      class="hover:scale-125 hover:text-accent"
+      class="hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="stop" size="2x" />
     </button>
     <button
       aria-label="next-song"
       @click="Command('next')"
-      class="hover:scale-125 hover:text-accent"
+      class="hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="step-forward" size="2x" />
     </button>
@@ -65,19 +65,11 @@
 </template>
 <script setup>
 const store = useStore();
-const currentSong = computed(() =>
-  shallowReactive(store.state.currentSong),
-);
+const currentSong = computed(() => shallowReactive(store.state.currentSong));
 
 const liked = computed(() => store.state.currentSong.Liked);
 
 const status = computed(() => shallowReactive(store.state.status));
-
-const btnClass = {
-  active: "text-green-500 bg-transparent",
-  normal: "bg-transparent hover:text-accent",
-  base: "p-2 tooltip transform scale-125 hover:scale-[135%]",
-};
 
 const playbackCommands = computed(() => [
   {
@@ -111,3 +103,11 @@ function Command(command) {
   store.dispatch("sendPlaybackCommand", command);
 }
 </script>
+<style lang="postcss">
+.playback-btn {
+  @apply scale-125 transform bg-transparent p-2 text-lightest hover:scale-[135%] hover:text-lighter;
+}
+.playback-active {
+  @apply text-accent !important;
+}
+</style>

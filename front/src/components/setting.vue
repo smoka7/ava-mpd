@@ -30,7 +30,7 @@ store.dispatch("getSettings");
 </script>
 <style lang="postcss">
 .card-class {
-  @apply w-full rounded bg-white p-4 dark:bg-gray-700 md:m-1 md:w-[48%];
+  @apply w-full rounded bg-white/60 backdrop-blur-3xl p-4 dark:bg-gray-700/60 md:m-1 md:w-[48%];
 }
 
 .card-header {

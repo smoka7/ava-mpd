@@ -115,6 +115,6 @@ function getStoredPlaylist() {
 </script>
 <style>
 .menuItem {
-  @apply flex w-full items-center justify-start space-x-2  overflow-x-hidden text-ellipsis rounded p-2 text-left hover:bg-blue-100 focus:outline-none focus:ring focus:ring-accent dark:hover:bg-blue-100 dark:hover:text-black;
+  @apply flex w-full items-center justify-start space-x-2  overflow-x-hidden text-ellipsis rounded p-2 text-left hover:bg-gray-200 focus:outline-none focus:ring focus:ring-accent dark:hover:text-black;
 }
 </style>

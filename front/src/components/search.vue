@@ -21,7 +21,7 @@
             >
               <li
                 :class="{
-                  'rounded p-2 hover:bg-blue-200 dark:hover:text-primary': true,
+                  'rounded p-2 hover:bg-gray-200 dark:hover:text-primary': true,
                   'bg-lightest dark:text-primary': selected,
                 }"
               >

@@ -20,7 +20,7 @@
         <RadioGroupOption v-slot="{ checked }" :value="index">
           <button
             :class="[
-              { 'rounded bg-blue-200 text-primary': checked },
+              { 'rounded bg-gray-200 text-primary': checked },
               'hover:lighter group flex w-full cursor-pointer flex-col space-y-2 rounded p-2 duration-300 dark:hover:bg-lightest',
             ]"
           >

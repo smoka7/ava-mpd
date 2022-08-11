@@ -3,7 +3,7 @@
     class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-lg text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
   >
     <div
-      class="fixed z-10 h-screen inset-0 md:static md:h-full md:w-1/4"
+      class="fixed inset-0 z-10 h-screen md:static md:h-full md:w-1/4"
       id="mediaController"
     >
       <media-controller />
@@ -36,6 +36,10 @@ function listenKeyEvents(event) {
 }
 </script>
 <style lang="postcss">
+* {
+  @apply focus:outline-none focus:outline-accent
+}
+
 .tooltip {
   @apply relative inline-block;
 }
@@ -52,10 +56,10 @@ function listenKeyEvents(event) {
   @apply bg-lightest;
 }
 ::-webkit-scrollbar-thumb {
-  @apply  bg-primary;
+  @apply bg-primary;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply  bg-secondary;
+  @apply bg-secondary;
 }
 @supports (-moz-appearance: none) {
   .fbg {

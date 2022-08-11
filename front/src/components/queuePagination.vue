@@ -4,7 +4,7 @@
       v-if="queue.CurrentPage > 1"
       aria-label="Previous-page"
       @click="loadPage(queue.CurrentPage - 1)"
-      class="flex items-center justify-between space-x-1 rounded px-2 hover:bg-primary hover:py-1.5 hover:text-secondary duration-200"
+      class="pagination-button"
     >
       <font-awesome-icon icon="angle-right" flip="horizontal" />
       <span> previous </span>
@@ -13,7 +13,7 @@
       v-if="queue.CurrentPage !== queue.LastPage"
       aria-label="next-page"
       @click="loadPage(queue.CurrentPage + 1)"
-      class="flex items-center justify-between space-x-1 rounded px-2 hover:bg-primary hover:py-1.5 hover:text-secondary duration-200"
+      class="pagination-button"
     >
       <span> next </span>
       <font-awesome-icon icon="angle-right" />
@@ -21,7 +21,7 @@
     <button
       aria-label="goto-current-song"
       @click="$emit('goToCurrent')"
-      class="flex items-center justify-between space-x-1 rounded px-2 hover:bg-primary hover:py-1.5 hover:text-secondary duration-200"
+      class="pagination-button"
     >
       <font-awesome-icon icon="compact-disc" />
       <span> Current Song </span>
@@ -37,3 +37,8 @@ function loadPage(page) {
   store.dispatch("getQueue", page);
 }
 </script>
+<style lang="postcss">
+.pagination-button {
+  @apply flex items-center justify-between space-x-1 rounded px-2 duration-200 hover:bg-primary hover:py-1.5 hover:text-lightest;
+}
+</style>
