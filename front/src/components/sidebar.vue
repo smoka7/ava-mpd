@@ -15,10 +15,13 @@
         v-slot="{ selected }"
         as="template"
       >
-        <button :class="[tabClasses.normal, selected ? tabClasses.active : '']">
+        <button :class="['normal-tab group', selected ? 'active-tab' : '']">
           <font-awesome-icon
             :icon="['fas', tab.icon]"
-            class="group-hover:text-secondary"
+            :class="[
+              'group-hover:text-secondary',
+              selected ? 'text-secondary' : 'text-accent',
+            ]"
           />
           <span class="hidden md:block">
             {{ name }}
@@ -94,12 +97,6 @@ function changeTab(index) {
   store.commit("setActiveTab", index);
 }
 
-const tabClasses = {
-  active: "bg-accent text-primary",
-  normal:
-    " group flex space-x-1 items-center md:p-2 p-3 cursor-pointer hover:bg-white/60 dark:hover:bg-lighter dark:hover:text-white rounded hover:px-4 duration-300",
-};
-
 const tabs = {
   Queue: {
     component: queueCmp,
@@ -123,7 +120,7 @@ const tabs = {
   },
 };
 </script>
-<style>
+<style lang="postcss">
 .fade-enter-active,
 .fade-leave-active {
   @apply transition-all duration-200 ease-in-out;
@@ -132,5 +129,16 @@ const tabs = {
 .fade-enter-from,
 .fade-leave-to {
   @apply -translate-y-2 opacity-0;
+}
+
+.active-tab {
+  @apply bg-accent text-primary !important;
+}
+
+.normal-tab {
+  @apply flex cursor-pointer items-center space-x-1 rounded p-3 duration-300;
+  @apply hover:bg-white/60 hover:px-4 focus:outline-none focus:ring focus:ring-lighter;
+  @apply dark:hover:bg-gray-800/70;
+  @apply md:p-2;
 }
 </style>
