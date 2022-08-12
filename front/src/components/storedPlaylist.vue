@@ -36,13 +36,10 @@
         />
       </span>
     </div>
-    <details
-      v-for="(playlist, index) in storedPlaylist"
-      :key="index"
-      :open="playlist.songs != null && playlist.songs.length > 0"
-    >
+    <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
         class="group mx-2 flex items-start justify-between rounded py-4 px-2 duration-300 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
+        @click.self="getSongs(index)"
       >
         <span
           @click="getSongs(index)"
@@ -50,13 +47,13 @@
         >
           <FontAwesomeIcon
             icon="angle-right"
-            class="mr-1 transform-gpu duration-200"
+            class="transform-gpu p-1 text-accent duration-200"
             :id="'icon-' + playlist.Name"
           />
           {{ playlist.Name }}
         </span>
         <span class="flex flex-col items-end space-x-2 text-sm">
-          <span>
+          <span @click="getSongs(index)">
             {{ playlist.SongsCount }} song ({{
               humanizeTime(playlist.Duration)
             }})
@@ -145,8 +142,8 @@ function addPlaylist(position) {
   const command = "add" + AddCmp.playlist;
   sendCommand(endpoints.storedPlaylists, command, data);
 }
+
 async function getSongs(index) {
-  animate(storedPlaylist.value[index].Name);
   if (
     storedPlaylist.value[index].songs &&
     storedPlaylist.value[index].songs.length
@@ -190,10 +187,5 @@ function toggleSelected(index) {
     : state.selectedCount++;
   state.renamePlaylist = storedPlaylist.value[index].Name;
   storedPlaylist.value[index].selected = !storedPlaylist.value[index].selected;
-}
-
-function animate(id) {
-  const el = document.getElementById("icon-" + id);
-  if (el) el.classList.toggle("rotate-90");
 }
 </script>
