@@ -28,7 +28,8 @@ func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 		case "add":
 			playlist.AddFolder(&c.Client, request.Data.Pos, request.Data.File)
 		case "addToPlaylist":
-			playlist.AddSongToPlaylist(&c.Client, request.Data.Pos, request.Data.File)
+			// TODO
+			// playlist.AddSongToPlaylist(&c.Client, request.Data.Pos, request.Data.File)
 		case "play":
 			playlist.PlayFolder(&c.Client, request.Data.File)
 		case "list":

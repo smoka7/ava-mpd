@@ -33,9 +33,8 @@ var commands = Commands{
 func Command(c config.Connection, cmd string, data int) error {
 	c.Connect()
 	defer c.Close()
-	if cmd, ok := commands[cmd]; ok {
-		err := cmd(&c)
-		return err
+	if command, ok := commands[cmd]; ok {
+		return command(&c)
 	}
 
 	switch cmd {
@@ -46,6 +45,7 @@ func Command(c config.Connection, cmd string, data int) error {
 	default:
 		return fmt.Errorf("invalid command")
 	}
+
 	return err
 }
 

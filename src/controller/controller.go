@@ -65,25 +65,28 @@ func NewClient(c config.Connection) (cl Mpd) {
 	return
 }
 
-func (c *Mpd) Playback(w http.ResponseWriter, r *http.Request) {
-	var request PlaybackRequest
+func (c Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+		var request PlaybackRequest
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
+
 		err = playback.Command(c.Client, request.Command, request.Data.Start)
 		sendErrorResponse(w, err)
 	}
 }
 
 // writes the current mpd server status
-func (c *Mpd) Status(w http.ResponseWriter, r *http.Request) {
+func (c Mpd) Status(w http.ResponseWriter, r *http.Request) {
 	currentSong := song.GetCurrentSong(c.Client)
+
 	c.Client.Connect()
 	response := StatusResponse{
 		Status:      newStatus(song.GetStatus(c.Client)),
 		CurrentSong: newCurrentSong(currentSong),
 	}
 	c.Client.Close()
+
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)
 }

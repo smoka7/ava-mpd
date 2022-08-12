@@ -17,21 +17,21 @@ func addAfterPos(c *config.Connection, name, pos string) {
 
 // removes duplicate songs based on their file address from the playlist name
 // if name is empty then it deletes duplicate songs in current queue
-func RemoveDuplicatesongs(c *config.Connection, name string) {
+func (a action) RemoveDuplicatesongs(name string) {
 	getQueue := func() (queue []mpd.Attrs) {
 		if name == "" {
-			queue, err = c.Client.PlaylistInfo(-1, -1)
+			queue, err = a.c.Client.PlaylistInfo(-1, -1)
 			config.Log(err)
 			return
 		}
-		queue, err = c.Client.PlaylistContents(name)
+		queue, err = a.c.Client.PlaylistContents(name)
 		config.Log(err)
 		return
 	}
 
 	queue := getQueue()
 	songs := make(map[string]bool)
-	cmds := c.Client.BeginCommandList()
+	cmds := a.c.Client.BeginCommandList()
 	for i := len(queue) - 1; i >= 0; i-- {
 
 		if _, duplicate := songs[queue[i]["file"]]; !duplicate {
@@ -82,7 +82,7 @@ func ListStoredPlaylist(c config.Connection) (playlists Playlists) {
 	return
 }
 
-//  returns list of playlist's song
+// returns list of playlist's song
 func ListSongsIn(c *config.Connection, playlist string) (songs Songs) {
 	contents, err := c.Client.PlaylistContents(playlist)
 	config.Log(err)
@@ -140,8 +140,8 @@ func RenamePlaylist(c *config.Connection, name, newName string) {
 }
 
 // adds the song to playlist
-func AddSongToPlaylist(c *config.Connection, playlist, uri string) {
-	err := c.Client.PlaylistAdd(playlist, uri)
+func (a action) AddSongToPlaylist(playlist, file string) {
+	err := a.c.Client.PlaylistAdd(playlist, file)
 	config.Log(err)
 }
 

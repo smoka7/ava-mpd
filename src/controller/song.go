@@ -6,7 +6,6 @@ import (
 
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
-	"github.com/smoka7/ava/src/playlist"
 	"github.com/smoka7/ava/src/song"
 )
 
@@ -52,19 +51,19 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Mpd) getSongResponse(songPos int) SongInfoResponse {
-	file, err := playlist.GetSongFile(&c.Client, songPos)
+	// file, err := playlist.GetSongFile(&c.Client, songPos)
 	if err != nil {
 		return SongInfoResponse{}
 	}
 
 	return SongInfoResponse{
-		Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
-		Stickers: song.GetStickers(&c.Client, file),
+		// Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
+		// Stickers: song.GetStickers(&c.Client, file),
 	}
 }
 
 func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
-	file, err := playlist.GetSongFile(&c.Client, songPos)
+	// file, err := playlist.GetSongFile(&c.Client, songPos)
 	if err != nil {
 		config.Log(err)
 		return CoverArtResponse{
@@ -73,6 +72,6 @@ func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
 	}
 
 	return CoverArtResponse{
-		Url: song.ServeAlbumArt(c.Client, file),
+		// Url: song.ServeAlbumArt(c.Client, file),
 	}
 }

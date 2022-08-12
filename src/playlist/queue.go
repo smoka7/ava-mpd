@@ -7,7 +7,30 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+type QueueRequest struct {
+	Command string    `json:"command"`
+	Data    QueueData `json:"data"`
+}
+
+type QueueData struct {
+	ID, Start, Finish int
+	Playlist          string
+}
+
+type action struct {
+	c config.Connection
+}
+
 const ClientQueueLimit = 200
+
+func NewAction(c config.Connection) action {
+	if c.Client != nil {
+		return action{c}
+	}
+	c.Connect()
+	defer c.Connect()
+	return action{c}
+}
 
 // returns current queue list
 func GetQueue(c config.Connection, page string) (q Queue) {
@@ -33,40 +56,40 @@ func GetQueue(c config.Connection, page string) (q Queue) {
 }
 
 // plays the id song in current Queue
-func PlaySong(c *config.Connection, id int) {
-	err := c.Client.PlayID(id)
+func (a action) PlaySong(d QueueData) {
+	err := a.c.Client.PlayID(d.ID)
 	config.Log(err)
 }
 
 // deletes the song from start to end from current Queue
-func DeleteSong(c *config.Connection, id int) {
-	err := c.Client.DeleteID(id)
+func (a action) DeleteSong(d QueueData) {
+	err := a.c.Client.DeleteID(d.ID)
 	config.Log(err)
 }
 
 // moves the song from position in queue to newPosition
-func MoveSong(c *config.Connection, position int, newPosition int) {
-	err := c.Client.MoveID(position, newPosition)
+func (a action) MoveSong(d QueueData) {
+	err := a.c.Client.MoveID(d.Start, d.Finish)
 	config.Log(err)
 }
 
 // shuffles an album given the position of the song in queue
-func ShuffleAlbum(c *config.Connection, pos int) {
-	firstSongIndex, lastSongIndex := findSongsAlbum(c, pos)
+func (a action) ShuffleAlbum(d QueueData) {
+	firstSongIndex, lastSongIndex := findSongsAlbum(&a.c, d.Start)
 
-	err = c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
+	err = a.c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
 	config.Log(err)
 }
 
 // saves the current queue as a new playlist
-func SaveQueue(c *config.Connection, name string) {
-	err := c.Client.PlaylistSave(name)
+func (a action) SaveQueue(d QueueData) {
+	err := a.c.Client.PlaylistSave(d.Playlist)
 	config.Log(err)
 }
 
 // gets the file path of song with id in Queue
-func GetSongFile(c *config.Connection, id int) (string, error) {
-	song, err := c.Client.Command("playlistid %d", id).Attrs()
+func (a action) GetSongFile(d QueueData) (string, error) {
+	song, err := a.c.Client.Command("playlistid %d", d.ID).Attrs()
 	if err != nil {
 		return "", err
 	}
