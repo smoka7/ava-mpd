@@ -75,7 +75,7 @@ func (a action) MoveSong(d QueueData) {
 
 // shuffles an album given the position of the song in queue
 func (a action) ShuffleAlbum(d QueueData) {
-	firstSongIndex, lastSongIndex := findSongsAlbum(&a.c, d.Start)
+	firstSongIndex, lastSongIndex := a.findSongsAlbum(d.Start)
 
 	err = a.c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
 	config.Log(err)
@@ -97,8 +97,8 @@ func (a action) GetSongFile(d QueueData) (string, error) {
 }
 
 // returns the boundaries of song in Queue
-func findSongsAlbum(c *config.Connection, pos int) (int, int) {
-	queue, err := c.Client.PlaylistInfo(-1, -1)
+func (a action) findSongsAlbum(pos int) (int, int) {
+	queue, err := a.c.Client.PlaylistInfo(-1, -1)
 	if err != nil {
 		config.Log(err)
 		return 0, 0
@@ -121,8 +121,8 @@ func findSongsAlbum(c *config.Connection, pos int) (int, int) {
 }
 
 // returns the current song position in queue
-func getCurrentSongPos(c *config.Connection) int {
-	cs, err := c.Client.CurrentSong()
+func (a action) getCurrentSongPos() int {
+	cs, err := a.c.Client.CurrentSong()
 	// check for empty queue
 	if err != nil || cs == nil {
 		config.Log(err)

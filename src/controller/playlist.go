@@ -8,59 +8,59 @@ import (
 	"github.com/smoka7/ava/src/playlist"
 )
 
-type PlaylistRequest struct {
-	Command string       `json:"command"`
-	Data    PlaylistData `json:"data"`
-}
+func (c Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		a := playlist.NewAction(c.Client)
+		playlist := a.ListStoredPlaylist()
+		err = json.NewEncoder(w).Encode(playlist)
+		config.Log(err)
 
-type PlaylistData struct {
-	Playlist    string
-	NewPlaylist string
-	Pos         string
-}
-
-func (c *Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		var request PlaylistRequest
-		c.Client.Connect()
+	case http.MethodPost:
+		var request playlist.PlaylistRequest
 		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		switch request.Command {
-		case "load":
-			playlist.LoadPlaylist(&c.Client, request.Data.Playlist, request.Data.Pos)
-		case "clear":
-			playlist.ClearPlaylist(&c.Client, request.Data.Playlist)
-		case "delete":
-			playlist.DeletePlaylist(&c.Client, request.Data.Playlist)
-		case "play":
-			playlist.PlayPlaylist(&c.Client, request.Data.Playlist)
-		case "removeduplicate":
-			// playlist.RemoveDuplicatesongs(&c.Client, request.Data.Playlist)
-		case "removeinvalid":
-			playlist.RemoveInvalidsongs(&c.Client, request.Data.Playlist)
-		case "rename":
-			playlist.RenamePlaylist(&c.Client, request.Data.Playlist, request.Data.NewPlaylist)
-		case "playliked":
-			songs := playlist.GetLikedSongs(&c.Client)
-			playlist.PlayFolder(&c.Client, songs...)
-		case "addliked":
-			songs := playlist.GetLikedSongs(&c.Client)
-			playlist.AddFolder(&c.Client, request.Data.Pos, songs...)
-		case "playmost":
-			songs := playlist.GetMostPlayed(&c.Client)
-			playlist.PlayFolder(&c.Client, songs...)
-		case "addmost":
-			songs := playlist.GetMostPlayed(&c.Client)
-			playlist.AddFolder(&c.Client, request.Data.Pos, songs...)
-		case "list":
-			songs := playlist.ListSongsIn(&c.Client, request.Data.Playlist)
+
+		c.Client.Connect()
+		defer c.Client.Close()
+		c.runPlCommand(w, request)
+	}
+}
+
+func (c Mpd) runPlCommand(w http.ResponseWriter, request playlist.PlaylistRequest) {
+	a := playlist.NewAction(c.Client)
+	cmd := Commands{
+		"load":            func() { a.LoadPlaylist(request.Data) },
+		"clear":           func() { a.ClearPlaylist(request.Data.Playlist) },
+		"delete":          func() { a.DeletePlaylist(request.Data.Playlist) },
+		"play":            func() { a.PlayPlaylist(request.Data) },
+		"removeduplicate": func() { a.RemoveDuplicatesongs(request.Data.Playlist) },
+		"removeinvalid":   func() { a.RemoveInvalidsongs(request.Data.Playlist) },
+		"rename":          func() { a.RenamePlaylist(request.Data) },
+		"playliked": func() {
+			songs := a.GetLikedSongs()
+			a.PlayFolder(songs...)
+		},
+		"addliked": func() {
+			songs := a.GetLikedSongs()
+			a.AddFolder(request.Data.Pos, songs...)
+		},
+		"playmost": func() {
+			songs := a.GetMostPlayed()
+			a.PlayFolder(songs...)
+		},
+		"addmost": func() {
+			songs := a.GetMostPlayed()
+			a.AddFolder(request.Data.Pos, songs...)
+		},
+		"list": func() {
+			songs := a.ListSongsIn(request.Data.Playlist)
 			err = json.NewEncoder(w).Encode(songs)
 			config.Log(err)
-		}
-		c.Client.Close()
-		return
+		},
 	}
-	playlist := playlist.ListStoredPlaylist(c.Client)
-	err = json.NewEncoder(w).Encode(playlist)
-	config.Log(err)
+
+	if action, ok := cmd[request.Command]; ok {
+		action()
+	}
 }

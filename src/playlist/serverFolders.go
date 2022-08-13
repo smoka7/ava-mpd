@@ -74,8 +74,8 @@ func (a action) AddFolder(pos string, uris ...string) {
 			config.Log(err)
 		}
 	case "currentAlbum":
-		pos := getCurrentSongPos(a.c)
-		_, endOfAlbum := findSongsAlbum(a.c, pos)
+		pos := a.getCurrentSongPos()
+		_, endOfAlbum := a.findSongsAlbum(pos)
 		add(fmt.Sprint(endOfAlbum))
 	}
 }
