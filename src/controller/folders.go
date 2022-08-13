@@ -8,36 +8,38 @@ import (
 	"github.com/smoka7/ava/src/playlist"
 )
 
-type FolderRequest struct {
-	Command string     `json:"command"`
-	Data    FolderData `json:"data"`
-}
-
-type FolderData struct {
-	Pos  string
-	File string
-}
-
-func (c *Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
+func (c Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		var request FolderRequest
-		c.Client.Connect()
+		var request playlist.FolderRequest
 		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		switch request.Command {
-		case "add":
-			playlist.AddFolder(&c.Client, request.Data.Pos, request.Data.File)
-		case "addToPlaylist":
-			// TODO
-			// playlist.AddSongToPlaylist(&c.Client, request.Data.Pos, request.Data.File)
-		case "play":
-			playlist.PlayFolder(&c.Client, request.Data.File)
-		case "list":
-			folders := playlist.ListFolders(&c.Client, request.Data.File)
+
+		c.Client.Connect()
+		defer c.Client.Close()
+		c.runFolderCommand(w, request)
+	}
+}
+
+func (c Mpd) runFolderCommand(w http.ResponseWriter, request playlist.FolderRequest) {
+	a := playlist.NewAction(c.Client)
+	folderCmds := Commands{
+		"add": func() {
+			a.AddFolder(request.Data.Pos, request.Data.File)
+		},
+		"addToPlaylist": func() {
+			a.AddSongToPlaylist(request.Data.Pos, request.Data.File)
+		},
+		"play": func() {
+			a.PlayFolder(request.Data.File)
+		},
+		"list": func() {
+			// TODO change to get
+			folders := a.ListFolders(request.Data)
 			err = json.NewEncoder(w).Encode(folders)
 			config.Log(err)
-		}
-		c.Client.Close()
-		return
+		},
+	}
+	if action, ok := folderCmds[request.Command]; ok {
+		action()
 	}
 }

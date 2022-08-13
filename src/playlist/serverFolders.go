@@ -7,9 +7,19 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+type FolderRequest struct {
+	Command string     `json:"command"`
+	Data    FolderData `json:"data"`
+}
+
+type FolderData struct {
+	Pos  string
+	File string
+}
+
 // returns content of the folder
-func ListFolders(c *config.Connection, folder string) (list ServerList) {
-	contents, err := c.Client.ListInfo(folder)
+func (a action) ListFolders(d FolderData) (list ServerList) {
+	contents, err := a.c.Client.ListInfo(d.File)
 	config.Log(err)
 	list.Files = make(Files, 0)
 	list.Folders = make(Folders, 0)
@@ -29,8 +39,8 @@ func ListFolders(c *config.Connection, folder string) (list ServerList) {
 }
 
 // clears the current queue and plays the folder
-func PlayFolder(c *config.Connection, uris ...string) {
-	cm := c.Client.BeginCommandList()
+func (a action) PlayFolder(uris ...string) {
+	cm := a.c.Client.BeginCommandList()
 	cm.Clear()
 	for _, uri := range uris {
 		cm.Add(uri)
@@ -41,17 +51,17 @@ func PlayFolder(c *config.Connection, uris ...string) {
 }
 
 // adds the folder to the current queue
-func AddFolder(c *config.Connection, position string, uris ...string) {
+func (a action) AddFolder(pos string, uris ...string) {
 	add := func(pos string) {
 		for _, uri := range uris {
-			err := c.Client.Command("add %s %s", uri, pos).OK()
+			err := a.c.Client.Command("add %s %s", uri, pos).OK()
 			config.Log(err)
 		}
 	}
-	switch position {
+	switch pos {
 	case "currentSong":
 		// check for empty queue
-		cs, err := c.Client.CurrentSong()
+		cs, err := a.c.Client.CurrentSong()
 		if err != nil || cs != nil {
 			config.Log(err)
 			return
@@ -60,12 +70,12 @@ func AddFolder(c *config.Connection, position string, uris ...string) {
 		add("+0")
 	case "endOfQueue":
 		for _, uri := range uris {
-			err := c.Client.Add(uri)
+			err := a.c.Client.Add(uri)
 			config.Log(err)
 		}
 	case "currentAlbum":
-		pos := getCurrentSongPos(c)
-		_, endOfAlbum := findSongsAlbum(c, pos)
+		pos := getCurrentSongPos(a.c)
+		_, endOfAlbum := findSongsAlbum(a.c, pos)
 		add(fmt.Sprint(endOfAlbum))
 	}
 }
