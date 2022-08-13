@@ -64,7 +64,7 @@ func (m *Mpd) RecordPlayCount() {
 		lastSong, err := client.Client.CurrentSong()
 		config.Log(err)
 		if status == "play" {
-			song.IncrementPCount(&client, lastSong["file"])
+			song.IncrementPCount(client, lastSong["file"])
 		}
 		client.Close()
 		for subsystem := range watcher.Event {
@@ -75,7 +75,7 @@ func (m *Mpd) RecordPlayCount() {
 				currStatus := song.GetStatus(client)["state"]
 				if lastSong["file"] != currSong["file"] &&
 					currStatus == "play" {
-					song.IncrementPCount(&client, currSong["file"])
+					song.IncrementPCount(client, currSong["file"])
 				}
 				client.Close()
 				lastSong = currSong

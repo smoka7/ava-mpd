@@ -35,7 +35,7 @@ func GetCurrentSong(c config.Connection) (song Song) {
 	defer c.Close()
 	song.Info, err = c.Client.CurrentSong()
 	config.Log(err)
-	liked := GetSticker(&c, song.Info["file"], "liked")
+	liked := GetSticker(c, song.Info["file"], "liked")
 	if liked != nil && liked.Value != "false" {
 		song.Liked = true
 		return
@@ -45,7 +45,7 @@ func GetCurrentSong(c config.Connection) (song Song) {
 }
 
 // gets the song info
-func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
+func (s *Song) GetSongInfo(c config.Connection, file string) *Song {
 	info, err := c.Client.ListAllInfo(file)
 	config.Log(err)
 	if len(info) > 0 {
@@ -55,20 +55,20 @@ func (s *Song) GetSongInfo(c *config.Connection, file string) *Song {
 }
 
 // set the sticker name to value for song
-func SetSticker(c *config.Connection, song, name, value string) {
+func SetSticker(c config.Connection, song, name, value string) {
 	err = c.Client.StickerSet(song, name, value)
 	config.Log(err)
 }
 
 // returns all the stickers of a song
-func GetStickers(c *config.Connection, file string) (status []mpd.Sticker) {
+func GetStickers(c config.Connection, file string) (status []mpd.Sticker) {
 	status, err = c.Client.StickerList(file)
 	config.Log(err)
 	return
 }
 
 // return the sticker name of a song
-func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
+func GetSticker(c config.Connection, file, name string) (status *mpd.Sticker) {
 	status, err = c.Client.StickerGet(file, name)
 	if err != nil && err.Error() != "command 'sticker' failed: no such sticker" {
 		config.Log(err)
@@ -77,7 +77,7 @@ func GetSticker(c *config.Connection, file, name string) (status *mpd.Sticker) {
 }
 
 // Increments played count of current song
-func IncrementPCount(c *config.Connection, filepath string) {
+func IncrementPCount(c config.Connection, filepath string) {
 	SetLastPlayed(c, filepath)
 	playedCount := GetSticker(c, filepath, "playedcount")
 	if playedCount == nil {
@@ -90,16 +90,16 @@ func IncrementPCount(c *config.Connection, filepath string) {
 }
 
 // sets last played time of song
-func SetLastPlayed(c *config.Connection, uri string) {
+func SetLastPlayed(c config.Connection, uri string) {
 	now := time.Now().Unix()
 	SetSticker(c, uri, "lastplayed", fmt.Sprintf("%d", now))
 }
 
 // toggles like state of song
-func ToggleLike(c *config.Connection, uri string) {
+func ToggleLike(c config.Connection, uri string) {
 	// when uri is empty toggle current song
 	if uri == "" {
-		uri = GetCurrentSong(*c).Info["file"]
+		uri = GetCurrentSong(c).Info["file"]
 	}
 
 	liked := GetSticker(c, uri, "liked")

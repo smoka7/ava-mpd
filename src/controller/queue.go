@@ -40,7 +40,7 @@ func (c Mpd) runCommand(request playlist.QueueRequest) {
 		"save":         func() { a.SaveQueue(request.Data) },
 		"shuffleAlbum": func() { a.ShuffleAlbum(request.Data) },
 		"addsong": func() {
-			file, err := a.GetSongFile(request.Data)
+			file, err := a.GetSongFile(request.Data.ID)
 			if err != nil {
 				return
 			}

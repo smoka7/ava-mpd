@@ -6,6 +6,7 @@ import (
 
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
+	"github.com/smoka7/ava/src/playlist"
 	"github.com/smoka7/ava/src/song"
 )
 
@@ -28,7 +29,7 @@ type CoverArtResponse struct {
 	Url string
 }
 
-func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
+func (c Mpd) Song(w http.ResponseWriter, r *http.Request) {
 	var request SongRequest
 	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
@@ -36,7 +37,7 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 		c.Client.Connect()
 		switch request.Command {
 		case "like":
-			song.ToggleLike(&c.Client, request.Data.File)
+			song.ToggleLike(c.Client, request.Data.File)
 		case "info":
 			response := c.getSongResponse(request.Data.ID)
 			err := json.NewEncoder(w).Encode(response)
@@ -50,20 +51,22 @@ func (c *Mpd) Song(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *Mpd) getSongResponse(songPos int) SongInfoResponse {
-	// file, err := playlist.GetSongFile(&c.Client, songPos)
+func (c Mpd) getSongResponse(songPos int) SongInfoResponse {
+	a := playlist.NewAction(c.Client)
+	file, err := a.GetSongFile(songPos)
 	if err != nil {
 		return SongInfoResponse{}
 	}
 
 	return SongInfoResponse{
-		// Info:     song.NewSong().GetSongInfo(&c.Client, file).Info,
-		// Stickers: song.GetStickers(&c.Client, file),
+		Info:     song.NewSong().GetSongInfo(c.Client, file).Info,
+		Stickers: song.GetStickers(c.Client, file),
 	}
 }
 
-func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
-	// file, err := playlist.GetSongFile(&c.Client, songPos)
+func (c Mpd) getSongCover(songPos int) CoverArtResponse {
+	a := playlist.NewAction(c.Client)
+	file, err := a.GetSongFile(songPos)
 	if err != nil {
 		config.Log(err)
 		return CoverArtResponse{
@@ -72,6 +75,6 @@ func (c *Mpd) getSongCover(songPos int) CoverArtResponse {
 	}
 
 	return CoverArtResponse{
-		// Url: song.ServeAlbumArt(c.Client, file),
+		Url: song.ServeAlbumArt(c.Client, file),
 	}
 }

@@ -88,8 +88,8 @@ func (a action) SaveQueue(d QueueData) {
 }
 
 // gets the file path of song with id in Queue
-func (a action) GetSongFile(d QueueData) (string, error) {
-	song, err := a.c.Client.Command("playlistid %d", d.ID).Attrs()
+func (a action) GetSongFile(id int) (string, error) {
+	song, err := a.c.Client.Command("playlistid %d", id).Attrs()
 	if err != nil {
 		return "", err
 	}

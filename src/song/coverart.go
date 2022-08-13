@@ -20,7 +20,7 @@ func ServeAlbumArt(c config.Connection, songPath string) (coverURL string) {
 	c.Connect()
 	defer c.Close()
 
-	song.GetSongInfo(&c, songPath)
+	song.GetSongInfo(c, songPath)
 	coverPath, coverURL, err := song.getCoverArtPath()
 	if err != nil {
 		return DefaultCover
@@ -72,7 +72,7 @@ func (s *Song) writeCoverToFile(data []byte) {
 		return
 	}
 
-	coverFile, err := os.OpenFile(coverPath, os.O_CREATE|os.O_WRONLY, 0600)
+	coverFile, err := os.OpenFile(coverPath, os.O_CREATE|os.O_WRONLY, 0o600)
 	config.Log(err)
 	defer coverFile.Close()
 	_, err = coverFile.Write(data)
@@ -84,7 +84,7 @@ func (s *Song) getCoverArtPath() (coverPath, url string, err error) {
 	coverFolder, _ := os.UserCacheDir()
 	coverFolder += "/ava-mpd/coverart/"
 	if _, e := os.Stat(coverFolder); os.IsNotExist(e) {
-		err := os.MkdirAll(coverFolder, 0777)
+		err := os.MkdirAll(coverFolder, 0o777)
 		config.Log(err)
 	}
 	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
