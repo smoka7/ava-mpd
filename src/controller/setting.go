@@ -24,39 +24,45 @@ type SettingsResponse struct {
 	DownloadCoverArt bool
 }
 
-func (c *Mpd) Settings(w http.ResponseWriter, r *http.Request) {
-	var request SettingRequest
-	if r.Method == http.MethodPost {
-		c.Client.Connect()
-		defer c.Client.Close()
+func (c Mpd) Settings(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		var request SettingRequest
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		switch request.Command {
-		case "crossfade":
-			c.Client.ChangeCrossfade(request.Data.Value)
-		case "download":
-			c.Client.ToggleDownloadCover()
-		case "mixrampdb":
-			c.Client.ChangeMixRampdb(request.Data.Value)
-		case "enableOutput":
-			c.Client.EnableOutput(request.Data.Value)
-		case "disableOutput":
-			c.Client.DisableOutput(request.Data.Value)
-		case "deleteCache":
-			config.DeleteCache()
-		case "setGain":
-			c.Client.ChangeReplayGain(request.Data.Value)
-		case "updateDatabase":
-			c.Client.UpdateDatabase()
+		c.setingcommand(request)
+
+	case http.MethodGet:
+		response := SettingsResponse{
+			DatabaseStats:    c.Client.DatabaseStats(),
+			ReplayGain:       c.Client.GetReplayGain(),
+			Outputs:          c.Client.ListOutputs(),
+			DownloadCoverArt: c.Client.DownloadCoverArt,
 		}
-		return
+		err := json.NewEncoder(w).Encode(response)
+		config.Log(err)
 	}
-	response := SettingsResponse{
-		DatabaseStats:    c.Client.DatabaseStats(),
-		ReplayGain:       c.Client.GetReplayGain(),
-		Outputs:          c.Client.ListOutputs(),
-		DownloadCoverArt: c.Client.DownloadCoverArt,
+}
+
+func (c Mpd) setingcommand(request SettingRequest) {
+	c.Client.Connect()
+	defer c.Client.Close()
+	switch request.Command {
+	case "crossfade":
+		c.Client.ChangeCrossfade(request.Data.Value)
+	case "download":
+		c.Client.ToggleDownloadCover()
+	case "mixrampdb":
+		c.Client.ChangeMixRampdb(request.Data.Value)
+	case "enableOutput":
+		c.Client.EnableOutput(request.Data.Value)
+	case "disableOutput":
+		c.Client.DisableOutput(request.Data.Value)
+	case "deleteCache":
+		config.DeleteCache()
+	case "setGain":
+		c.Client.ChangeReplayGain(request.Data.Value)
+	case "updateDatabase":
+		c.Client.UpdateDatabase()
 	}
-	err := json.NewEncoder(w).Encode(response)
-	config.Log(err)
 }
