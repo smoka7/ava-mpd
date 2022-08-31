@@ -1,6 +1,7 @@
 <template>
-  <div
-    class="absolute inset-0 z-auto flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll bg-lightest p-4 md:p-8"
+  <Dialog
+    :open="true"
+    class="absolute inset-0 z-20 flex flex-col space-y-2 overflow-x-hidden overflow-y-scroll bg-lightest p-4 md:inset-4 md:rounded md:p-8"
   >
     <div class="flex flex-col-reverse items-center justify-start md:flex-row">
       <h1
@@ -30,7 +31,7 @@
       />
       <ul
         :class="{
-          'flex w-full flex-col rounded bg-white dark:bg-gray-700 list': true,
+          'list flex w-full flex-col rounded bg-white dark:bg-gray-700': true,
           'md:w-1/2': state.albumArt != 'default',
         }"
       >
@@ -50,7 +51,7 @@
         </li>
       </ul>
     </div>
-  </div>
+  </Dialog>
 </template>
 <script setup>
 const state = computed(() => useStore().state.song);

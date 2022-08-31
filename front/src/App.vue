@@ -9,6 +9,7 @@
       <media-controller />
     </div>
     <sidebar class="h-screen md:h-full md:w-3/4" id="queue" />
+    <songInfo v-if="showSongInfo" @close="closeInfo" />
   </div>
 </template>
 <script setup>
@@ -34,10 +35,18 @@ function listenKeyEvents(event) {
     handleKey(event.key);
   }
 }
+
+const songInfo = defineAsyncComponent(() => import("./components/songInfo.vue"));
+const showSongInfo = computed(() => store.state.song.show);
+
+async function closeInfo() {
+  await store.dispatch("clearSongInfo");
+}
+
 </script>
 <style lang="postcss">
 * {
-  @apply focus:outline-none focus:outline-accent
+  @apply focus:outline-none focus:outline-accent;
 }
 
 .tooltip {
