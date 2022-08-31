@@ -11,7 +11,7 @@ export async function fetchOrFail(url) {
     return await response.json();
   }
 
-  console.log(response.error);
+  console.log(response);
 }
 
 /**

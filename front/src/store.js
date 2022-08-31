@@ -104,7 +104,7 @@ const store = createStore({
     },
     async getQueue(_, page = -1) {
       const response = await fetchOrFail(endpoints.queue + "?page=" + page);
-      store.commit("setQueue", response);
+      if (response) store.commit("setQueue", response);
     },
     async sendPlaybackCommand(_, command) {
       sendCommand(endpoints.playback, command);

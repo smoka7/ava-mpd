@@ -3,12 +3,13 @@
     class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-lg text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
   >
     <div
-      class="fixed inset-0 z-10 h-screen md:static md:h-full md:w-1/4"
+      v-if="store.state.connected"
+      class="fixed inset-0 z-10 h-screen flex-shrink-0 md:static md:h-full md:w-1/4"
       id="mediaController"
     >
       <media-controller />
     </div>
-    <sidebar class="h-screen md:h-full md:w-3/4" id="queue" />
+    <sidebar class="h-screen w-full md:h-full" id="queue" />
     <songInfo v-if="showSongInfo" @close="closeInfo" />
   </div>
 </template>
@@ -36,13 +37,14 @@ function listenKeyEvents(event) {
   }
 }
 
-const songInfo = defineAsyncComponent(() => import("./components/songInfo.vue"));
+const songInfo = defineAsyncComponent(() =>
+  import("./components/songInfo.vue")
+);
 const showSongInfo = computed(() => store.state.song.show);
 
 async function closeInfo() {
   await store.dispatch("clearSongInfo");
 }
-
 </script>
 <style lang="postcss">
 * {

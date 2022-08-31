@@ -30,6 +30,7 @@
       {{ message }}
     </div>
     <QueueStats
+      v-if="store.state.connected"
       @scrollToCurrentSong="scrollToCurrentSong"
       :length="queue.Length"
       :duration="queue.Duration"
