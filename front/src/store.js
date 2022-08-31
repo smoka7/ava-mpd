@@ -59,6 +59,13 @@ const store = createStore({
     },
     setConnected(state, connected) {
       state.connected = connected;
+      if (!connected) {
+        state.queue = {
+          Albums: [],
+          Length: 0,
+          Duration: 0,
+        };
+      }
     },
     setServerFolders(state, response) {
       state.serverFolders = [...response.Folders, ...response.Files];
@@ -140,9 +147,14 @@ const store = createStore({
           store.dispatch("getQueue");
         }
       };
+
       socket.onerror = (err) => {
         store.commit("setConnected", false);
         console.log(err);
+      };
+
+      socket.onclose = () => {
+        store.commit("setConnected", false);
       };
     },
     async getSongInfo(_, songId) {
