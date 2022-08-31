@@ -64,6 +64,7 @@
   </div>
 </template>
 <script setup>
+import { toggleMediaController } from "../helpers.js";
 const store = useStore();
 const currentSong = computed(() => shallowReactive(store.state.currentSong));
 
