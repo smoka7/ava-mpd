@@ -15,30 +15,37 @@
         />
       </Switch>
     </SwitchGroup>
-    <RadioGroup v-model="colorScheme" class="flex flex-col space-y-3">
-      <template v-for="(scheme, index) in colorSchemes" :key="index">
-        <RadioGroupOption v-slot="{ checked }" :value="index">
-          <button
-            :class="[
-              { 'rounded bg-gray-200 text-primary': checked },
-              'hover:lighter group flex w-full cursor-pointer flex-col space-y-2 rounded p-2 duration-300 dark:hover:bg-lightest',
-            ]"
+    <RadioGroup
+      v-model="colorScheme"
+      class="flex flex-col space-y-3 rounded bg-white p-2 dark:bg-gray-600"
+    >
+      <RadioGroupOption
+        v-for="(scheme, index) in colorSchemes"
+        :key="index"
+        as="template"
+        v-slot="{ checked }"
+        :value="index"
+      >
+        <div
+          :class="[
+            { 'rounded bg-gray-200 text-primary': checked },
+            'hover:lighter group flex w-full cursor-pointer flex-col space-y-2 rounded p-2 duration-200 dark:hover:bg-lightest',
+          ]"
+        >
+          <span
+            class="flex w-full items-center justify-between group-hover:text-primary"
           >
-            <span
-              class="flex w-full items-center justify-between group-hover:text-primary"
-            >
-              <RadioGroupLabel>{{ index }}</RadioGroupLabel>
-              <font-awesome-icon
-                v-show="checked"
-                class="text-primary"
-                icon="check-circle"
-              />
-            </span>
-            <span :style="renderScheme(scheme)" class="h-10 w-full rounded">
-            </span>
-          </button>
-        </RadioGroupOption>
-      </template>
+            <RadioGroupLabel>{{ index }}</RadioGroupLabel>
+            <font-awesome-icon
+              v-if="checked"
+              class="text-primary"
+              icon="check-circle"
+            />
+          </span>
+          <span :style="renderScheme(scheme)" class="h-10 w-full rounded">
+          </span>
+        </div>
+      </RadioGroupOption>
     </RadioGroup>
   </div>
 </template>
