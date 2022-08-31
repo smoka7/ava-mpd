@@ -1,7 +1,7 @@
 <template>
   <button
     @click="open = true"
-    class="rounded border-2 border-lightest p-2 hover:border-lighter hover:bg-lighter"
+    class="rounded border-2 border-lightest p-2 hover:border-lighter hover:bg-lighter hover:text-primary"
   >
     show mappings list
   </button>

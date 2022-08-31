@@ -64,8 +64,3 @@ function deleteCache() {
   });
 }
 </script>
-<style lang="postcss">
-.list li {
-  @apply p-2 even:bg-gray-200 dark:even:bg-gray-800;
-}
-</style>

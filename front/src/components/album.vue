@@ -8,7 +8,7 @@
           :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
           :class="[
             currentAlbum ? 'text-accent' : '',
-            'mr-2 transform-gpu duration-200',
+            'mr-2 transform-gpu duration-200 open-rotate',
           ]"
           size="lg"
         />
@@ -139,7 +139,7 @@ function moveSong(event, position) {
 }
 </script>
 <style lang="postcss">
-details[open] > summary > span > svg {
+details[open] > summary > span > .open-rotate {
   @apply rotate-90;
 }
 details[open] summary ~ * {

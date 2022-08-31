@@ -47,7 +47,7 @@
         >
           <FontAwesomeIcon
             icon="angle-right"
-            class="transform-gpu p-1 text-accent duration-200"
+            class="transform-gpu p-1 text-accent duration-200 open-rotate"
             :id="'icon-' + playlist.Name"
           />
           {{ playlist.Name }}

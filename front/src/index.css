@@ -8,3 +8,6 @@ body {
   scrollbar-color: var(--primary-color) var(--lightest-color);
 }
 
+.list li {
+  @apply p-2 even:bg-gray-200 dark:even:bg-gray-800;
+}
