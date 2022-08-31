@@ -13,6 +13,7 @@ import {
   faPlay,
   faPlus,
   faRandom,
+  faRefresh,
   faRetweet,
   faSearch,
   faStepBackward,
@@ -70,6 +71,7 @@ const icons = [
   faTrash,
   faEdit,
   faInfoCircle,
+  faRefresh,
 ];
 
 library.add(icons);

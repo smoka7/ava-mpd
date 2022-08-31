@@ -46,6 +46,7 @@ const store = createStore({
     },
     setStatus(state, status) {
       state.status = status;
+      state.connected = true;
     },
     setQueue(state, playlist) {
       state.queue = playlist;

@@ -9,6 +9,7 @@
     >
       <media-controller />
     </div>
+    <reconnectButton v-else />
     <sidebar class="h-screen w-full md:h-full" id="queue" />
     <songInfo v-if="showSongInfo" @close="closeInfo" />
   </div>

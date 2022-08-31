@@ -38,6 +38,7 @@ declare module '@vue/runtime-core' {
     RadioGroup: typeof import('@headlessui/vue')['RadioGroup']
     RadioGroupLabel: typeof import('@headlessui/vue')['RadioGroupLabel']
     RadioGroupOption: typeof import('@headlessui/vue')['RadioGroupOption']
+    ReconnectButton: typeof import('./src/components/reconnectButton.vue')['default']
     RenamePlaylist: typeof import('./src/components/renamePlaylist.vue')['default']
     SaveQueue: typeof import('./src/components/saveQueue.vue')['default']
     Search: typeof import('./src/components/search.vue')['default']
