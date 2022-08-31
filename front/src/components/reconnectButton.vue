@@ -1,4 +1,10 @@
 <template>
+  <div
+    class="fixed inset-0 flex items-center justify-center p-4 text-center text-7xl text-primary underline decoration-accent md:text-9xl"
+  >
+    Could't connect to server !!! <br />
+    😱 😱 😱
+  </div>
   <button
     @click="reConnect"
     class="group fixed bottom-10 right-10 z-20 flex h-20 w-fit items-center justify-center space-x-2 rounded bg-primary p-2 text-4xl text-white hover:bg-accent hover:text-primary"

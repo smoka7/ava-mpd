@@ -5,16 +5,16 @@
     <div class="card-class">
       <theme-settings />
     </div>
-    <div class="card-class" v-if="connected">
+    <div class="card-class">
       <database-info />
     </div>
-    <div class="card-class" v-if="connected">
+    <div class="card-class">
       <playback-options />
     </div>
-    <div class="card-class space-y-1" v-if="connected">
+    <div class="card-class space-y-1">
       <outputs />
     </div>
-    <div class="card-class" v-if="connected">
+    <div class="card-class">
       <DownloadCover />
     </div>
     <div class="card-class">
@@ -24,7 +24,6 @@
 </template>
 <script setup>
 const store = useStore();
-const connected = computed(() => store.state.connected);
 
 store.dispatch("getSettings");
 </script>

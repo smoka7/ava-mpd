@@ -27,10 +27,9 @@
       v-if="queue.Length == 0"
       class="flex h-full w-full items-center justify-center p-4 text-7xl underline decoration-accent md:text-9xl"
     >
-      {{ message }}
+      Queue is empty!
     </div>
     <QueueStats
-      v-if="store.state.connected"
       @scrollToCurrentSong="scrollToCurrentSong"
       :length="queue.Length"
       :duration="queue.Duration"
@@ -52,16 +51,6 @@ const state = reactive({
 const queue = computed(() => shallowReactive(store.state.queue));
 
 const currentSongPos = computed(() => store.state.currentSong.Pos);
-
-const message = computed(() => {
-  if (!store.state.connected) {
-    return "Couldn't Connect to server!!";
-  }
-  if (queue.value.Length == 0) {
-    return "Queue is empty!";
-  }
-  return "";
-});
 
 onMounted(() => {
   scrollToCurrentSong();
