@@ -165,6 +165,8 @@ const store = createStore({
         ID: songId,
       });
 
+      if (song.Info == null && song.Stickers == null) return;
+
       store.state.song.info = song.Info;
       store.state.song.stickers = song.Stickers;
       store.state.song.albumArt = albumArt.Url;
