@@ -9,7 +9,7 @@
       @clearSelection="clearSelection()"
       @rename="state.renameOpen = true"
     />
-    <div
+    <button
       v-for="playlist in playlists"
       :key="playlist.name"
       class="group mx-2 flex items-center justify-between rounded p-2 text-primary duration-300 hover:bg-white/60 hover:py-3 dark:text-white dark:hover:bg-gray-800/70"
@@ -18,7 +18,7 @@
         <font-awesome-icon :icon="['fas', playlist.icon]" />
         {{ playlist.name }}
       </span>
-      <span class="invisible group-hover:visible md:text-sm">
+      <span class="hide-unfocused md:text-sm">
         <sidebar-button
           :label="'add ' + playlist.name"
           icon="plus"
@@ -35,7 +35,7 @@
           "
         />
       </span>
-    </div>
+    </button>
     <details v-for="(playlist, index) in storedPlaylist" :key="index">
       <summary
         class="group mx-2 flex items-start justify-between rounded py-4 px-2 duration-300 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
@@ -47,7 +47,7 @@
         >
           <FontAwesomeIcon
             icon="angle-right"
-            class="transform-gpu p-1 text-accent duration-200 open-rotate"
+            class="open-rotate transform-gpu p-1 text-accent duration-200"
             :id="'icon-' + playlist.Name"
           />
           {{ playlist.Name }}
@@ -58,7 +58,7 @@
               humanizeTime(playlist.Duration)
             }})
           </span>
-          <span class="invisible flex group-hover:visible">
+          <span class="hide-unfocused flex">
             <sidebar-button
               label="add"
               icon="plus"

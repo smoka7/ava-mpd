@@ -30,6 +30,7 @@
       Queue is empty!
     </div>
     <QueueStats
+      v-else
       @scrollToCurrentSong="scrollToCurrentSong"
       :length="queue.Length"
       :duration="queue.Duration"

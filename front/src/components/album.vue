@@ -8,7 +8,7 @@
           :icon="['fas', currentAlbum ? 'compact-disc' : 'angle-right']"
           :class="[
             currentAlbum ? 'text-accent' : '',
-            'mr-2 transform-gpu duration-200 open-rotate',
+            'open-rotate mr-2 transform-gpu duration-200',
           ]"
           size="lg"
         />
@@ -22,7 +22,7 @@
           label="select Album"
           icon="check-circle"
           size="lg"
-          class="invisible text-primary group-hover:visible"
+          class="hide-unfocused text-primary"
           @click.stop="$emit('selectAlbum', album.Album)"
         />
         {{ album.Date }}
@@ -43,13 +43,16 @@
       <div
         class="mr-2 flex flex-grow-0 space-x-4 overflow-x-clip text-ellipsis"
       >
-        <span class="group relative cursor-pointer" @click.stop="play(song.Id)">
+        <button
+          class="group relative cursor-pointer"
+          @click.stop="play(song.Id)"
+        >
           <FontAwesomeIcon
             :id="song.Pos"
             :class="
               isCurrSong(song.Pos)
                 ? 'text-accent'
-                : 'invisible text-green-500 group-hover:visible'
+                : 'hide-unfocused text-green-500'
             "
             :icon="['fas', isCurrSong(song.Pos) ? 'compact-disc' : 'play']"
           />
@@ -57,13 +60,13 @@
             :class="[
               isCurrSong(song.Pos)
                 ? 'hidden'
-                : 'absolute inset-0 group-hover:invisible',
+                : 'absolute inset-0 group-focus-within:invisible group-hover:invisible group-focus:invisible',
             ]"
           >
             {{ song.Track }}
           </span>
-        </span>
-        <span class="">
+        </button>
+        <span>
           {{ song.Title }}
         </span>
       </div>
@@ -76,7 +79,7 @@
           :class="
             isSelected(song.Id)
               ? 'visible text-green-500 dark:text-green-400'
-              : 'invisible text-primary group-hover:visible dark:text-white'
+              : 'hide-unfocused text-primary dark:text-white'
           "
         >
           <FontAwesomeIcon icon="check-circle" />
@@ -84,7 +87,7 @@
         <button
           aria-label="show-menu"
           @click="$emit('showMenu', song.Pos, song.Id, $event)"
-          class="invisible mr-2 text-primary group-hover:visible dark:text-white"
+          class="hide-unfocused mr-2 text-primary dark:text-white"
         >
           <FontAwesomeIcon icon="ellipsis-h" />
         </button>
@@ -162,7 +165,7 @@ details[open] summary ~ * {
 }
 
 .song {
-  @apply my-1 flex w-full justify-between p-1 duration-300;
+  @apply my-1 flex w-full justify-between p-1;
   @apply hover:bg-white/60 hover:py-1.5 dark:text-white dark:hover:bg-gray-800/70;
   @apply md:rounded md:px-3;
 }

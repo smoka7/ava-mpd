@@ -78,4 +78,7 @@ async function closeInfo() {
     @apply bg-white/70 dark:bg-gray-700/70 !important;
   }
 }
+.hide-unfocused {
+  @apply invisible group-focus-within:visible group-hover:visible group-focus:visible;
+}
 </style>

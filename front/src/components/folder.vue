@@ -11,7 +11,7 @@
         />
         {{ folderName() }}
       </span>
-      <span class="invisible space-x-2 text-sm group-hover:visible">
+      <span class="hide-unfocused space-x-2 text-sm">
         <sidebar-button label="add" icon="plus" @click.stop="openAdd" />
         <sidebar-button
           label="play"
