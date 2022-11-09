@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/smoka7/ava/src/config"
 	"github.com/smoka7/ava/src/controller"
@@ -42,9 +43,12 @@ func InitConnections(frontDist fs.FS, config config.Connection) {
 	serveCoverArts()
 	serveRoutes()
 
-	log.Panic(
-		http.ListenAndServe(":"+cl.Client.AppPort, nil),
-	)
+	srv := http.Server{
+		Addr:         ":" + cl.Client.AppPort,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+	}
+	log.Panic(srv.ListenAndServe())
 }
 
 func serveRoutes() {
@@ -86,7 +90,7 @@ func serveCoverArts() {
 	cache, err := os.UserCacheDir()
 	config.Log(err)
 	coverArtDir := cache + "/ava-mpd"
-	err = os.MkdirAll(coverArtDir, 0777)
+	err = os.MkdirAll(coverArtDir, 0o777)
 	config.Log(err)
 	http.Handle("/coverart/", cacheControl(http.FileServer(http.Dir(coverArtDir))))
 }
@@ -99,7 +103,10 @@ func getHostIP() string {
 		return "127.0.0.1"
 	}
 	defer conn.Close()
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
+	localAddr, ok := conn.LocalAddr().(*net.UDPAddr)
+	if !ok {
+		return "127.0.0.1"
+	}
 
 	return localAddr.IP.String()
 }
