@@ -50,7 +50,7 @@ func TestGetImageURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotURL := parseImageURL(tt.args.b); gotURL != tt.wantURL {
+			if gotURL := getCoverURL(tt.args.b); gotURL != tt.wantURL {
 				t.Errorf("GetImageURL() = %v, want %v", gotURL, tt.wantURL)
 			}
 		})

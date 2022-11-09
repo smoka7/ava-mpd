@@ -66,13 +66,16 @@ func (s *Song) getAlbumArt(c config.Connection) error {
 		return nil
 	}
 
-	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok &&
-		releaseID != "" &&
-		c.DownloadCoverArt {
+	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok && c.DownloadCoverArt &&
+		releaseID != "" {
+		// create a nil temp file so we don't send multiple request for cover
+		s.writeCoverToFile(nil)
 		coverBin, err = brainz.GetCover(releaseID)
 		if err == nil {
 			s.writeCoverToFile(coverBin)
 			return nil
+		} else {
+			os.Remove(s.CoverArt.path)
 		}
 	}
 

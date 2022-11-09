@@ -24,45 +24,51 @@ type images struct {
 	Front bool   `json:"front"`
 }
 
-func fetch(url string) (body []byte, err error) {
+func fetch(url string) ([]byte, error) {
 	ctx := context.Background()
 	timeout, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(timeout, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	req.Header.Set("User-Agent", "ava-mpd/1.2.0 ( smohsenk@gmail.com )")
-	client := &http.Client{}
+
+	var client http.Client
 	res, err := client.Do(req)
 	if err != nil {
 		config.Log(err)
-		return
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	switch res.StatusCode {
 	case http.StatusNotFound:
-		return body, fmt.Errorf("%d : couldn't find resource for %s", http.StatusNotFound, url)
+		return nil, fmt.Errorf("%d : couldn't find resource for %s", http.StatusNotFound, url)
 	case http.StatusBadRequest:
-		return body, fmt.Errorf("%d : couldn't find resource for %s", http.StatusBadRequest, url)
+		return nil, fmt.Errorf("%d : couldn't find resource for %s", http.StatusBadRequest, url)
 	case http.StatusServiceUnavailable:
-		return body, fmt.Errorf("%d : rate limited %s", http.StatusServiceUnavailable, url)
+		return nil, fmt.Errorf("%d : rate limited %s", http.StatusServiceUnavailable, url)
 	}
 
-	body, err = io.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	return
+	return body, nil
 }
 
+// gets the cover for release releaseID from musicbrainz
 func GetCover(releaseID string) ([]byte, error) {
 	res, err := fetch(CAURL + releaseID)
 	if err != nil {
 		return nil, err
 	}
 
-	url := parseImageURL(res)
+	url := getCoverURL(res)
 	if url == "" {
 		return nil, fmt.Errorf("couldn't find cover")
 	}
@@ -71,9 +77,10 @@ func GetCover(releaseID string) ([]byte, error) {
 	return cover, err
 }
 
-func parseImageURL(b []byte) (url string) {
-	resp := CoverArtResponse{}
-	if err := json.Unmarshal(b, &resp); err != nil {
+// parses the cover art response and returns the cover url
+func getCoverURL(body []byte) string {
+	var resp CoverArtResponse
+	if err := json.Unmarshal(body, &resp); err != nil {
 		config.Log(err)
 		return ""
 	}
