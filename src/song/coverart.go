@@ -9,46 +9,61 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+// message to send to client when we can't find any cover
 const DefaultCover = "default"
 
+// path of coverarts cache directory
+var coversDirectory string
+
+// makes the coverArt cache directory for firstTime Use
+func init() {
+	coversDirectory, _ = os.UserCacheDir()
+	coversDirectory += "/ava-mpd/coverart/"
+	if _, e := os.Stat(coversDirectory); os.IsNotExist(e) {
+		err = os.MkdirAll(coversDirectory, 0o777)
+		config.Log(err)
+	}
+}
+
 // returns the URL of the song
-func ServeAlbumArt(c config.Connection, songPath string) (coverURL string) {
-	song := NewSong()
+func ServeAlbumArt(c config.Connection, songPath string) string {
 	if songPath == "" {
 		return DefaultCover
 	}
+
 	c.Connect()
 	defer c.Close()
 
+	song := NewSong()
 	song.GetSongInfo(c, songPath)
-	coverPath, coverURL, err := song.getCoverArtPath()
+	err = song.setCoverArtPath()
 	if err != nil {
 		return DefaultCover
 	}
 
 	//  if cover isn't cached get it from mpd
-	if _, err := os.Stat(coverPath); os.IsNotExist(err) {
-		err := song.getAlbumArt(&c)
+	if _, err := os.Stat(song.CoverArt.path); os.IsNotExist(err) {
+		err := song.getAlbumArt(c)
 		if err != nil {
 			config.Log(err)
 			return DefaultCover
 		}
 	}
-	return
+	return song.CoverArt.url
 }
 
 // gets the cover from mpd
-func (s *Song) getAlbumArt(c *config.Connection) (err error) {
+func (s *Song) getAlbumArt(c config.Connection) error {
 	coverBin, err := c.Client.AlbumArt(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
-		return
+		return nil
 	}
 	//  get the embed cover
 	coverBin, err = c.Client.ReadPicture(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
-		return
+		return nil
 	}
 
 	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok &&
@@ -57,36 +72,22 @@ func (s *Song) getAlbumArt(c *config.Connection) (err error) {
 		coverBin, err = brainz.GetCover(releaseID)
 		if err == nil {
 			s.writeCoverToFile(coverBin)
-			return
+			return nil
 		}
 	}
 
 	err = errors.New("cover not found")
-	return
+	return err
 }
 
 // writes the cover data to cache folder
 func (s *Song) writeCoverToFile(data []byte) {
-	coverPath, _, err := s.getCoverArtPath()
-	if err != nil {
-		return
-	}
-
-	coverFile, err := os.OpenFile(coverPath, os.O_CREATE|os.O_WRONLY, 0o600)
-	config.Log(err)
-	defer coverFile.Close()
-	_, err = coverFile.Write(data)
+	err = os.WriteFile(s.CoverArt.path, data, 0o600)
 	config.Log(err)
 }
 
-// generates a name for cover and returns its path in URL
-func (s *Song) getCoverArtPath() (coverPath, url string, err error) {
-	coverFolder, _ := os.UserCacheDir()
-	coverFolder += "/ava-mpd/coverart/"
-	if _, e := os.Stat(coverFolder); os.IsNotExist(e) {
-		err := os.MkdirAll(coverFolder, 0o777)
-		config.Log(err)
-	}
+// finds the path and URL of the cover art
+func (s *Song) setCoverArtPath() error {
 	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
 
 	if fileName == "" {
@@ -96,12 +97,12 @@ func (s *Song) getCoverArtPath() (coverPath, url string, err error) {
 	if fileName == "" {
 		err = errors.New("couldn't find a name for cover")
 		config.Log(err)
-		return
+		return err
 	}
 
-	coverPath = coverFolder + fileName
-	url = "/coverart/" + fileName
-	return
+	s.CoverArt.path = coversDirectory + fileName
+	s.CoverArt.url = "/coverart/" + fileName
+	return nil
 }
 
 // return a valid file name

@@ -11,9 +11,14 @@ import (
 
 var err error
 
+type CoverArt struct {
+	url, path string
+}
+
 type Song struct {
-	Info  mpd.Attrs
-	Liked bool
+	Info     mpd.Attrs
+	Liked    bool
+	CoverArt CoverArt
 }
 
 func NewSong() *Song {
