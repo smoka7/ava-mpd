@@ -33,7 +33,7 @@ func NewAction(c config.Connection) action {
 }
 
 // returns current queue list
-func GetQueue(c config.Connection, page string) (q Queue) {
+func GetQueue(c config.Connection, pageNumber string) (q Queue) {
 	c.Connect()
 	queue, err := c.Client.PlaylistInfo(-1, -1)
 	c.Close()
@@ -43,14 +43,15 @@ func GetQueue(c config.Connection, page string) (q Queue) {
 		return
 	}
 	q.Duration = getDurationSum(queue)
-	queue = q.getQueueInPage(c, queue, page)
-	q.newAlbum(queue[0])
-	for i := 1; i < len(queue); i++ {
-		if queue[i]["Album"] != queue[i-1]["Album"] {
-			q.newAlbum(queue[i])
+	d, u := q.getQueueInPage(c, pageNumber)
+	page := queue[d:u]
+	q.newAlbum(page[0])
+	for i := 1; i < len(page); i++ {
+		if page[i]["Album"] != page[i-1]["Album"] {
+			q.newAlbum(page[i])
 			continue
 		}
-		q.Albums[len(q.Albums)-1].newSong(queue[i])
+		q.Albums[len(q.Albums)-1].newSong(page[i])
 	}
 	return
 }
@@ -164,37 +165,42 @@ func (a *Album) newSong(song mpd.Attrs) {
 	})
 }
 
-func (q *Queue) getQueueInPage(c config.Connection, queue []mpd.Attrs, page string) (currentPage []mpd.Attrs) {
+func (q *Queue) getQueueInPage(c config.Connection, page string) (downLimit, upLimt int) {
 	c.Connect()
 	currentSong, err := c.Client.CurrentSong()
 	c.Close()
 	config.Log(err)
 
-	downLimit, upLimt := 0, ClientQueueLimit
-	csPos, _ := strconv.Atoi(currentSong["Pos"])
+	q.setPageInfo(page, currentSong["Pos"])
+	return q.getQueueBounds()
+}
+
+func (q Queue) getQueueBounds() (downLimit, upLimt int) {
+	downLimit = int((q.CurrentPage - 1) * ClientQueueLimit)
+	upLimt = downLimit + ClientQueueLimit
+
+	if upLimt > int(q.Length) {
+		upLimt = int(q.Length)
+	}
+	return
+}
+
+// sets the value of cuerrnt page
+func (q *Queue) setPageInfo(page, currentSong string) {
+	csPos, _ := strconv.Atoi(currentSong)
 	q.CurrentSongPage = uint(csPos/ClientQueueLimit + 1)
-	q.LastPage = uint(len(queue)/ClientQueueLimit + 1)
+	q.LastPage = uint(q.Length/ClientQueueLimit + 1)
 
-	// returns the part of queue that page number requested
 	parsedPage, err := strconv.Atoi(page)
-	if parsedPage == -1 {
+	if err != nil || parsedPage < 1 {
 		q.CurrentPage = q.CurrentSongPage
-	} else {
-		q.CurrentPage = uint(parsedPage)
+		return
 	}
 
-	if q.CurrentPage > q.LastPage {
+	if uint(parsedPage) > q.LastPage {
 		q.CurrentPage = q.LastPage
-	} else if q.CurrentPage <= 0 {
-		q.CurrentPage = 1
-	}
-	if err == nil || q.CurrentPage != 0 {
-		downLimit = int((q.CurrentPage - 1) * ClientQueueLimit)
-		upLimt = downLimit + ClientQueueLimit
+		return
 	}
 
-	if upLimt > len(queue) {
-		upLimt = len(queue)
-	}
-	return queue[downLimit:upLimt]
+	q.CurrentPage = uint(parsedPage)
 }
