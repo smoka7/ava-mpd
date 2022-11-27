@@ -139,9 +139,14 @@ func (a action) getCurrentSongPos() int {
 
 // filter album info
 func (q *Queue) newAlbum(song mpd.Attrs) {
+	artist, ok := song["AlbumArtist"]
+	if !ok {
+		artist = song["Artist"]
+	}
+
 	album := Album{
 		Album:  song["Album"],
-		Artist: song["Artist"],
+		Artist: artist,
 		Date:   song["Date"],
 	}
 	album.newSong(song)
