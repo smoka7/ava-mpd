@@ -29,7 +29,7 @@
     <button
       aria-label="previous-song"
       @click="Command('previous')"
-      class="hover:scale-125 hover:text-lighter"
+      class="duration-200 hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="step-backward" size="2x" />
     </button>
@@ -39,7 +39,7 @@
       @click="Command('toggle')"
       :class="[
         status.state === 'pause' ? 'bg-secondary' : 'bg-accent',
-        'flex items-center justify-center rounded-full px-10 text-white hover:scale-105 hover:text-lightest md:px-8',
+        'flex aspect-square items-center justify-center rounded-full text-white duration-200 hover:scale-105 hover:text-lightest',
       ]"
     >
       <font-awesome-icon
@@ -50,14 +50,14 @@
     <button
       aria-label="stop-song"
       @click="Command('stop')"
-      class="hover:scale-125 hover:text-lighter"
+      class="duration-200 hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="stop" size="2x" />
     </button>
     <button
       aria-label="next-song"
       @click="Command('next')"
-      class="hover:scale-125 hover:text-lighter"
+      class="duration-200 hover:scale-125 hover:text-lighter"
     >
       <font-awesome-icon icon="step-forward" size="2x" />
     </button>
@@ -106,7 +106,7 @@ function Command(command) {
 </script>
 <style lang="postcss">
 .playback-btn {
-  @apply scale-125 transform bg-transparent p-2 text-lightest hover:scale-[135%] hover:text-lighter;
+  @apply scale-125 transform bg-transparent p-2 text-lightest duration-200 hover:scale-[135%] hover:text-lighter;
 }
 .playback-active {
   @apply text-accent !important;

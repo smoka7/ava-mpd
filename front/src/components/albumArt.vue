@@ -24,10 +24,10 @@ function zoom() {
 const defaultAlbumArt = computed(() => props.url === "default");
 const albumArtClass = computed(() => {
   return {
-    "fixed z-50 top-2 bottom-2 w-screen h-auto md:w-1/2 aspect-square inset-0 md:left-1/4":
+    "fixed z-50 top-2 bottom-2 w-screen md:w-1/2 inset-0 md:left-1/4":
       isZoomed.value,
-    "w-full aspect-square": !isZoomed.value,
-    "rounded cursor-pointer": true,
+    "w-full": !isZoomed.value,
+    "rounded cursor-pointer aspect-square": true,
   };
 });
 </script>

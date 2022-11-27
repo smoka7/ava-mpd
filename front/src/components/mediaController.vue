@@ -3,7 +3,7 @@
     class="flex h-full max-h-full flex-col justify-around space-y-4 bg-primary p-2 text-white md:rounded"
   >
     <div
-      class="my-2 flex w-full flex-col self-center text-left text-xl"
+      class="my-2 flex w-full flex-col self-center overflow-hidden text-ellipsis text-left text-xl md:max-h-[30%]"
       v-if="currentSong.Title"
     >
       <span class="text-ellipsis">

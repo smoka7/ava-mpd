@@ -3,6 +3,7 @@
     <button
       @click="changeVolume()"
       :aria-label="volume > 0 ? 'mute' : 'max-the-volume'"
+      class="flex items-center"
     >
       <font-awesome-icon :icon="['fas', icon()]" size="lg" />
     </button>
