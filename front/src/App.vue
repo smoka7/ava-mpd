@@ -33,7 +33,12 @@ onUnmounted(() => {
 });
 
 function listenKeyEvents(event) {
-  if (event && event.target.tagName.toUpperCase() !== "INPUT") {
+  const pressedModifire = event.ctrlKey || event.altKey || event.shiftKey;
+  const pressdInInput = event.target.tagName.toUpperCase() == "INPUT";
+  if (pressdInInput || pressedModifire) {
+    return;
+  }
+  if (event) {
     handleKey(event.key);
   }
 }
