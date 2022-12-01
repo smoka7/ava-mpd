@@ -1,7 +1,7 @@
 <template>
   <details :open="folders.data != null && folders.data.length > 0">
     <summary
-      class="group flex justify-between rounded px-2 py-4 duration-200 hover:bg-white/60 hover:py-[1.1rem] dark:text-white dark:hover:bg-gray-800/70 md:p-2"
+      class="group flex justify-between rounded px-2 py-4 duration-200 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
       @click="listFolders()"
     >
       <span class="w-4/6 overflow-x-hidden text-ellipsis">

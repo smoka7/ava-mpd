@@ -1,15 +1,15 @@
 <template>
   <div
-    class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-lg text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
+    class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
     v-if="store.state.connected"
   >
     <div
-      class="fixed inset-0 z-10 h-screen flex-shrink-0 md:static md:h-full md:w-1/4"
+      class="fixed inset-0 z-10 h-[100dvh] flex-shrink-0 md:static md:h-full md:w-1/4"
       id="mediaController"
     >
       <media-controller />
     </div>
-    <sidebar class="h-screen w-full md:h-full" id="queue" />
+    <sidebar class="h-[100dvh] w-full md:h-full" id="queue" />
     <songInfo v-if="showSongInfo" @close="closeInfo" />
   </div>
   <reconnectButton v-else />
@@ -54,17 +54,18 @@ async function closeInfo() {
 </script>
 <style lang="postcss">
 * {
-  @apply focus:outline-none focus:outline-accent;
+  @apply focus:outline-none focus:ring-2 focus:ring-accent  !important;
+  @apply focus:rounded;
 }
 
 .tooltip {
   @apply relative inline-block;
 }
 .tooltip .tooltiptext {
-  @apply invisible absolute bottom-full left-1/2 z-10 -ml-10 inline w-auto rounded bg-lightest/90 p-2 text-center text-primary;
+  @apply invisible absolute bottom-full left-1/2 z-10 -ml-10 flex w-fit scale-0 rounded bg-lightest/90 p-1 text-center text-sm text-primary duration-100;
 }
 .tooltip:hover .tooltiptext {
-  @apply visible;
+  @apply visible scale-100;
 }
 ::-webkit-scrollbar {
   @apply w-2;
@@ -78,11 +79,7 @@ async function closeInfo() {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-secondary;
 }
-@supports (-moz-appearance: none) {
-  .fbg {
-    @apply bg-white/70 dark:bg-gray-700/70 !important;
-  }
-}
+
 .hide-unfocused {
   @apply invisible group-focus-within:visible group-hover:visible group-focus:visible;
 }

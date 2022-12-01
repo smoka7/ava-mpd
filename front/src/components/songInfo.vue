@@ -31,7 +31,7 @@
       />
       <ul
         :class="{
-          'list flex w-full flex-col rounded bg-white dark:bg-gray-700': true,
+          'list flex w-full flex-col rounded bg-white dark:bg-gray-700 dark:text-white': true,
           'md:w-1/2': state.albumArt != 'default',
         }"
       >

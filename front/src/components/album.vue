@@ -10,7 +10,6 @@
             currentAlbum ? 'text-accent' : '',
             'open-rotate mr-2 transform-gpu duration-200',
           ]"
-          size="lg"
         />
         {{ album.Artist }} | {{ album.Album }}
       </span>
@@ -22,7 +21,7 @@
           label="select Album"
           icon="check-circle"
           size="lg"
-          class="hide-unfocused text-primary"
+          class="hide-unfocused text-primary dark:text-white"
           @click.stop="$emit('selectAlbum', album.Album)"
         />
         {{ album.Date }}
@@ -49,18 +48,20 @@
         >
           <FontAwesomeIcon
             :id="song.Pos"
-            :class="
+            :class="[
               isCurrSong(song.Pos)
-                ? 'text-accent'
-                : 'hide-unfocused text-green-500'
-            "
-            :icon="['fas', isCurrSong(song.Pos) ? 'compact-disc' : 'play']"
+                ? ' group-hover:invisible group-focus:invisible'
+                : 'hide-unfocused',
+              'text-green-500',
+            ]"
+            :icon="['fas', 'play']"
           />
           <span
             :class="[
               isCurrSong(song.Pos)
-                ? 'hidden'
-                : 'absolute inset-0 group-focus-within:invisible group-hover:invisible group-focus:invisible',
+                ? 'hide-unfocused'
+                : ' group-focus-within:invisible group-hover:invisible group-focus:invisible',
+              'absolute inset-0',
             ]"
           >
             {{ song.Track }}
@@ -156,22 +157,22 @@ details[open] summary ~ * {
 .album-header {
   @apply sticky top-0 flex cursor-pointer items-center justify-between rounded px-4 py-2;
   @apply transition-transform duration-200;
-  @apply hover:bg-lightest hover:py-3 hover:text-primary dark:text-white dark:hover:text-primary;
+  @apply hover:bg-white dark:text-white hover:dark:bg-gray-800/70;
 }
 
 .current-album-header {
   @apply album-header;
-  @apply bg-lightest text-primary hover:py-2 !important;
+  @apply bg-white dark:bg-gray-800/70 dark:text-white !important;
 }
 
 .song {
   @apply my-1 flex w-full justify-between p-1;
-  @apply hover:bg-white/60 hover:py-1.5 dark:text-white dark:hover:bg-gray-800/70;
+  @apply hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70;
   @apply md:rounded md:px-3;
 }
 
 #currentSong {
-  @apply bg-white/60 dark:bg-gray-800/70;
+  @apply bg-white py-1.5 dark:bg-gray-800/70;
 }
 
 @keyframes sweep {

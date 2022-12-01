@@ -3,7 +3,7 @@
     as="div"
     :selectedIndex="selectedTab"
     @change="changeTab"
-    class="fbg relative flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
+    class="relative flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
   >
     <TabList
       as="div"
@@ -20,7 +20,7 @@
             :icon="['fas', tab.icon]"
             :class="[
               'group-hover:text-secondary',
-              selected ? 'text-secondary' : 'text-accent',
+              selected ? 'text-accent' : 'text-secondary',
             ]"
           />
           <span class="hidden md:block">
@@ -132,7 +132,7 @@ const tabs = {
 }
 
 .active-tab {
-  @apply bg-lighter text-primary !important;
+  @apply bg-white dark:bg-gray-800/70 !important;
 }
 
 .normal-tab {
