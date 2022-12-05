@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -118,10 +117,8 @@ func (c *Connection) loadConfigFile(configPath string) {
 	var config Connection
 	if configPath == "" {
 		configDir, err := os.UserConfigDir()
-		if err != nil {
-			log.Println(err)
-			os.Exit(1)
-		}
+		LogAndExit(err)
+
 		configPath = configDir + ConfigFilePath + ConfigFileName
 	}
 
@@ -131,17 +128,11 @@ func (c *Connection) loadConfigFile(configPath string) {
 	}
 
 	bytes, err := os.ReadFile(configPath)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
+	LogAndExit(err)
 
 	err = json.Unmarshal(bytes, &config)
-	if err != nil {
-		fmt.Println("faild to parse config file at : ", configPath)
-		log.Println(err)
-		os.Exit(1)
-	}
+	LogAndExit(err)
+
 	c.copyConfig(config)
 }
 
@@ -167,7 +158,7 @@ func DeleteCache() {
 	Log(err)
 }
 
-//  checks log and saves it to cache folder
+// checks log and saves it to cache folder
 func Log(err error) {
 	if err == nil {
 		return
@@ -194,6 +185,14 @@ func Log(err error) {
 	Log := log.New(logFile, "", log.LstdFlags|log.Lshortfile)
 	Log.Println(err)
 	logFile.Close()
+}
+
+// for none nil errors logs to file and then exits
+func LogAndExit(err error) {
+	if err != nil {
+		Log(err)
+		log.Fatalln(err)
+	}
 }
 
 // updates the MPD server database

@@ -34,7 +34,8 @@ func (m *Mpd) Serve(ws *websocket.Conn) {
 // connect to mpd server and watches for the subsystem change
 func eventWatcher(c config.Connection, event chan string) {
 	watcher, err := mpd.NewWatcher("tcp", c.Address, c.Password)
-	config.Log(err)
+	config.LogAndExit(err)
+
 	go func() {
 		for err := range watcher.Error {
 			config.Log(err)
@@ -51,7 +52,8 @@ func eventWatcher(c config.Connection, event chan string) {
 func (m *Mpd) RecordPlayCount() {
 	client := m.Client
 	watcher, err := mpd.NewWatcher("tcp", client.Address, client.Password)
-	config.Log(err)
+	config.LogAndExit(err)
+
 	defer watcher.Close()
 	go func() {
 		for err := range watcher.Error {
