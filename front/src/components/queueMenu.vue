@@ -5,25 +5,23 @@
     class="fixed inset-0 z-10 overflow-y-auto"
     id="context-menu"
   >
-    <DialogOverlay
+    <div
       v-show="open"
       class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
     />
-    <div
-      class="drop-blur-3xl absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-56 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12"
-    >
+    <DialogPanel class="menu">
       <button
-        class="menuItem"
+        class="menuItem group"
         @click="action.func()"
         v-for="action in actions"
         :key="action.title"
       >
-        <FontAwesomeIcon :icon="action.icon" class="text-accent" />
+        <FontAwesomeIcon :icon="action.icon" class="menuIcon" />
         <span>{{ action.title }}</span>
       </button>
       <details>
-        <summary @click="getStoredPlaylist" class="menuItem">
-          <FontAwesomeIcon icon="plus" class="text-accent" />
+        <summary @click="getStoredPlaylist" class="menuItem group">
+          <FontAwesomeIcon icon="plus" class="menuIcon" />
           <span>Add to playlist </span>
         </summary>
         <button
@@ -35,7 +33,7 @@
           {{ pl.Name }}
         </button>
       </details>
-    </div>
+    </DialogPanel>
   </Dialog>
 </template>
 <script setup>
@@ -114,6 +112,12 @@ function getStoredPlaylist() {
 }
 </script>
 <style>
+.menu {
+  @apply absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-56 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12;
+}
+.menuIcon{
+    @apply text-secondary group-hover:text-accent group-focus:text-accent dark:text-lightest;
+}
 .menuItem {
   @apply flex w-full items-center justify-start space-x-2  overflow-x-hidden text-ellipsis rounded p-2 text-left hover:bg-gray-200 focus:outline-none focus:ring focus:ring-accent dark:hover:text-black;
 }

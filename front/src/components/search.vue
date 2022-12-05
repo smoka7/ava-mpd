@@ -17,16 +17,15 @@
               as="template"
               :key="tag"
               :value="tag"
-              v-slot="{ selected }"
+              v-slot="{ active }"
             >
               <li
                 :class="{
-                  'rounded p-2 hover:bg-gray-200 dark:hover:text-primary': true,
-                  'bg-lightest dark:text-primary': selected,
+                  'menuItem': true,
+                  'ring-accent ring-2': active,
                 }"
               >
                 {{ tag }}
-                <FontAwesomeIcon class="ml-2" v-show="selected" icon="check" />
               </li>
             </ListboxOption>
           </ListboxOptions>

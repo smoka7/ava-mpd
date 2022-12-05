@@ -7,7 +7,7 @@
       <span class="w-4/6 overflow-x-hidden text-ellipsis">
         <FontAwesomeIcon
           :icon="data.Directory ? 'folder' : 'music'"
-          class="group-hover:text-secondary"
+          class="menuIcon"
         />
         {{ folderName() }}
       </span>

@@ -4,8 +4,8 @@
     @close="$emit('close')"
     class="fixed inset-0 z-10 overflow-y-auto rounded"
   >
-    <DialogOverlay class="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-    <div
+    <div class="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+    <DialogPanel
       class="relative top-1/3 mx-auto flex max-w-xl flex-col rounded bg-white p-4 dark:bg-gray-800 dark:text-white"
     >
       <DialogTitle class="my-2 text-lg">
@@ -33,7 +33,7 @@
           Cancel
         </button>
       </div>
-    </div>
+    </DialogPanel>
   </Dialog>
 </template>
 <script setup>

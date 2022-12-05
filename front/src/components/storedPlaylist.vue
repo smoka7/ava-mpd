@@ -15,7 +15,7 @@
       class="group mx-2 flex items-center justify-between rounded p-2 text-primary duration-300 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70"
     >
       <span>
-        <font-awesome-icon :icon="['fas', playlist.icon]" />
+        <font-awesome-icon :icon="['fas', playlist.icon]" class="menuIcon" />
         {{ playlist.name }}
       </span>
       <span class="hide-unfocused md:text-sm">
@@ -47,7 +47,7 @@
         >
           <FontAwesomeIcon
             icon="angle-right"
-            class="open-rotate transform-gpu p-1 text-accent duration-200"
+            class="open-rotate transform-gpu p-1 menuIcon duration-200"
             :id="'icon-' + playlist.Name"
           />
           {{ playlist.Name }}

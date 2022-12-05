@@ -20,7 +20,7 @@
             :icon="['fas', tab.icon]"
             :class="[
               'group-hover:text-secondary',
-              selected ? 'text-accent' : 'text-secondary',
+                selected ? 'text-accent' : 'text-secondary dark:text-lighter',
             ]"
           />
           <span class="hidden md:block">
