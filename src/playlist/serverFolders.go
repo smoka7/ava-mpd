@@ -28,7 +28,7 @@ func (a action) ListFolders(d FolderData) (list ServerList) {
 		if _, ok := item["playlist"]; ok {
 			continue
 		}
-		// append files to the end of list
+
 		if _, ok := item["file"]; ok {
 			list.Files = append(list.Files, newFile(item))
 			continue
@@ -62,7 +62,7 @@ func (a action) AddFolder(pos string, uris ...string) {
 	case "currentSong":
 		// check for empty queue
 		cs, err := a.c.Client.CurrentSong()
-		if err != nil || cs != nil {
+		if err != nil || cs == nil {
 			config.Log(err)
 			return
 		}
