@@ -34,8 +34,7 @@ func ServeAlbumArt(c config.Connection, songPath string) string {
 	c.Connect()
 	defer c.Close()
 
-	song := NewSong()
-	song.GetSongInfo(c, songPath)
+	song := NewSong(c, songPath)
 	err = song.setCoverArtPath()
 	if err != nil {
 		return DefaultCover
@@ -74,9 +73,8 @@ func (s *Song) getAlbumArt(c config.Connection) error {
 		if err == nil {
 			s.writeCoverToFile(coverBin)
 			return nil
-		} else {
-			os.Remove(s.CoverArt.path)
 		}
+		os.Remove(s.CoverArt.path)
 	}
 
 	err = errors.New("cover not found")

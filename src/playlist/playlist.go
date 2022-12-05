@@ -29,8 +29,9 @@ func (a action) addAfterPos(name, pos string) {
 // removes duplicate songs based on their file address from the playlist name
 // if name is empty then it deletes duplicate songs in current queue
 func (a action) RemoveDuplicatesongs(name string) {
+	removeFromQueue := name == ""
 	getQueue := func() (queue []mpd.Attrs) {
-		if name == "" {
+		if removeFromQueue {
 			queue, err = a.c.Client.PlaylistInfo(-1, -1)
 			config.Log(err)
 			return
@@ -41,23 +42,31 @@ func (a action) RemoveDuplicatesongs(name string) {
 	}
 
 	queue := getQueue()
-	songs := make(map[string]bool)
 	cmds := a.c.Client.BeginCommandList()
-	for i := len(queue) - 1; i >= 0; i-- {
 
-		if _, duplicate := songs[queue[i]["file"]]; !duplicate {
-			songs[queue[i]["file"]] = true
-			continue
-		}
-		// deleting from Queue
-		if name == "" {
-			id, _ := strconv.Atoi(queue[i]["Id"])
+	// cmd used to delete duplicates
+	var removeDuplicates func(int)
+	if removeFromQueue {
+		removeDuplicates = func(index int) {
+			id, _ := strconv.Atoi(queue[index]["Id"])
 			cmds.DeleteID(id)
+		}
+	} else {
+		removeDuplicates = func(i int) {
+			cmds.PlaylistDelete(name, i)
+		}
+	}
+
+	// find the duplicate songs
+	songs := make(map[string]bool)
+	for i := len(queue) - 1; i >= 0; i-- {
+		if _, duplicate := songs[queue[i]["file"]]; duplicate {
+			removeDuplicates(i)
 			continue
 		}
-		// deleting from StoredPlaylist
-		cmds.PlaylistDelete(name, i)
+		songs[queue[i]["file"]] = true
 	}
+
 	err := cmds.End()
 	config.Log(err)
 }

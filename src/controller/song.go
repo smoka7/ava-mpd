@@ -59,7 +59,7 @@ func (c Mpd) getSongResponse(songPos int) SongInfoResponse {
 	}
 
 	return SongInfoResponse{
-		Info:     song.NewSong().GetSongInfo(c.Client, file).Info,
+		Info:     song.NewSong(c.Client, file).Info,
 		Stickers: song.GetStickers(c.Client, file),
 	}
 }
