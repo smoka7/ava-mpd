@@ -39,7 +39,7 @@
       @click="Command('toggle')"
       :class="[
         status.state === 'pause' ? 'bg-secondary' : 'bg-accent',
-        'flex aspect-square items-center justify-center rounded-full text-white duration-200 hover:scale-105 hover:text-lightest',
+        'flex aspect-square items-center justify-center rounded-full text-lightest duration-200 hover:scale-105 hover:border-8 hover:border-primary/40 hover:text-lighter',
       ]"
     >
       <font-awesome-icon
@@ -63,7 +63,7 @@
     </button>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { toggleMediaController } from "../helpers.js";
 const store = useStore();
 const currentSong = computed(() => shallowReactive(store.state.currentSong));

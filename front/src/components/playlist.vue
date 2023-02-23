@@ -38,7 +38,7 @@
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));
 
 const store = useStore();

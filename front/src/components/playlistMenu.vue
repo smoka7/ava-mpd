@@ -32,7 +32,7 @@
     </transition>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 const open = ref(false);
 
 defineEmits([

@@ -49,7 +49,7 @@
     </RadioGroup>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
 
 const colorScheme = ref(localStorage.getItem("colorScheme") || "first");

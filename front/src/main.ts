@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./index.css";
-import "./fontAwesome.js";
-import store from "./store.js";
+import "./fontAwesome";
+import store from "./store";
 
 createApp(App).use(store).mount("#app");

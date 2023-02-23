@@ -8,7 +8,7 @@
     :value="progressedPercentage"
   />
 </template>
-<script setup>
+<script setup lang="ts">
 const progress = ref(null);
 
 const props = defineProps({

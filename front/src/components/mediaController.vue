@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import endpoints from "../endpoints.js";
 import { sendCommand, humanizeTime } from "../helpers";
 

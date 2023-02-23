@@ -36,7 +36,7 @@
     </DialogPanel>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 import { sendCommand } from "../helpers.js";
 import endpoints from "../endpoints.js";
 

@@ -36,7 +36,7 @@
     </DialogPanel>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 defineEmits(["close", "finish"]);
 defineProps(["isOpen"]);
 const inputText = ref("");

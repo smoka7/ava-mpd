@@ -13,7 +13,7 @@
     <span> Reconnect </span>
   </button>
 </template>
-<script setup>
+<script setup lang="ts">
 const btnClass = ref(["btn-normal"]);
 
 const store = useStore();

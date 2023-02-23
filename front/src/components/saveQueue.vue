@@ -16,7 +16,7 @@
     <template #btn>Save</template>
   </text-input>
 </template>
-<script setup>
+<script setup lang="ts">
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints.js";
 

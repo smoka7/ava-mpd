@@ -3,7 +3,7 @@
     <font-awesome-icon :icon="[pLiked ? 'fas' : 'far', 'heart']" size="2x" />
   </button>
 </template>
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   pLiked: Boolean,
   file: String,

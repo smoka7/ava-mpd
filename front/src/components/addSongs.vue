@@ -41,7 +41,7 @@
     </DialogPanel>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 defineProps(["open", "storedPlaylist"]);
 const emit = defineEmits(["close", "add", "addToPlaylist"]);
 const postitions = ["currentSong", "endOfQueue", "currentAlbum"];

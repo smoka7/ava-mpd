@@ -103,7 +103,7 @@
     />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import endpoints from "../endpoints";
 import { humanizeTime, sendCommand } from "../helpers.js";
 

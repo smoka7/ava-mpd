@@ -52,7 +52,7 @@
     </TabPanels>
   </TabGroup>
 </template>
-<script setup>
+<script setup lang="ts">
 import { toggleMediaController } from "../helpers.js";
 
 const store = useStore();

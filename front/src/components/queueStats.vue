@@ -12,7 +12,7 @@
     <queuePagination @goToCurrent="emits('scrollToCurrentSong')" />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { humanizeTime } from "../helpers.js";
 defineProps(["length", "duration", "selectedLength"]);
 const emits = defineEmits(["scrollToCurrentSong"]);

@@ -28,7 +28,7 @@
     </button>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const store = useStore();
 const queue = computed(() => store.state.queue);
 defineEmits(["goToCurrent"]);

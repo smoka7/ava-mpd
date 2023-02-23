@@ -7,7 +7,7 @@
     <font-awesome-icon :icon="icon" size="lg" />
   </button>
 </template>
-<script setup>
+<script setup lang="ts">
 defineProps({
   label: String,
   icon: String,

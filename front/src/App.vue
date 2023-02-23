@@ -14,7 +14,7 @@
   </div>
   <reconnectButton v-else />
 </template>
-<script setup>
+<script setup lang="ts">
 import { loadTheme, setColorScheme } from "./colors.js";
 import { handleKey } from "./keymap";
 

@@ -11,7 +11,7 @@
     <span class="tooltiptext">volume {{ volume }}%</span>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
 

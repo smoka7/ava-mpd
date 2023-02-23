@@ -41,7 +41,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const store = useStore();
 const replayGainMods = ["off", "track", "album", "auto"];
 

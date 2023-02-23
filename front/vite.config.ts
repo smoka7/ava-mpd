@@ -7,12 +7,11 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      imports: [
-        "vue",
-        "vuex",
-      ],
+      dts: true,
+      imports: ["vue", "vuex"],
     }),
     Components({
+      dts: true,
       resolvers: [
         HeadlessUiResolver(),
         (componentName) => {

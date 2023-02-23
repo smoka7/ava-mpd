@@ -53,6 +53,6 @@
     </div>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 const state = computed(() => useStore().state.song);
 </script>

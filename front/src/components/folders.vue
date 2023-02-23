@@ -3,7 +3,7 @@
     <Folder v-for="(folder, index) in serverRoot" :key="index" :data="folder" />
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 const store = useStore();
 const serverRoot = computed(() =>
   shallowReactive(store.state.serverFolders),

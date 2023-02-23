@@ -60,7 +60,7 @@
     </transition>
   </Dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 import { otherMappings, tabMappings, playbackMappings } from "../keymap";
 const open = ref(false);
 </script>
