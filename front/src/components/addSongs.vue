@@ -5,15 +5,16 @@
     class="fixed inset-0 z-10 overflow-y-auto rounded"
   >
     <div class="fixed inset-0 bg-black/30 backdrop-blur-sm" />
-    <DialogPanel
-      class="menu"
-    >
+    <DialogPanel class="menu">
       <DialogTitle class="m-2 text-lg"> Add items to ... </DialogTitle>
       <div class="mt-2 flex w-full flex-col justify-between space-y-2">
         <button
           v-for="(position, index) in postitions"
           :key="position"
-          @click="add('add', position)"
+          @click="
+            emit('add', position);
+            emit('close');
+          "
           class="menuItem"
         >
           {{ texts[index] }}
@@ -30,7 +31,10 @@
             <button
               v-for="(playlist, index) in storedPlaylist"
               :key="index"
-              @click="add('addToPlaylist', playlist.Name)"
+              @click="
+                emit('addToPlaylist', playlist.Name);
+                emit('close');
+              "
               class="menuItem"
             >
               {{ playlist.Name }}
@@ -42,13 +46,21 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-defineProps(["open", "storedPlaylist"]);
-const emit = defineEmits(["close", "add", "addToPlaylist"]);
-const postitions = ["currentSong", "endOfQueue", "currentAlbum"];
-const texts = ["After Current Song", "End Of Queue", "After Current Album"];
+import type { StoredPlaylist } from "../store";
+defineProps<{ open: boolean; storedPlaylist?: Array<StoredPlaylist> }>();
+type SongPosition = "currentSong" | "endOfQueue" | "currentAlbum";
 
-function add(command, position) {
-  emit(command, position);
-  emit("close");
-}
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "add", value: SongPosition): void;
+  (e: "addToPlaylist", value: string): void;
+}>();
+
+const postitions: Array<SongPosition> = [
+  "currentSong",
+  "endOfQueue",
+  "currentAlbum",
+];
+
+const texts = ["After Current Song", "End Of Queue", "After Current Album"];
 </script>

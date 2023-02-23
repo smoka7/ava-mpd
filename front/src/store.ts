@@ -55,7 +55,7 @@ type Song = {
   Track: string;
   Duration: string;
 };
-type StoredPlaylist = {
+export type StoredPlaylist = {
   Name: string;
   SongsCount: number;
   Duration: number;
