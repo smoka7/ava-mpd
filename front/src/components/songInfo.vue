@@ -8,9 +8,9 @@
         class="flex items-center space-x-4 text-ellipsis text-3xl font-bold text-primary underline decoration-accent md:mr-2"
       >
         <span>
-          {{ state.info.Title }}
+          {{ state.Info["Title"] }}
         </span>
-        <likeSong :pLiked="state.liked" :file="state.info['file']" />
+        <likeSong :pLiked="state.liked" :file="state.Info['file']" />
       </h1>
       <button
         aria-label="close-info"
@@ -26,7 +26,7 @@
       <album-art
         v-if="state.albumArt != 'default'"
         :url="state.albumArt"
-        :altText="state.info['Title'] + ' cover'"
+        :altText="state.Info['Title'] + ' cover'"
         class="top-0 h-fit md:sticky md:w-1/2"
       />
       <ul
@@ -36,14 +36,14 @@
         }"
       >
         <li
-          v-for="(value, index) in state.info"
+          v-for="(value, index) in state.Info"
           :key="index"
           class="p-2 first:rounded-t last:rounded-b"
         >
           {{ index }} : {{ value }}
         </li>
         <li
-          v-for="(sticker, index) in state.stickers"
+          v-for="(sticker, index) in state.Stickers"
           :key="index"
           class="p-2 last:rounded-b"
         >
@@ -54,5 +54,6 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-const state = computed(() => useStore().state.song);
+import { useStore } from "../store";
+const state = computed(() => useStore().song);
 </script>

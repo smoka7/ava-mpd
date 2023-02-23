@@ -55,6 +55,19 @@ type Song = {
   Track: string;
   Duration: string;
 };
+
+type SongInfoResponse = {
+  Info: Array<string>;
+  Stickers: Array<Stickers>;
+  liked: boolean;
+  albumArt: string;
+  show: boolean;
+};
+type Stickers = {
+  Name: string;
+  Value: string;
+};
+
 export type StoredPlaylist = {
   Name: string;
   SongsCount: number;
@@ -87,13 +100,7 @@ export const useStore = defineStore("main", {
       albumArt: "default",
       storedPlaylist: [] as Array<StoredPlaylist>,
       queue: {} as Queue,
-      song: {
-        info: {},
-        stickers: {},
-        albumArt: "",
-        liked: false,
-        show: false,
-      },
+      song: {} as SongInfoResponse,
       serverFolders: [],
       settings: {
         Outputs: {},
@@ -228,7 +235,7 @@ export const useStore = defineStore("main", {
       };
     },
     async getSongInfo(songId: number) {
-      const song = await sendCommand(endpoints.song, "info", {
+      const song: SongInfoResponse = await sendCommand(endpoints.song, "info", {
         ID: songId,
       });
       const albumArt = await sendCommand(endpoints.song, "albumArt", {
@@ -237,8 +244,8 @@ export const useStore = defineStore("main", {
 
       if (song.Info == null && song.Stickers == null) return;
 
-      this.song.info = song.Info;
-      this.song.stickers = song.Stickers;
+      this.song.Info = song.Info;
+      this.song.Stickers = song.Stickers;
       this.song.albumArt = albumArt.Url;
       this.song.show = true;
 
