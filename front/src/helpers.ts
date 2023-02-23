@@ -1,3 +1,5 @@
+import type endpoints from "./endpoints";
+
 /**
  * @param {string} url
  */
@@ -20,7 +22,7 @@ export async function fetchOrFail(url) {
  * @param {string} command
  * @param {object} data
  */
-export async function sendCommand(url, command, data) {
+export async function sendCommand(url: endpoints, command: string, data: any) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
   const request = {

@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import { sendCommand } from "../helpers.js";
-import endpoints from "../endpoints.js";
+import endpoints from "../endpoints";
 
 const store = useStore();
 const emit = defineEmits(["close", "showInfo", "clearSelection"]);

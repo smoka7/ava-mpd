@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import { sendCommand } from "../helpers";
-import endpoints from "../endpoints.js";
+import endpoints from "../endpoints";
 
 const store = useStore();
 const InputIsOpen = ref(false);

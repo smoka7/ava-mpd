@@ -44,7 +44,7 @@
 </template>
 <script setup lang="ts">
 import { sendCommand } from "../helpers.js";
-import endpoints from "../endpoints.js";
+import endpoints from "../endpoints";
 
 const props = defineProps(["data"]);
 const folders = reactive({ data: [] });

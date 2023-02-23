@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import endpoints from "../endpoints.js";
+import endpoints from "../endpoints";
 import { sendCommand, humanizeTime } from "../helpers";
 
 defineEmits(["openSetting"]);

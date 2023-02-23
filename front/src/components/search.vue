@@ -76,7 +76,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import endpoints from "../endpoints.js";
+import endpoints from "../endpoints";
 
 const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];
 const tag = ref("file");
