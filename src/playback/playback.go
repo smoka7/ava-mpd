@@ -11,7 +11,7 @@ import (
 
 var err error
 
-type Commands map[string]func(c *config.Connection) error
+type Commands map[string]func(c config.Connection) error
 
 var commands = Commands{
 	"clear":        clearQueue,
@@ -34,14 +34,14 @@ func Command(c config.Connection, cmd string, data int) error {
 	c.Connect()
 	defer c.Close()
 	if command, ok := commands[cmd]; ok {
-		return command(&c)
+		return command(c)
 	}
 
 	switch cmd {
 	case "seek":
-		err = seek(&c, data)
+		err = seek(c, data)
 	case "changeVolume":
-		err = changeVolume(&c, data)
+		err = changeVolume(c, data)
 	default:
 		return fmt.Errorf("invalid command")
 	}
@@ -50,8 +50,8 @@ func Command(c config.Connection, cmd string, data int) error {
 }
 
 // toggles the state between play and pause
-func toggle(c *config.Connection) error {
-	status := song.GetStatus(*c)
+func toggle(c config.Connection) error {
+	status := song.GetStatus(c)
 	if status["state"] == "play" {
 		err = c.Client.Pause(true)
 		return err
@@ -61,35 +61,35 @@ func toggle(c *config.Connection) error {
 }
 
 // play starts playing the current song in queue
-func play(c *config.Connection) error {
+func play(c config.Connection) error {
 	err = c.Client.Play(-1)
 	config.Log(err)
 	return err
 }
 
 // stops the current queue
-func stop(c *config.Connection) error {
+func stop(c config.Connection) error {
 	err = c.Client.Stop()
 	config.Log(err)
 	return err
 }
 
 // goes to next song in queue
-func nextSong(c *config.Connection) error {
+func nextSong(c config.Connection) error {
 	err = c.Client.Next()
 	config.Log(err)
 	return err
 }
 
 // goes to Previous song in queue
-func prevSong(c *config.Connection) error {
+func prevSong(c config.Connection) error {
 	err = c.Client.Previous()
 	config.Log(err)
 	return err
 }
 
 // seeks t second in current song
-func seek(c *config.Connection, t int) error {
+func seek(c config.Connection, t int) error {
 	seekDuration, err := time.ParseDuration(fmt.Sprintf("%ds", t))
 	config.Log(err)
 	err = c.Client.SeekCur(seekDuration, false)
@@ -98,22 +98,22 @@ func seek(c *config.Connection, t int) error {
 }
 
 // seeks 15 seconds forward in current song
-func seekForward(c *config.Connection) error {
+func seekForward(c config.Connection) error {
 	err = c.Client.SeekCur(15*time.Second, true)
 	config.Log(err)
 	return err
 }
 
 // seeks 15 seconds backward in current song
-func seekBackward(c *config.Connection) error {
+func seekBackward(c config.Connection) error {
 	err = c.Client.SeekCur(-15*time.Second, true)
 	config.Log(err)
 	return err
 }
 
 // toggles the Single state
-func single(c *config.Connection) error {
-	status := song.GetStatus(*c)
+func single(c config.Connection) error {
+	status := song.GetStatus(c)
 	single := false
 	if status["single"] == "0" {
 		single = true
@@ -124,8 +124,8 @@ func single(c *config.Connection) error {
 }
 
 // toggles the Repeat state
-func repeat(c *config.Connection) error {
-	status := song.GetStatus(*c)
+func repeat(c config.Connection) error {
+	status := song.GetStatus(c)
 	repeat := false
 	if status["repeat"] == "0" {
 		repeat = true
@@ -136,8 +136,8 @@ func repeat(c *config.Connection) error {
 }
 
 // toggles the Consume state
-func consume(c *config.Connection) error {
-	status := song.GetStatus(*c)
+func consume(c config.Connection) error {
+	status := song.GetStatus(c)
 	consume := false
 	if status["consume"] == "0" {
 		consume = true
@@ -148,8 +148,8 @@ func consume(c *config.Connection) error {
 }
 
 // toggles the random state
-func random(c *config.Connection) error {
-	status := song.GetStatus(*c)
+func random(c config.Connection) error {
+	status := song.GetStatus(c)
 	repeat := false
 	if status["random"] == "0" {
 		repeat = true
@@ -160,7 +160,7 @@ func random(c *config.Connection) error {
 }
 
 // sets the volume
-func changeVolume(c *config.Connection, volume int) error {
+func changeVolume(c config.Connection, volume int) error {
 	if volume > 100 {
 		volume = 100
 	}
@@ -174,7 +174,7 @@ func changeVolume(c *config.Connection, volume int) error {
 }
 
 // returns the volume
-func getVolume(c *config.Connection) int {
+func getVolume(c config.Connection) int {
 	volAttr, err := c.Client.Command("getvol").Attrs()
 	config.Log(err)
 	volume, _ := strconv.Atoi(volAttr["volume"])
@@ -182,7 +182,7 @@ func getVolume(c *config.Connection) int {
 }
 
 // Increases the  Volume by 5%
-func volumeUp(c *config.Connection) error {
+func volumeUp(c config.Connection) error {
 	volume := getVolume(c)
 	err = changeVolume(c, volume+5)
 	config.Log(err)
@@ -190,7 +190,7 @@ func volumeUp(c *config.Connection) error {
 }
 
 // Decreases the Volume by 5%
-func volumeDown(c *config.Connection) error {
+func volumeDown(c config.Connection) error {
 	volume := getVolume(c)
 	err = changeVolume(c, volume-5)
 	config.Log(err)
@@ -198,7 +198,7 @@ func volumeDown(c *config.Connection) error {
 }
 
 // clears the current queue
-func clearQueue(c *config.Connection) error {
+func clearQueue(c config.Connection) error {
 	err = c.Client.Clear()
 	config.Log(err)
 	return err

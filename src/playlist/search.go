@@ -12,7 +12,7 @@ var tags = map[string]bool{
 }
 
 // search for songs in the server
-func SearchServer(c *config.Connection, term ...string) (SearchResult, error) {
+func SearchServer(c config.Connection, term ...string) (SearchResult, error) {
 	err = validFilter(term...)
 	config.Log(err)
 	if err != nil {
@@ -47,7 +47,7 @@ func SearchServer(c *config.Connection, term ...string) (SearchResult, error) {
 }
 
 // searchs for the term in server and adds them to current queue
-func SearchAdd(c *config.Connection, term ...string) error {
+func SearchAdd(c config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func SearchAdd(c *config.Connection, term ...string) error {
 }
 
 // clears the queue then adds the founded songs to queue and plays it
-func SearchPlay(c *config.Connection, term ...string) error {
+func SearchPlay(c config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func SearchPlay(c *config.Connection, term ...string) error {
 	return nil
 }
 
-func searchAdd(c *config.Connection, term ...string) error {
+func searchAdd(c config.Connection, term ...string) error {
 	err = c.Client.Command("searchadd %s %s", term[0], term[1]).OK()
 	return err
 }

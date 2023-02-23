@@ -86,7 +86,7 @@ func ReadConfigs() Connection {
 }
 
 // saves the app configurations to file
-func (c *Connection) SaveConfig() {
+func (c Connection) SaveConfig() {
 	bytes, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
 		Log(err)
@@ -196,7 +196,7 @@ func LogAndExit(err error) {
 }
 
 // updates the MPD server database
-func (c *Connection) UpdateDatabase() {
+func (c Connection) UpdateDatabase() {
 	_, err := c.Client.Update("")
 	Log(err)
 }
@@ -227,31 +227,31 @@ func (c Connection) ListOutputs() (stats []mpd.Attrs) {
 }
 
 // enables the output
-func (c *Connection) EnableOutput(id int) {
+func (c Connection) EnableOutput(id int) {
 	err := c.Client.EnableOutput(id)
 	Log(err)
 }
 
 // Disables the output
-func (c *Connection) DisableOutput(id int) {
+func (c Connection) DisableOutput(id int) {
 	err := c.Client.DisableOutput(id)
 	Log(err)
 }
 
 // sets the crossFade
-func (c *Connection) ChangeCrossfade(second int) {
+func (c Connection) ChangeCrossfade(second int) {
 	err := c.Client.Command("crossfade %d", second).OK()
 	Log(err)
 }
 
 // sets the crossFade
-func (c *Connection) ChangeMixRampdb(second int) {
+func (c Connection) ChangeMixRampdb(second int) {
 	err := c.Client.Command("mixrampdb %d", second).OK()
 	Log(err)
 }
 
 // sets the Gain status
-func (c *Connection) ChangeReplayGain(id int) {
+func (c Connection) ChangeReplayGain(id int) {
 	modes := map[int]string{
 		0: "off",
 		1: "track",

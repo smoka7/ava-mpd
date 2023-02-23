@@ -67,10 +67,10 @@ func setSticker(c config.Connection, song, name, value string) {
 }
 
 // returns all the stickers of a song
-func GetStickers(c config.Connection, file string) (status []mpd.Sticker) {
-	status, err = c.Client.StickerList(file)
+func GetStickers(c config.Connection, file string) []mpd.Sticker {
+	stickers, err := c.Client.StickerList(file)
 	config.Log(err)
-	return
+	return stickers
 }
 
 // return the sticker name of a song
@@ -84,7 +84,7 @@ func getSticker(c config.Connection, file, name string) (status *mpd.Sticker) {
 
 // Increments played count of current song
 func IncrementPCount(c config.Connection, filepath string) {
-	SetLastPlayed(c, filepath)
+	setLastPlayed(c, filepath)
 	playedCount := getSticker(c, filepath, "playedcount")
 	if playedCount == nil {
 		setSticker(c, filepath, "playedcount", "1")
@@ -96,7 +96,7 @@ func IncrementPCount(c config.Connection, filepath string) {
 }
 
 // sets last played time of song
-func SetLastPlayed(c config.Connection, uri string) {
+func setLastPlayed(c config.Connection, uri string) {
 	now := time.Now().Unix()
 	setSticker(c, uri, "lastplayed", fmt.Sprintf("%d", now))
 }

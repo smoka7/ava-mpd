@@ -29,11 +29,11 @@ func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 		config.Log(err)
 		switch request.Command {
 		case "search":
-			files, err = playlist.SearchServer(&c.Client, request.Terms...)
+			files, err = playlist.SearchServer(c.Client, request.Terms...)
 		case "searchadd":
-			err = playlist.SearchAdd(&c.Client, request.Terms...)
+			err = playlist.SearchAdd(c.Client, request.Terms...)
 		case "searchplay":
-			err = playlist.SearchPlay(&c.Client, request.Terms...)
+			err = playlist.SearchPlay(c.Client, request.Terms...)
 		default:
 			err = errors.New("chose a command")
 		}
