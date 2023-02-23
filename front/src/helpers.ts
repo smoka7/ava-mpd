@@ -71,6 +71,11 @@ export function humanizeTime(time) {
 }
 /** toggles media controller visibility in mobile */
 export function toggleMediaController() {
-  document.getElementById("mediaController").classList.toggle("z-10");
-  document.getElementById("queue").classList.toggle("z-10");
+  const cl = document.getElementById("mediaController");
+  const queue = document.getElementById("queue");
+  if (cl === null || queue == null) {
+    return;
+  }
+  cl.classList.toggle("z-10");
+  queue.classList.toggle("z-10");
 }
