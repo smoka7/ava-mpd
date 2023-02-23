@@ -15,7 +15,7 @@
   <reconnectButton v-else />
 </template>
 <script setup lang="ts">
-import { loadTheme, setColorScheme } from "./colors.js";
+import { loadTheme, setColorScheme } from "./colors";
 import { handleKey } from "./keymap";
 
 const store = useStore();

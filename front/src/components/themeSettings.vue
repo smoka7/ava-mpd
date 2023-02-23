@@ -50,7 +50,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { colorSchemes, getRGB, setColorScheme } from "../colors.js";
+import {
+  colorSchemes,
+  getRGB,
+  setColorScheme,
+  type colorScheme,
+} from "../colors";
 
 const colorScheme = ref(localStorage.getItem("colorScheme") || "first");
 const isDark = ref(localStorage.getItem("theme") == "dark");
@@ -70,7 +75,7 @@ function changeColorScheme() {
   setColorScheme();
 }
 
-function renderScheme(scheme) {
+function renderScheme(scheme: colorScheme): string {
   let style = "background-image: linear-gradient(90deg,";
   let percent = 0;
 
@@ -84,8 +89,8 @@ function renderScheme(scheme) {
   return style + getRGB(scheme[4]) + " 100%);";
 }
 
-watch(colorScheme, (newCS) => {
-  changeColorScheme(newCS);
+watch(colorScheme, () => {
+  changeColorScheme();
 });
 
 watch(isDark, () => {

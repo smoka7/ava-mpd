@@ -1,4 +1,12 @@
-export const colorSchemes = {
+export type colorScheme = Array<string>;
+type ColorSchemes = {
+  first: colorScheme;
+  second: colorScheme;
+  third: colorScheme;
+  fourth: colorScheme;
+};
+
+export const colorSchemes: ColorSchemes = {
   first: [
     "51 54 82",
     "144 173 198",
@@ -29,11 +37,15 @@ export const colorSchemes = {
   ],
 };
 
-export function getRGB(color) {
+export function getRGB(color: string): string {
   return "rgb(" + color + ")";
 }
 export function writeColors(colors = colorSchemes.first) {
-  document.getElementById("style").innerText =
+  const style = document.getElementById("style");
+  if (style === null) {
+    return;
+  }
+  style.innerText =
     ":root{--primary-color:" +
     colors[0] +
     ";--secondary-color:" +
@@ -59,9 +71,20 @@ export function loadTheme() {
 
 export function setColorScheme() {
   const scheme = localStorage.getItem("colorScheme");
-  if (colorSchemes[scheme]) {
-    writeColors(colorSchemes[scheme]);
-    return;
+  switch (scheme) {
+    case "first":
+      writeColors(colorSchemes["first"]);
+      break;
+    case "second":
+      writeColors(colorSchemes["second"]);
+      break;
+    case "third":
+      writeColors(colorSchemes["third"]);
+      break;
+    case "fourth":
+      writeColors(colorSchemes["fourth"]);
+      break;
+    default:
+      writeColors(colorSchemes["first"]);
   }
-  writeColors(colorSchemes["first"]);
 }
