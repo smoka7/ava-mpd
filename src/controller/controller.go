@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
@@ -92,6 +93,11 @@ func (c Mpd) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 func newCurrentSong(song song.Song) CurrentSongResponse {
+	if song.Info["Title"] == "" {
+		split := strings.Split(song.Info["file"], "/")
+		song.Info["Title"] = split[len(split)-1]
+	}
+
 	return CurrentSongResponse{
 		Album:  song.Info["Album"],
 		Artist: song.Info["Artist"],

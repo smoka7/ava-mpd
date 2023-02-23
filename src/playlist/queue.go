@@ -2,6 +2,7 @@ package playlist
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/fhs/gompd/v2/mpd"
 	"github.com/smoka7/ava/src/config"
@@ -156,6 +157,10 @@ func (q *Queue) newAlbum(song mpd.Attrs) {
 
 // filter song info
 func (a *Album) newSong(song mpd.Attrs) {
+	if song["Title"] == "" {
+		split := strings.Split(song["file"], "/")
+		song["Title"] = split[len(split)-1]
+	}
 	a.Songs = append(a.Songs, Song{
 		Title:    song["Title"],
 		Pos:      song["Pos"],
