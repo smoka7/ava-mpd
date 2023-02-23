@@ -58,7 +58,7 @@ export function humanizeTime(time: number): string {
   }
   const second = Math.floor(Number(time) % 60);
   if (time <= 60) {
-    return second.toString();
+    return 0 + ":" + second.toString();
   }
   const minute = Math.floor(Number(time) / 60);
   if (time < 3600) {

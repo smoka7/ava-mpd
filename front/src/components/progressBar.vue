@@ -9,35 +9,35 @@
   />
 </template>
 <script setup lang="ts">
-const progress = ref(null);
+const progress = ref<HTMLInputElement | null>(null);
 
-const props = defineProps({
-  data: Object,
-});
+const props = defineProps<{
+  data: { value: number; max: number };
+}>();
 const emit = defineEmits(["seek", "sendhover"]);
 
-function seek(e) {
+function seek(e: MouseEvent) {
   const seek = findSeekValue(e);
   emit("seek", seek);
 }
 
-function sendHover(e) {
+function sendHover(e: MouseEvent) {
   const seek = findSeekValue(e);
   emit("sendhover", seek);
 }
 
-function findSeekValue(e) {
-  const percent = e.offsetX / progress.value.offsetWidth;
+function findSeekValue(e: MouseEvent): number {
+  const percent = e.offsetX / (progress.value?.offsetWidth || 0);
   return Math.floor(percent * props.data.max);
 }
 
 const progressedPercentage = computed(
-  () => (props.data.value / props.data.max) * 100 || 0,
+  () => (props.data.value / props.data.max) * 100 || 0
 );
 </script>
-<style>
+<style lang="postcss">
 progress {
-  -webkit-appearance: none;
+  appearance: none;
 }
 ::-webkit-progress-value {
   @apply rounded bg-gradient-to-r from-lighter via-secondary to-accent;

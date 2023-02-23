@@ -18,7 +18,7 @@
       id="albumArt"
       class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2"
     />
-    <volume-control :v-if="status != null" :volume="status.volume" />
+    <volume-control :v-if="status != null" :volume="Number(status.volume)" />
     <PlaybackCommands />
     <div class="flex w-full flex-col justify-start" v-if="status.elapsed">
       <p class="flex justify-between">
@@ -54,11 +54,11 @@ const status = computed(() => shallowReactive(store.status));
 const currentSong = computed(() => shallowReactive(store.currentSong));
 const hoverProgress = ref(0);
 
-function seek(time) {
-  sendCommand(endpoints.playback, "seek", { start: Number(time) });
+function seek(time: number) {
+  sendCommand(endpoints.playback, "seek", { start: time });
 }
 
-function sethoverProgress(e) {
+function sethoverProgress(e: number) {
   hoverProgress.value = e;
 }
 </script>

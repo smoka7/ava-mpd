@@ -15,12 +15,14 @@
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
 
-const props = defineProps(["volume"]);
+const props = defineProps<{
+  volume: number;
+}>();
 
-function changeVolume(volume) {
+function changeVolume(volume?: number) {
+  if (volume === undefined) volume = props.volume > 0 ? 0 : 100;
   if (volume > 100) volume = 100;
   if (volume < 0) volume = 0;
-  if (volume === undefined) volume = props.volume > 0 ? 0 : 100;
   sendCommand(endpoints.playback, "changeVolume", { start: volume });
 }
 
