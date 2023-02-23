@@ -11,6 +11,10 @@ type Mpd struct {
 	Client config.Connection
 }
 
+type status struct {
+	state, path string
+}
+
 type eventMessage struct {
 	Subsystem string
 }
@@ -20,7 +24,7 @@ func NewClient(c config.Connection) Mpd {
 }
 
 // sends the mpd events to client's Socket
-func (m *Mpd) Serve(ws *websocket.Conn) {
+func (m Mpd) Serve(ws *websocket.Conn) {
 	event := make(chan string, 4)
 	message := eventMessage{}
 	eventWatcher(m.Client, event)
@@ -49,39 +53,49 @@ func eventWatcher(c config.Connection, event chan string) {
 }
 
 // saves the each songs play count
-func (m *Mpd) RecordPlayCount() {
+func (m Mpd) RecordPlayCount() {
 	client := m.Client
 	watcher, err := mpd.NewWatcher("tcp", client.Address, client.Password)
 	config.LogAndExit(err)
 
 	defer watcher.Close()
+
 	go func() {
 		for err := range watcher.Error {
 			config.Log(err)
 		}
 	}()
-	func() {
-		client.Connect()
-		status := song.GetStatus(client)["state"]
-		lastSong, err := client.Client.CurrentSong()
-		config.Log(err)
-		if status == "play" {
-			song.IncrementPCount(client, lastSong["file"])
+
+	status := newStatus()
+	status.compareStatus(client)
+	for subsystem := range watcher.Event {
+		if subsystem != "player" {
+			continue
 		}
-		client.Close()
-		for subsystem := range watcher.Event {
-			if subsystem == "player" {
-				client.Connect()
-				currSong, err := client.Client.CurrentSong()
-				config.Log(err)
-				currStatus := song.GetStatus(client)["state"]
-				if lastSong["file"] != currSong["file"] &&
-					currStatus == "play" {
-					song.IncrementPCount(client, currSong["file"])
-				}
-				client.Close()
-				lastSong = currSong
-			}
-		}
-	}()
+		status.compareStatus(client)
+	}
+}
+
+func newStatus() status {
+	return status{
+		path:  "",
+		state: "",
+	}
+}
+
+// compareStatus compares current and last playing status of server
+// and increments playing count accordingly
+func (s *status) compareStatus(c config.Connection) {
+	c.Connect()
+	defer c.Close()
+
+	s.state = song.GetStatus(c)["state"]
+	currentSong, err := c.Client.CurrentSong()
+	config.Log(err)
+
+	if s.path != currentSong["file"] &&
+		s.state == "play" {
+		song.IncrementPCount(c, currentSong["file"])
+	}
+	s.path = currentSong["file"]
 }
