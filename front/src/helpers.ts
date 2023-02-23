@@ -3,7 +3,7 @@ import type endpoints from "./endpoints";
 /**
  * @param {string} url
  */
-export async function fetchOrFail(url) {
+export async function fetchOrFail<T>(url: string): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
 
@@ -12,8 +12,8 @@ export async function fetchOrFail(url) {
     clearTimeout(timeoutId);
     return await response.json();
   }
-
   console.log(response);
+  return await response.json();
 }
 
 /**
@@ -22,7 +22,7 @@ export async function fetchOrFail(url) {
  * @param {string} command
  * @param {object} data
  */
-export async function sendCommand(url: endpoints, command: string, data: any) {
+export async function sendCommand(url: endpoints, command: string, data?: any) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
   const request = {
@@ -45,7 +45,6 @@ export async function sendCommand(url: endpoints, command: string, data: any) {
       return;
     }
   }
-  console.log(response.error);
 }
 
 /**
@@ -53,22 +52,22 @@ export async function sendCommand(url: endpoints, command: string, data: any) {
  * @param {number} time
  * @return {string}
  */
-export function humanizeTime(time) {
-  function spanZero(time) {
-    return time < 10 ? "0" + time : time;
+export function humanizeTime(time: number): string {
+  function spanZero(time: number): string {
+    return time < 10 ? "0" + time : time.toString();
   }
-  let second = Math.floor(Number(time) % 60);
+  const second = Math.floor(Number(time) % 60);
+  if (time <= 60) {
+    return second.toString();
+  }
+  const minute = Math.floor(Number(time) / 60);
   if (time < 3600) {
-    const minute = Math.floor(Number(time) / 60);
-    second = spanZero(second);
-    return minute + ":" + second;
+    return minute + ":" + spanZero(second);
   }
   const hour = Math.floor(Number(time) / 3600);
-  let minute = Math.floor((time % 3600) / 60);
-  second = spanZero(second);
-  minute = spanZero(minute);
-  return hour + ":" + minute + ":" + second;
+  return hour + ":" + spanZero(minute) + ":" + spanZero(second);
 }
+
 /** toggles media controller visibility in mobile */
 export function toggleMediaController() {
   const cl = document.getElementById("mediaController");

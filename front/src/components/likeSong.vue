@@ -4,6 +4,8 @@
   </button>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
+
 const props = defineProps({
   pLiked: Boolean,
   file: String,
@@ -21,7 +23,7 @@ const btnClass = ref([classes.normal]);
 const store = useStore();
 
 function likeSong() {
-  store.dispatch("toggleLike", { File: props.file });
+  store.toggleLike({ File: props.file });
 
   btnClass.value = [classes.normal, classes.scale, classes.right];
 

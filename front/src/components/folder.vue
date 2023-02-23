@@ -43,7 +43,8 @@
   </details>
 </template>
 <script setup lang="ts">
-import { sendCommand } from "../helpers.js";
+import { sendCommand } from "../helpers";
+import { useStore } from "../store";
 import endpoints from "../endpoints";
 
 const props = defineProps(["data"]);
@@ -51,7 +52,7 @@ const folders = reactive({ data: [] });
 const AddOpen = ref(false);
 
 const store = useStore();
-const storedPlaylist = computed(() => store.state.storedPlaylist);
+const storedPlaylist = computed(() => store.storedPlaylist);
 
 async function listFolders() {
   // if its not a folder do nothing and if folder list exists delete it
@@ -83,6 +84,6 @@ function folderName() {
 function openAdd() {
   AddOpen.value = !AddOpen.value;
   if (storedPlaylist.length) return;
-  store.dispatch("getStoredPlaylist");
+  store.getStoredPlaylist();
 }
 </script>

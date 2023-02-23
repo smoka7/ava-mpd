@@ -5,10 +5,7 @@
     class="fixed inset-0 z-10 overflow-y-auto"
     id="context-menu"
   >
-    <div
-      v-show="open"
-      class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
-    />
+    <div v-show="open" class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm" />
     <DialogPanel class="menu">
       <button
         class="menuItem group"
@@ -37,12 +34,13 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { sendCommand } from "../helpers.js";
+import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
+import { useStore } from "../store";
 
 const store = useStore();
 const emit = defineEmits(["close", "showInfo", "clearSelection"]);
-const storedPlaylist = computed(() => store.state.storedPlaylist);
+const storedPlaylist = computed(() => store.storedPlaylist);
 
 const props = defineProps({
   open: Boolean,
@@ -108,15 +106,15 @@ function removeDuplicate() {
 
 function getStoredPlaylist() {
   if (storedPlaylist.length) return;
-  store.dispatch("getStoredPlaylist");
+  store.getStoredPlaylist();
 }
 </script>
 <style>
 .menu {
   @apply absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-56 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12;
 }
-.menuIcon{
-    @apply text-secondary group-hover:text-accent group-focus:text-accent dark:text-lightest;
+.menuIcon {
+  @apply text-secondary group-hover:text-accent group-focus:text-accent dark:text-lightest;
 }
 .menuItem {
   @apply flex w-full items-center justify-start space-x-2  overflow-x-hidden text-ellipsis rounded p-2 text-left hover:bg-gray-200 focus:outline-none focus:ring focus:ring-accent dark:hover:text-black;

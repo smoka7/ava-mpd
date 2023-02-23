@@ -2,6 +2,6 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "./index.css";
 import "./fontAwesome";
-import store from "./store";
+const pinia = createPinia();
 
-createApp(App).use(store).mount("#app");
+createApp(App).use(pinia).mount("#app");

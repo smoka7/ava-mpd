@@ -42,16 +42,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
 const store = useStore();
 const replayGainMods = ["off", "track", "album", "auto"];
 
 const replayGain = computed({
   get() {
-    return store.state.settings.ReplayGain;
+    return store.settings.ReplayGain;
   },
   set(value) {
     const index = replayGainMods.indexOf(value);
-    store.dispatch("sendCommandToSetting", {
+    store.sendCommandToSetting({
       command: "setGain",
       data: { Value: Number(index) },
     });
@@ -60,10 +61,10 @@ const replayGain = computed({
 
 const mixRampDB = computed({
   get() {
-    return store.state.status.mixrampdb || 0;
+    return store.status.mixrampdb || 0;
   },
   set(value) {
-    store.dispatch("sendCommandToSetting", {
+    store.sendCommandToSetting({
       command: "mixrampdb",
       data: {
         Value: Number(value),
@@ -74,10 +75,10 @@ const mixRampDB = computed({
 
 const crossFade = computed({
   get() {
-    return store.state.status.xfade || 0;
+    return store.status.xfade || 0;
   },
   set(value) {
-    store.dispatch("sendCommandToSetting", {
+    store.sendCommandToSetting({
       command: "crossfade",
       data: { Value: value < 1 ? 0 : value },
     });

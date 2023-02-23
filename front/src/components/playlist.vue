@@ -39,6 +39,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
+
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));
 
 const store = useStore();
@@ -49,9 +51,9 @@ const state = reactive({
   selectedIds: [],
 });
 
-const queue = computed(() => shallowReactive(store.state.queue));
+const queue = computed(() => shallowReactive(store.queue));
 
-const currentSongPos = computed(() => store.state.currentSong.Pos);
+const currentSongPos = computed(() => store.currentSong.Pos);
 
 onMounted(() => {
   scrollToCurrentSong();
@@ -68,7 +70,7 @@ function hideMenu() {
 }
 
 async function showInfo() {
-  await store.dispatch("getSongInfo", state.selected.id);
+  await store.getSongInfo(state.selected.id);
 }
 
 function selectAlbum(name) {
@@ -94,7 +96,7 @@ function selectSong(id) {
 
 async function scrollToCurrentSong() {
   if (queue.value.CurrentPage != queue.value.CurrentSongPage) {
-    await store.dispatch("getQueue", queue.value.CurrentSongPage);
+    await store.getQueue(queue.value.CurrentSongPage);
   }
   const el = document.getElementById("currentSong");
   if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });

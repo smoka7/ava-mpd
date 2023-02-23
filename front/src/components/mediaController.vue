@@ -45,13 +45,13 @@
 <script setup lang="ts">
 import endpoints from "../endpoints";
 import { sendCommand, humanizeTime } from "../helpers";
-
+import { useStore } from "../store";
 defineEmits(["openSetting"]);
 
 const store = useStore();
-const AlbumArtUrl = computed(() => store.state.albumArt);
-const status = computed(() => shallowReactive(store.state.status));
-const currentSong = computed(() => shallowReactive(store.state.currentSong));
+const AlbumArtUrl = computed(() => store.albumArt);
+const status = computed(() => shallowReactive(store.status));
+const currentSong = computed(() => shallowReactive(store.currentSong));
 const hoverProgress = ref(0);
 
 function seek(time) {

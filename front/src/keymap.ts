@@ -1,5 +1,4 @@
-import store from "./store";
-
+import { useStore } from "./store";
 export const playbackMappings = {
   p: { name: "toggle playback (play/pause)", action: "toggle" },
   Backspace: { name: "play", action: "play" },
@@ -30,8 +29,9 @@ export const tabMappings = {
 };
 
 export function handleKey(key) {
+  const store = useStore();
   if (playbackMappings[key]) {
-    store.dispatch("sendPlaybackCommand", playbackMappings[key].action);
+    store.sendPlaybackCommand(playbackMappings[key].action);
     return;
   }
 
@@ -46,17 +46,20 @@ export function handleKey(key) {
 }
 
 function like() {
-  store.dispatch("toggleLike", { File: "" });
+  const store = useStore();
+  store.toggleLike({ File: "" });
 }
 
-function changeActiveTab(tab) {
-  store.commit("setActiveTab", tab - 1);
+function changeActiveTab(tab:number) {
+  const store = useStore();
+  store.setActiveTab(tab - 1);
 }
 
 function showInfo() {
-  if (store.state.song.show) {
-    store.dispatch("clearSongInfo", Number(store.state.currentSong.Id));
+  const store = useStore();
+  if (store.song.show) {
+    store.clearSongInfo();
     return;
   }
-  store.dispatch("getSongInfo", Number(store.state.currentSong.Id));
+  store.getSongInfo(Number(store.currentSong.Id));
 }

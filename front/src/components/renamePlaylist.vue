@@ -11,16 +11,17 @@
 <script setup lang="ts">
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
+import { useStore } from "../store";
 
-const store=useStore();
-const props=defineProps(["rename"]);
-const InputIsOpen=ref(true);
+const store = useStore();
+const props = defineProps(["rename"]);
+const InputIsOpen = ref(true);
 
 function renamePlaylist(name) {
   sendCommand(endpoints.storedPlaylists, "rename", {
     Playlist: props.rename,
     NewPlaylist: name,
   });
-  store.dispatch("getStoredPlaylist");
-};
+  store.getStoredPlaylist();
+}
 </script>

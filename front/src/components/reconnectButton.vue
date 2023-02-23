@@ -14,6 +14,8 @@
   </button>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
+
 const btnClass = ref(["btn-normal"]);
 
 const store = useStore();
@@ -29,10 +31,10 @@ function reConnect() {
     btnClass.value = "btn-normal btn-animate";
   }, 300);
 
-  store.dispatch("getCurrentSong");
-  store.dispatch("getQueue");
-  store.dispatch("startCounter");
-  store.dispatch("connectToSocket");
+  store.getCurrentSong();
+  store.getQueue();
+  store.startCounter();
+  store.connectToSocket();
 }
 </script>
 <style lang="postcss" scoped>

@@ -19,8 +19,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
+
 const store = useStore();
-const outputs = computed(() => store.state.settings.Outputs);
+const outputs = computed(() => store.settings.Outputs);
 
 function toggleOutput(index) {
   const id = Number(outputs.value[index]["outputid"]);
@@ -30,7 +32,7 @@ function toggleOutput(index) {
     command = "disableOutput";
   }
 
-  store.dispatch("sendCommandToSetting", {
+  store.sendCommandToSetting({
     command: command,
     data: { Value: id },
   });

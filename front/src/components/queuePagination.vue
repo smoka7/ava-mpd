@@ -29,12 +29,13 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
 const store = useStore();
-const queue = computed(() => store.state.queue);
+const queue = computed(() => store.queue);
 defineEmits(["goToCurrent"]);
 
 function loadPage(page) {
-  store.dispatch("getQueue", page);
+  store.getQueue(page);
 }
 </script>
 <style lang="postcss">

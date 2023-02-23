@@ -105,13 +105,12 @@
 </template>
 <script setup lang="ts">
 import endpoints from "../endpoints";
-import { humanizeTime, sendCommand } from "../helpers.js";
+import { humanizeTime, sendCommand } from "../helpers";
+import { useStore } from "../store";
 
 const store = useStore();
 
-const storedPlaylist = computed(() =>
-  shallowReactive(store.state.storedPlaylist)
-);
+const storedPlaylist = computed(() => shallowReactive(store.storedPlaylist));
 
 const state = reactive({
   renameOpen: false,
@@ -171,7 +170,7 @@ function playlistCommand(method, index, position) {
       sendCommand(endpoints.storedPlaylists, method, data);
     }
   });
-  store.dispatch("getStoredPlaylist");
+  store.getStoredPlaylist();
 }
 
 function clearSelection() {

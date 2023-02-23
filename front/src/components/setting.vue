@@ -23,9 +23,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
 const store = useStore();
 
-store.dispatch("getSettings");
+store.getSettings();
 </script>
 <style lang="postcss">
 .card-class {

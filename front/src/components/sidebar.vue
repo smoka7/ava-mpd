@@ -20,7 +20,7 @@
             :icon="['fas', tab.icon]"
             :class="[
               'group-hover:text-secondary',
-                selected ? 'text-accent' : 'text-secondary dark:text-lighter',
+              selected ? 'text-accent' : 'text-secondary dark:text-lighter',
             ]"
           />
           <span class="hidden md:block">
@@ -54,6 +54,7 @@
 </template>
 <script setup lang="ts">
 import { toggleMediaController } from "../helpers";
+import { useStore } from "../store";
 
 const store = useStore();
 
@@ -64,7 +65,7 @@ const setting = defineAsyncComponent({
 
 const queueCmp = defineAsyncComponent({
   loader: () => {
-    store.dispatch("getQueue");
+    store.getQueue();
     return import("./playlist.vue");
   },
   delay: 200,
@@ -72,7 +73,7 @@ const queueCmp = defineAsyncComponent({
 
 const storedPlaylist = defineAsyncComponent({
   loader: () => {
-    store.dispatch("getStoredPlaylist");
+    store.getStoredPlaylist();
     return import("./storedPlaylist.vue");
   },
   delay: 200,
@@ -80,7 +81,7 @@ const storedPlaylist = defineAsyncComponent({
 
 const folders = defineAsyncComponent({
   loader: () => {
-    store.dispatch("getServerFolders");
+    store.getServerFolders();
     return import("./folders.vue");
   },
   delay: 200,
@@ -91,10 +92,10 @@ const search = defineAsyncComponent({
   delay: 200,
 });
 
-const selectedTab = computed(() => store.state.activeTabIndex);
+const selectedTab = computed(() => store.activeTabIndex);
 
-function changeTab(index) {
-  store.commit("setActiveTab", index);
+function changeTab(index:number) {
+  store.setActiveTab( index);
 }
 
 const tabs = {

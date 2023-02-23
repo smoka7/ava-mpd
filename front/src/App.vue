@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
-    v-if="store.state.connected"
+    v-if="store.connected"
   >
     <div
       class="fixed inset-0 z-10 h-[100dvh] flex-shrink-0 md:static md:h-full md:w-1/4"
@@ -17,12 +17,13 @@
 <script setup lang="ts">
 import { loadTheme, setColorScheme } from "./colors";
 import { handleKey } from "./keymap";
+import { useStore } from "./store";
 
 const store = useStore();
 
-store.dispatch("connectToSocket");
-store.dispatch("getCurrentSong");
-store.dispatch("startCounter");
+store.connectToSocket();
+store.getCurrentSong();
+store.startCounter();
 loadTheme();
 setColorScheme();
 
@@ -32,7 +33,7 @@ onUnmounted(() => {
   document.removeEventListener("keydown", listenKeyEvents);
 });
 
-function listenKeyEvents(event) {
+function listenKeyEvents(event: KeyboardEvent) {
   const pressedModifire = event.ctrlKey || event.altKey || event.shiftKey;
   const pressdInInput = event.target.tagName.toUpperCase() == "INPUT";
   if (pressdInInput || pressedModifire) {
@@ -43,13 +44,13 @@ function listenKeyEvents(event) {
   }
 }
 
-const songInfo = defineAsyncComponent(() =>
-  import("./components/songInfo.vue")
+const songInfo = defineAsyncComponent(
+  () => import("./components/songInfo.vue")
 );
-const showSongInfo = computed(() => store.state.song.show);
+const showSongInfo = computed(() => store.song.show);
 
 async function closeInfo() {
-  await store.dispatch("clearSongInfo");
+  store.clearSongInfo();
 }
 </script>
 <style lang="postcss">

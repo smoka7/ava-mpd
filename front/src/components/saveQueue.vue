@@ -19,12 +19,13 @@
 <script setup lang="ts">
 import { sendCommand } from "../helpers";
 import endpoints from "../endpoints";
+import { useStore } from "../store";
 
 const store = useStore();
 const InputIsOpen = ref(false);
 
 function saveQueue(name) {
   sendCommand(endpoints.queue, "save", { Playlist: name });
-  store.dispatch("getStoredPlaylist");
+  store.getStoredPlaylist();
 }
 </script>

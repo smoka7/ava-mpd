@@ -8,7 +8,7 @@
         :aria-label="command.command"
         @click="Command(command.command)"
         :class="{
-          'playback-active': command.status == '1',
+          'playback-active': command.status,
           'playback-btn tooltip': true,
         }"
       >
@@ -65,33 +65,35 @@
 </template>
 <script setup lang="ts">
 import { toggleMediaController } from "../helpers";
+import { useStore } from "../store";
+
 const store = useStore();
-const currentSong = computed(() => shallowReactive(store.state.currentSong));
+const currentSong = computed(() => shallowReactive(store.currentSong));
 
-const liked = computed(() => store.state.currentSong.Liked);
+const liked = computed(() => store.currentSong.Liked);
 
-const status = computed(() => shallowReactive(store.state.status));
+const status = computed(() => shallowReactive(store.status));
 
 const playbackCommands = computed(() => [
   {
     command: "consume",
     icon: "minus-square",
-    status: store.state.status.consume,
+    status: store.status.consume,
   },
   {
     command: "single",
     icon: "dice-one",
-    status: store.state.status.single,
+    status: store.status.single,
   },
   {
     command: "repeat",
     icon: "retweet",
-    status: store.state.status.repeat,
+    status: store.status.repeat,
   },
   {
     command: "random",
     icon: "random",
-    status: store.state.status.random,
+    status: store.status.random,
   },
   {
     command: "clear",
@@ -101,7 +103,7 @@ const playbackCommands = computed(() => [
 ]);
 
 function Command(command) {
-  store.dispatch("sendPlaybackCommand", command);
+  store.sendPlaybackCommand(command);
 }
 </script>
 <style lang="postcss">

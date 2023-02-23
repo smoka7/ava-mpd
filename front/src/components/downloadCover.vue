@@ -29,13 +29,14 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useStore } from "../store";
 const store = useStore();
 const download = computed({
   get() {
-    return store.state.settings.DownloadCoverArt;
+    return store.settings.DownloadCoverArt;
   },
   set() {
-    store.dispatch("sendCommandToSetting", {
+    store.sendCommandToSetting({
       command: "download",
     });
   },

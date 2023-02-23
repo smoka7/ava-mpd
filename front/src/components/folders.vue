@@ -4,9 +4,8 @@
   </div>
 </template>
 <script setup lang="ts">
-const store = useStore();
-const serverRoot = computed(() =>
-  shallowReactive(store.state.serverFolders),
-);
+import { useStore } from "../store";
 
+const store = useStore();
+const serverRoot = computed(() => shallowReactive(store.serverFolders));
 </script>

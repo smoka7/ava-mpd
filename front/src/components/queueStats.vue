@@ -13,7 +13,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { humanizeTime } from "../helpers.js";
+import { humanizeTime } from "../helpers";
 defineProps(["length", "duration", "selectedLength"]);
 const emits = defineEmits(["scrollToCurrentSong"]);
 </script>

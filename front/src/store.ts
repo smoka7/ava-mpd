@@ -1,124 +1,194 @@
-import { createStore } from "vuex";
 import { fetchOrFail, sendCommand } from "./helpers";
 import endpoints from "./endpoints";
+type StatusResponse = {
+  Status: Status;
+  CurrentSong: CurrentSong;
+};
+type SongCommandData = {
+  ID: number;
+  File: string;
+};
+type CurrentSong = {
+  Album: string;
+  Artist: string;
+  Date: string;
+  Genre: string;
+  Id: string;
+  Pos: string;
+  Title: string;
+  File: string;
+  Liked: boolean;
+};
+type Status = {
+  state: "pause" | "play" | "stop";
+  duration: number;
+  mixrampdb?: number;
+  xfade?: number;
+  updatingDB?: boolean;
+  volume: number;
+  elapsed: number;
+  consume: boolean;
+  random: boolean;
+  repeat: boolean;
+  single: boolean;
+};
+type Queue = {
+  Length: number;
+  CurrentSongPage: number;
+  CurrentPage: number;
+  LastPage: number;
+  Duration: number;
+  Albums: Array<Album>;
+};
+type Album = {
+  Songs: Array<Song>;
+  Album: string;
+  Artist: string;
+  Date: string;
+};
+type Song = {
+  Album: string;
+  Artist: string;
+  Title: string;
+  Pos: string;
+  Id: string;
+  Track: string;
+  Duration: string;
+};
+type StoredPlaylist = {
+  Name: string;
+  SongsCount: number;
+  Duration: number;
+};
+type DatabaseStats = {
+  albums: string;
+  artists: string;
+  db_playtime: string;
+  db_update: string;
+  playtime: string;
+  songs: string;
+  uptime: string;
+};
 
-const store = createStore({
-  state: {
-    connected: true,
-    currentSong: {},
-    activeTabIndex: 0,
-    durationInterval: Number,
-    status: {},
-    albumArt: "default",
-    storedPlaylist: [],
-    queue: {
-      Albums: [],
-      Length: 0,
-      Duration: 0,
-    },
-    song: {
-      info: {},
-      stickers: {},
-      albumArt: "",
-      liked: false,
-      show: false,
-    },
-    serverFolders: [],
-    settings: {
-      Outputs: {},
-      DatabaseStats: {
-        albums: "",
-        artists: "",
-        db_playtime: "",
-        db_update: "",
-        playtime: "",
-        songs: "",
-        uptime: "",
+type SettingsResponse = {
+  Outputs: Array<Array<string>>;
+  DatabaseStats: DatabaseStats;
+  ReplayGain: string;
+  DownloadCoverArt: boolean;
+};
+export const useStore = defineStore("main", {
+  state: () => {
+    return {
+      connected: true,
+      currentSong: {} as CurrentSong,
+      activeTabIndex: 0,
+      durationInterval: 0 as number,
+      status: {} as Status,
+      albumArt: "default",
+      storedPlaylist: [] as Array<StoredPlaylist>,
+      queue: {} as Queue,
+      song: {
+        info: {},
+        stickers: {},
+        albumArt: "",
+        liked: false,
+        show: false,
       },
-    },
+      serverFolders: [],
+      settings: {
+        Outputs: {},
+        DatabaseStats: {
+          albums: "",
+          artists: "",
+          db_playtime: "",
+          db_update: "",
+          playtime: "",
+          songs: "",
+          uptime: "",
+        },
+      },
+    };
   },
-  mutations: {
-    setCurrentSong(state, song) {
-      state.currentSong = song;
+  actions: {
+    setCurrentSong(song: CurrentSong) {
+      this.currentSong = song;
     },
-    setActiveTab(state, tab) {
-      state.activeTabIndex = tab;
+    setActiveTab(tab: number) {
+      this.activeTabIndex = tab;
     },
-    setStatus(state, status) {
-      state.status = status;
-      state.connected = true;
+    setStatus(status: Status) {
+      this.status = status;
+      this.connected = true;
     },
-    setQueue(state, playlist) {
-      state.queue = playlist;
+    setQueue(playlist: Queue) {
+      this.queue = playlist;
     },
-    setStoredPlaylist(state, playlist) {
-      state.storedPlaylist = playlist;
+    setStoredPlaylist(playlist: Array<StoredPlaylist>) {
+      this.storedPlaylist = playlist;
     },
-    setAlbumArt(state, albumArt) {
-      state.albumArt = albumArt;
+    setAlbumArt(albumArt) {
+      this.albumArt = albumArt;
     },
-    setConnected(state, connected) {
-      state.connected = connected;
+    setConnected(connected: boolean) {
+      this.connected = connected;
       if (!connected) {
-        state.queue = {
-          Albums: [],
-          Length: 0,
-          Duration: 0,
-        };
+        this.queue = {} as Queue;
       }
     },
-    setServerFolders(state, response) {
-      state.serverFolders = [...response.Folders, ...response.Files];
+    setServerFolders(response) {
+      this.serverFolders = [...response.Folders, ...response.Files];
     },
-    setSettings(state, settings) {
-      state.settings = settings;
+    setSettings(settings: SettingsResponse) {
+      this.settings = settings;
     },
-    setCounter(state) {
-      clearInterval(state.durationInterval);
-      if (state.status.state == "play") {
-        state.durationInterval = setInterval(() => {
-          state.status.elapsed = Number(state.status.elapsed) + 1;
+    setCounter() {
+      clearInterval(this.durationInterval);
+      if (this.status.state == "play") {
+        this.durationInterval = setInterval(() => {
+          this.status.elapsed = Number(this.status.elapsed) + 1;
         }, 1000);
       }
     },
-  },
-  actions: {
-    async getCurrentSong(store) {
-      const response = await fetchOrFail(endpoints.status);
+    async getCurrentSong() {
+      const response = await fetchOrFail<StatusResponse>(endpoints.status);
       if (response.Status != null || response.CurrentSong != null) {
-        store.commit("setCurrentSong", response.CurrentSong);
-        store.commit("setStatus", response.Status);
-        store.commit("setCounter");
-        store.dispatch("getCurrentSongAlbumart");
+        this.setCurrentSong(response.CurrentSong);
+        this.setStatus(response.Status);
+        this.setCounter();
+        this.getCurrentSongAlbumart();
         return;
       }
-      store.dispatch("getCurrentSong");
+      this.getCurrentSong();
     },
     async getCurrentSongAlbumart() {
       const albumArt = await sendCommand(endpoints.song, "albumArt", {
-        ID: Number(store.state.currentSong.Id),
+        ID: Number(this.currentSong.Id),
       });
-      store.commit("setAlbumArt", albumArt.Url);
+      this.setAlbumArt(albumArt.Url);
     },
     async getServerFolders() {
       const response = await sendCommand(endpoints.folders, "list", {
         File: "",
       });
-      store.commit("setServerFolders", response);
+      this.setServerFolders(response);
     },
     async getStoredPlaylist() {
-      const response = await fetchOrFail(endpoints.storedPlaylists);
-      store.commit("setStoredPlaylist", response);
+      const response = await fetchOrFail<Array<StoredPlaylist>>(
+        endpoints.storedPlaylists
+      );
+      this.setStoredPlaylist(response);
     },
-    async getQueue(_, page = -1) {
-      const response = await fetchOrFail(endpoints.queue + "?page=" + page);
-      if (response) store.commit("setQueue", response);
+    async getQueue(page = -1) {
+      const response = await fetchOrFail<Queue>(
+        endpoints.queue + "?page=" + page
+      );
+      if (response) this.setQueue(response);
     },
-    async sendPlaybackCommand(_, command) {
+    async sendPlaybackCommand(command: string) {
       sendCommand(endpoints.playback, command);
     },
     startCounter() {
-      store.commit("setCounter");
+      this.setCounter();
     },
     connectToSocket() {
       let hostname = new URL(window.location.href).host;
@@ -139,25 +209,25 @@ const store = createStore({
           event == "mixer" ||
           event == "update"
         ) {
-          store.dispatch("getCurrentSong");
-          store.commit("setCounter");
+          this.getCurrentSong();
+          this.setCounter();
         }
 
         if (event == "playlist") {
-          store.dispatch("getQueue");
+          this.getQueue();
         }
       };
 
       socket.onerror = (err) => {
-        store.commit("setConnected", false);
+        this.setConnected(false);
         console.log(err);
       };
 
       socket.onclose = () => {
-        store.commit("setConnected", false);
+        this.setConnected(false);
       };
     },
-    async getSongInfo(_, songId) {
+    async getSongInfo(songId: number) {
       const song = await sendCommand(endpoints.song, "info", {
         ID: songId,
       });
@@ -167,30 +237,32 @@ const store = createStore({
 
       if (song.Info == null && song.Stickers == null) return;
 
-      store.state.song.info = song.Info;
-      store.state.song.stickers = song.Stickers;
-      store.state.song.albumArt = albumArt.Url;
-      store.state.song.show = true;
+      this.song.info = song.Info;
+      this.song.stickers = song.Stickers;
+      this.song.albumArt = albumArt.Url;
+      this.song.show = true;
 
       const index = song.Stickers.findIndex((stick) => {
         return stick.Name == "liked" && stick.Value == "true";
       });
-      store.state.song.liked = index > -1;
+      this.song.liked = index > -1;
     },
     clearSongInfo() {
-      store.state.song.show = false;
+      this.song.show = false;
     },
     async getSettings() {
-      const response = await fetchOrFail(endpoints.setting);
-      store.commit("setSettings", response);
+      const response = await fetchOrFail<SettingsResponse>(endpoints.setting);
+      this.setSettings(response);
     },
-    async sendCommandToSetting(_, payload) {
+    async sendCommandToSetting(payload: {
+      command: string;
+      data?: { Value: number };
+    }) {
       sendCommand(endpoints.setting, payload.command, payload.data);
-      store.dispatch("getSettings");
+      this.getSettings();
     },
-    async toggleLike(_, data) {
+    async toggleLike(data: SongCommandData) {
       sendCommand(endpoints.song, "like", data);
     },
   },
 });
-export default store;
