@@ -9,15 +9,15 @@ jobs:
     - uses: actions/checkout@v3
     - uses: pnpm/action-setup@v2
       with:
-        version: 6.32.9
+        version: 'latest'
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: 'latest'
     - run: cd front && pnpm install --frozen-lockfile
     - run: cd front && pnpm build
     - uses: wangyoucao577/go-release-action@v1.28
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: linux
-        goversion: 1.18
+        goversion: 1.20
         goarch: amd64
