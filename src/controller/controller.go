@@ -28,13 +28,13 @@ type CurrentSongResponse struct {
 }
 
 type Status struct {
-	Consume    string `json:"consume,omitempty"`
+	Consume    bool   `json:"consume,omitempty"`
 	Duration   string `json:"duration,omitempty"`
 	Elapsed    string `json:"elapsed,omitempty"`
 	Mixrampdb  string `json:"mixrampdb,omitempty"`
-	Random     string `json:"random,omitempty"`
-	Repeat     string `json:"repeat,omitempty"`
-	Single     string `json:"single,omitempty"`
+	Random     bool   `json:"random,omitempty"`
+	Repeat     bool   `json:"repeat,omitempty"`
+	Single     bool   `json:"single,omitempty"`
 	State      string `json:"state,omitempty"`
 	Volume     string `json:"volume,omitempty"`
 	Xfade      string `json:"xfade,omitempty"`
@@ -113,13 +113,13 @@ func newCurrentSong(song song.Song) CurrentSongResponse {
 
 func newStatus(status mpd.Attrs) Status {
 	return Status{
-		Consume:    status["consume"],
+		Consume:    status["consume"] == "1",
 		Duration:   status["duration"],
 		Elapsed:    status["elapsed"],
 		Mixrampdb:  status["mixrampdb"],
-		Random:     status["random"],
-		Repeat:     status["repeat"],
-		Single:     status["single"],
+		Random:     status["random"] == "1",
+		Repeat:     status["repeat"] == "1",
+		Single:     status["single"] == "1",
 		State:      status["state"],
 		Volume:     status["volume"],
 		Xfade:      status["xfade"],

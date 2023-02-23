@@ -5,8 +5,8 @@ type StatusResponse = {
   CurrentSong: CurrentSong;
 };
 type SongCommandData = {
-  ID: number;
-  File: string;
+  ID?: number;
+  File?: string;
 };
 type CurrentSong = {
   Album: string;

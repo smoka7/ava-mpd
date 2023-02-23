@@ -74,7 +74,13 @@ const liked = computed(() => store.currentSong.Liked);
 
 const status = computed(() => shallowReactive(store.status));
 
-const playbackCommands = computed(() => [
+type CommandButton = {
+  command: string;
+  icon: string;
+  status: boolean;
+};
+
+const playbackCommands = computed<Array<CommandButton>>(() => [
   {
     command: "consume",
     icon: "minus-square",
@@ -98,11 +104,11 @@ const playbackCommands = computed(() => [
   {
     command: "clear",
     icon: "eraser",
-    status: 0,
+    status: false,
   },
 ]);
 
-function Command(command) {
+function Command(command: string) {
   store.sendPlaybackCommand(command);
 }
 </script>

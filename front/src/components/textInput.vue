@@ -37,7 +37,12 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-defineEmits(["close", "finish"]);
-defineProps(["isOpen"]);
+defineEmits<{
+  (e: "close"): void;
+  (e: "finish", value: string): void;
+}>();
+defineProps<{
+  isOpen: boolean;
+}>();
 const inputText = ref("");
 </script>

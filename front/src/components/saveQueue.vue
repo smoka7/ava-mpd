@@ -24,7 +24,7 @@ import { useStore } from "../store";
 const store = useStore();
 const InputIsOpen = ref(false);
 
-function saveQueue(name) {
+function saveQueue(name: string) {
   sendCommand(endpoints.queue, "save", { Playlist: name });
   store.getStoredPlaylist();
 }

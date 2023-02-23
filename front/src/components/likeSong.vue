@@ -6,10 +6,10 @@
 <script setup lang="ts">
 import { useStore } from "../store";
 
-const props = defineProps({
-  pLiked: Boolean,
-  file: String,
-});
+const props = defineProps<{
+  pLiked?: boolean;
+  file?: string;
+}>();
 
 const classes = {
   normal:
@@ -32,7 +32,7 @@ function likeSong() {
   }, 150);
 
   setTimeout(() => {
-    btnClass.value = classes.normal;
+    btnClass.value = [classes.normal];
   }, 300);
 }
 </script>
