@@ -14,10 +14,12 @@ import endpoints from "../endpoints";
 import { useStore } from "../store";
 
 const store = useStore();
-const props = defineProps(["rename"]);
+const props = defineProps<{
+  rename: string;
+}>();
 const InputIsOpen = ref(true);
 
-function renamePlaylist(name) {
+function renamePlaylist(name: string) {
   sendCommand(endpoints.storedPlaylists, "rename", {
     Playlist: props.rename,
     NewPlaylist: name,

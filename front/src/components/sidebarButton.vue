@@ -8,8 +8,8 @@
   </button>
 </template>
 <script setup lang="ts">
-defineProps({
-  label: String,
-  icon: String,
-});
+defineProps<{
+  label: string;
+  icon: string;
+}>();
 </script>

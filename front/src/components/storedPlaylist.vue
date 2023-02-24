@@ -75,7 +75,7 @@
             <sidebar-button
               label="select playlist"
               icon="check-circle"
-              :class="playlist.selected ? 'visible text-green-500' : ''"
+              :class="playlist.Selected ? 'visible text-green-500' : ''"
               @click="toggleSelected(index)"
             />
           </span>
@@ -84,7 +84,7 @@
       <div class="mx-4 my-1 flex flex-col rounded bg-gray-600/20">
         <p
           class="flex items-center justify-between p-2 dark:text-white md:flex-row"
-          v-for="(song, index) in playlist.songs"
+          v-for="(song, index) in playlist.Songs"
           :key="index"
         >
           <span>{{ song.Title }}</span>
@@ -129,7 +129,7 @@ const AddCmp = reactive({
   index: -1,
 });
 
-function addPlaylist(position) {
+function addPlaylist(position: string) {
   const data = {
     Pos: position,
   };
@@ -142,27 +142,27 @@ function addPlaylist(position) {
   sendCommand(endpoints.storedPlaylists, command, data);
 }
 
-async function getSongs(index) {
+async function getSongs(index: number) {
   if (
-    storedPlaylist.value[index].songs &&
-    storedPlaylist.value[index].songs.length
+    storedPlaylist.value[index].Songs &&
+    storedPlaylist.value[index].Songs.length
   ) {
-    storedPlaylist.value[index].songs = [];
+    storedPlaylist.value[index].Songs = [];
     return;
   }
-  storedPlaylist.value[index].songs = await sendCommand(
+  storedPlaylist.value[index].Songs = await sendCommand(
     endpoints.storedPlaylists,
     "list",
     { Playlist: storedPlaylist.value[index].Name }
   );
 }
 
-function playlistCommand(method, index, position) {
+function playlistCommand(method: string, index?: number, position?: string) {
   if (index != null) {
-    storedPlaylist.value[index].selected = true;
+    storedPlaylist.value[index].Selected = true;
   }
   storedPlaylist.value.forEach((p) => {
-    if (p.selected) {
+    if (p.Selected) {
       const data = {
         Playlist: p.Name,
         Pos: position,
@@ -175,16 +175,16 @@ function playlistCommand(method, index, position) {
 
 function clearSelection() {
   storedPlaylist.value.forEach((p) => {
-    p.selected = false;
+    p.Selected = false;
   });
   state.selectedCount = 0;
 }
 
-function toggleSelected(index) {
-  storedPlaylist.value[index].selected
+function toggleSelected(index: number) {
+  storedPlaylist.value[index].Selected
     ? state.selectedCount--
     : state.selectedCount++;
   state.renamePlaylist = storedPlaylist.value[index].Name;
-  storedPlaylist.value[index].selected = !storedPlaylist.value[index].selected;
+  storedPlaylist.value[index].Selected = !storedPlaylist.value[index].Selected;
 }
 </script>

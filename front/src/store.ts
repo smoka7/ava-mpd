@@ -70,9 +70,12 @@ type Stickers = {
 
 export type StoredPlaylist = {
   Name: string;
+  Selected?: boolean;
   SongsCount: number;
   Duration: number;
+  Songs: Array<{ Album: string; Title: string; Artist: string }>;
 };
+
 type DatabaseStats = {
   albums: number;
   artists: number;

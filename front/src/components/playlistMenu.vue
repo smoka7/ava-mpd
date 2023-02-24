@@ -7,10 +7,7 @@
     @close="open = false"
     class="fixed inset-0 z-10 overflow-y-auto"
   >
-    <div
-      v-show="open"
-      class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm"
-    />
+    <div v-show="open" class="fixed inset-0 z-0 bg-black/30 backdrop-blur-sm" />
 
     <transition name="fade">
       <DialogPanel
