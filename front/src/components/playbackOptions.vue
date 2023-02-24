@@ -50,7 +50,7 @@ const replayGain = computed({
   get() {
     return store.settings.ReplayGain;
   },
-  set(value) {
+  set(value: string) {
     const index = replayGainMods.indexOf(value);
     store.sendCommandToSetting({
       command: "setGain",
@@ -77,7 +77,7 @@ const crossFade = computed({
   get() {
     return store.status.xfade || 0;
   },
-  set(value) {
+  set(value: number) {
     store.sendCommandToSetting({
       command: "crossfade",
       data: { Value: value < 1 ? 0 : value },

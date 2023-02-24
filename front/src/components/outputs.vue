@@ -9,12 +9,12 @@
     <input
       type="checkbox"
       class="accent-secondary"
-      :checked="output['outputenabled'] == 1"
-      :name="output['outputname']"
-      :aria-label="output['outputname']"
+      :checked="output.outputenabled == 1"
+      :name="output.outputname"
+      :aria-label="output.outputname"
     />
-    <label :for="output['outputname']">
-      {{ output["outputname"] }}
+    <label :for="output.outputname">
+      {{ output.outputname }}
     </label>
   </div>
 </template>
@@ -24,11 +24,11 @@ import { useStore } from "../store";
 const store = useStore();
 const outputs = computed(() => store.settings.Outputs);
 
-function toggleOutput(index) {
-  const id = Number(outputs.value[index]["outputid"]);
+function toggleOutput(index: number) {
+  const id = Number(outputs.value[index].outputid);
 
   let command = "enableOutput";
-  if (outputs.value[index]["outputenabled"] == 1) {
+  if (outputs.value[index].outputenabled == 1) {
     command = "disableOutput";
   }
 

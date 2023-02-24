@@ -24,7 +24,7 @@ type Status = {
   duration: number;
   mixrampdb?: number;
   xfade?: number;
-  updatingDB?: boolean;
+  updating_db?: boolean;
   volume: number;
   elapsed: number;
   consume: boolean;
@@ -74,17 +74,23 @@ export type StoredPlaylist = {
   Duration: number;
 };
 type DatabaseStats = {
-  albums: string;
-  artists: string;
-  db_playtime: string;
-  db_update: string;
-  playtime: string;
-  songs: string;
-  uptime: string;
+  albums: number;
+  artists: number;
+  db_playtime: number;
+  db_update: number;
+  playtime: number;
+  songs: number;
+  uptime: number;
+};
+
+type Output = {
+  outputname: string;
+  outputenabled: number;
+  outputid: number;
 };
 
 type SettingsResponse = {
-  Outputs: Array<Array<string>>;
+  Outputs: Array<Output>;
   DatabaseStats: DatabaseStats;
   ReplayGain: string;
   DownloadCoverArt: boolean;
@@ -102,18 +108,7 @@ export const useStore = defineStore("main", {
       queue: {} as Queue,
       song: {} as SongInfoResponse,
       serverFolders: [],
-      settings: {
-        Outputs: {},
-        DatabaseStats: {
-          albums: "",
-          artists: "",
-          db_playtime: "",
-          db_update: "",
-          playtime: "",
-          songs: "",
-          uptime: "",
-        },
-      },
+      settings: {} as SettingsResponse,
     };
   },
   actions: {

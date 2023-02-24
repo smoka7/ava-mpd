@@ -59,7 +59,10 @@ import { useStore } from "../store";
 const store = useStore();
 
 const setting = defineAsyncComponent({
-  loader: () => import("./setting.vue"),
+  loader: () => {
+    store.getSettings();
+    return import("./setting.vue");
+  },
   delay: 200,
 });
 
@@ -94,8 +97,8 @@ const search = defineAsyncComponent({
 
 const selectedTab = computed(() => store.activeTabIndex);
 
-function changeTab(index:number) {
-  store.setActiveTab( index);
+function changeTab(index: number) {
+  store.setActiveTab(index);
 }
 
 const tabs = {
