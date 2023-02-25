@@ -93,47 +93,53 @@
           <FontAwesomeIcon icon="ellipsis-h" />
         </button>
         <span>
-          {{ humanizeTime(song.Duration) }}
+          {{ humanizeTime(Number(song.Duration)) }}
         </span>
       </div>
     </div>
   </details>
 </template>
 <script setup lang="ts">
+import type { Album } from "../store";
 import endpoints from "../endpoints";
 import { sendCommand, humanizeTime } from "../helpers";
 
 defineEmits(["showMenu", "select", "selectAlbum"]);
+const props = defineProps<{
+  album: Album;
+  currentSongPos: number;
+  currentAlbum: boolean;
+  selectedIds: Array<number>;
+}>();
 
-const props = defineProps([
-  "album",
-  "currentSongPos",
-  "currentAlbum",
-  "selectedIds",
-]);
-
-function play(id) {
+function play(id: number) {
   const data = {
     ID: Number(id),
   };
   sendCommand(endpoints.queue, "play", data);
 }
 
-function isCurrSong(pos) {
+function isCurrSong(pos: number): boolean {
   return pos === props.currentSongPos;
 }
 
-function isSelected(id) {
+function isSelected(id: number): boolean {
   return props.selectedIds.indexOf(id) > -1;
 }
 
-function startMoveSong(event, id) {
-  event.dataTransfer.setData("id", id);
-  event.dataTransfer.dropEfect = "move";
+function startMoveSong(event: DragEvent, id: number) {
+  if (event.dataTransfer == null) {
+    return;
+  }
+  event.dataTransfer.setData("id", id.toString());
+  event.dataTransfer.dropEffect = "move";
   event.dataTransfer.effectAllowed = "move";
 }
 
-function moveSong(event, position) {
+function moveSong(event: DragEvent, position: number) {
+  if (event.dataTransfer == null) {
+    return;
+  }
   const start = event.dataTransfer.getData("id");
   const data = {
     Start: Number(start),

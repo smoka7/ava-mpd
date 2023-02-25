@@ -39,7 +39,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "../store";
+import { useStore, type Album } from "../store";
 
 const queueMenu = defineAsyncComponent(() => import("./queueMenu.vue"));
 
@@ -48,7 +48,7 @@ const store = useStore();
 const state = reactive({
   menu: false,
   selected: { id: -1, pos: -1 },
-  selectedIds: [],
+  selectedIds: [] as Array<number>,
 });
 
 const queue = computed(() => shallowReactive(store.queue));
@@ -59,7 +59,7 @@ onMounted(() => {
   scrollToCurrentSong();
 });
 
-function showMenu(pos, id) {
+function showMenu(pos: string, id: string) {
   state.selected.pos = Number(pos);
   state.selected.id = Number(id);
   state.menu = true;
@@ -73,19 +73,19 @@ async function showInfo() {
   await store.getSongInfo(state.selected.id);
 }
 
-function selectAlbum(name) {
+function selectAlbum(name: string) {
   const album = queue.value.Albums.find((album) => {
     return album.Album == name;
   });
 
-  if (album !== null) {
+  if (album !== undefined) {
     album.Songs.forEach((song) => {
       selectSong(song.Id);
     });
   }
 }
 
-function selectSong(id) {
+function selectSong(id: number) {
   const index = state.selectedIds.indexOf(id);
   if (index > -1) {
     state.selectedIds.splice(index, 1);
@@ -102,7 +102,7 @@ async function scrollToCurrentSong() {
   if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-function currentAlbum(album) {
+function currentAlbum(album: Album): boolean {
   return (
     Number(currentSongPos.value) >= Number(album.Songs[0].Pos) &&
     Number(currentSongPos.value) <=

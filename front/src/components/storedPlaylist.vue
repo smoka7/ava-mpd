@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import endpoints from "../endpoints";
 import { humanizeTime, sendCommand } from "../helpers";
-import { useStore } from "../store";
+import { useStore, type Songs } from "../store";
 
 const store = useStore();
 
@@ -150,11 +150,10 @@ async function getSongs(index: number) {
     storedPlaylist.value[index].Songs = [];
     return;
   }
-  storedPlaylist.value[index].Songs = await sendCommand(
-    endpoints.storedPlaylists,
-    "list",
-    { Playlist: storedPlaylist.value[index].Name }
-  );
+  const response = await sendCommand<Songs>(endpoints.storedPlaylists, "list", {
+    Playlist: storedPlaylist.value[index].Name,
+  });
+  if (response) storedPlaylist.value[index].Songs = response;
 }
 
 function playlistCommand(method: string, index?: number, position?: string) {

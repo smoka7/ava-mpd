@@ -42,14 +42,14 @@ const store = useStore();
 const emit = defineEmits(["close", "showInfo", "clearSelection"]);
 const storedPlaylist = computed(() => store.storedPlaylist);
 
-const props = defineProps({
-  open: Boolean,
+const props = defineProps<{
+  open: boolean;
   song: {
-    id: Number,
-    pos: Number,
-  },
-  selectedIds: Array,
-});
+    id: number;
+    pos: number;
+  };
+  selectedIds: Array<number>;
+}>();
 
 const actions = [
   { title: "Delete", icon: "trash", func: deleteSong },
@@ -69,7 +69,7 @@ function deleteSong() {
   emit("close");
 }
 
-function addSongTo(playlist) {
+function addSongTo(playlist: string) {
   props.selectedIds.forEach((id) => {
     sendCommand(endpoints.queue, "addsong", {
       ID: Number(id),
@@ -105,11 +105,11 @@ function removeDuplicate() {
 }
 
 function getStoredPlaylist() {
-  if (storedPlaylist.length) return;
+  if (storedPlaylist.value.length) return;
   store.getStoredPlaylist();
 }
 </script>
-<style>
+<style lang="postcss">
 .menu {
   @apply absolute top-1/4 left-1/4 right-1/4 mx-auto flex w-56 flex-col rounded bg-white p-1 dark:bg-gray-800 dark:text-white md:left-auto md:top-1/3 md:right-12;
 }

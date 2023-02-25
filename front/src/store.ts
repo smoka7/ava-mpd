@@ -40,8 +40,8 @@ type Queue = {
   Duration: number;
   Albums: Array<Album>;
 };
-type Album = {
-  Songs: Array<Song>;
+export type Album = {
+  Songs: Songs;
   Album: string;
   Artist: string;
   Date: string;
@@ -50,19 +50,47 @@ type Song = {
   Album: string;
   Artist: string;
   Title: string;
-  Pos: string;
-  Id: string;
-  Track: string;
-  Duration: string;
+  Pos: number;
+  Id: number;
+  Track: number;
+  Duration: number;
 };
+export type Songs = Array<Song>;
 export type File = { File: string };
 export type Directory = { Directory: string };
 export type FoldersResponse = {
   Directories: Array<Directory>;
   Files: Array<File>;
 };
+type SongInfo = {
+  Album: string;
+  AlbumArtist: string;
+  AlbumArtistSort: string;
+  Artist: string;
+  ArtistSort: string;
+  Composer: string;
+  Date: string;
+  Disc: string;
+  Format: string;
+  Genre: string;
+  Label: string;
+  "Last-Modified": string;
+  MUSICBRAINZ_ALBUMARTISTID: string;
+  MUSICBRAINZ_ALBUMID: string;
+  MUSICBRAINZ_ARTISTID: string;
+  MUSICBRAINZ_RELEASETRACKID: string;
+  MUSICBRAINZ_TRACKID: string;
+  MUSICBRAINZ_WORKID: string;
+  OriginalDate: string;
+  Time: string;
+  Title: string;
+  Track: string;
+  duration: string;
+  file: string;
+};
+type AlbumArtResponse = { Url: string };
 type SongInfoResponse = {
-  Info: Array<string>;
+  Info: SongInfo;
   Stickers: Array<Stickers>;
   liked: boolean;
   albumArt: string;
@@ -136,7 +164,7 @@ export const useStore = defineStore("main", {
     setStoredPlaylist(playlist: Array<StoredPlaylist>) {
       this.storedPlaylist = playlist;
     },
-    setAlbumArt(albumArt) {
+    setAlbumArt(albumArt: string) {
       this.albumArt = albumArt;
     },
     setConnected(connected: boolean) {
@@ -171,16 +199,24 @@ export const useStore = defineStore("main", {
       this.getCurrentSong();
     },
     async getCurrentSongAlbumart() {
-      const albumArt = await sendCommand(endpoints.song, "albumArt", {
-        ID: Number(this.currentSong.Id),
-      });
-      this.setAlbumArt(albumArt.Url);
+      const albumArt = await sendCommand<AlbumArtResponse>(
+        endpoints.song,
+        "albumArt",
+        {
+          ID: Number(this.currentSong.Id),
+        }
+      );
+      if (albumArt) this.setAlbumArt(albumArt.Url);
     },
     async getServerFolders() {
-      const response = await sendCommand(endpoints.folders, "list", {
-        File: "",
-      });
-      this.setServerFolders(response);
+      const response = await sendCommand<FoldersResponse>(
+        endpoints.folders,
+        "list",
+        {
+          File: "",
+        }
+      );
+      if (response) this.setServerFolders(response);
     },
     async getStoredPlaylist() {
       const response = await fetchOrFail<Array<StoredPlaylist>>(
@@ -238,13 +274,17 @@ export const useStore = defineStore("main", {
       };
     },
     async getSongInfo(songId: number) {
-      const song: SongInfoResponse = await sendCommand(endpoints.song, "info", {
+      const song = await sendCommand<SongInfoResponse>(endpoints.song, "info", {
         ID: songId,
       });
-      const albumArt = await sendCommand(endpoints.song, "albumArt", {
-        ID: songId,
-      });
-
+      const albumArt = await sendCommand<AlbumArtResponse>(
+        endpoints.song,
+        "albumArt",
+        {
+          ID: songId,
+        }
+      );
+      if (song == null || albumArt == null) return;
       if (song.Info == null && song.Stickers == null) return;
 
       this.song.Info = song.Info;

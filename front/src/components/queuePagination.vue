@@ -34,7 +34,7 @@ const store = useStore();
 const queue = computed(() => store.queue);
 defineEmits(["goToCurrent"]);
 
-function loadPage(page) {
+function loadPage(page: number) {
   store.getQueue(page);
 }
 </script>
