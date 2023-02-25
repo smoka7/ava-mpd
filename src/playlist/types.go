@@ -36,11 +36,11 @@ type Playlist struct {
 
 type Playlists []Playlist
 
-type Folder struct {
+type Directory struct {
 	Directory string
 }
 
-type Folders []Folder
+type Directories []Directory
 
 type File struct {
 	File string
@@ -49,8 +49,8 @@ type File struct {
 type Files []File
 
 type ServerList struct {
-	Folders Folders
-	Files   Files
+	Directories Directories
+	Files       Files
 }
 
 type SearchResult map[string]Files

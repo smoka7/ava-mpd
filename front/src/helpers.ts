@@ -22,7 +22,11 @@ export async function fetchOrFail<T>(url: string): Promise<T> {
  * @param {string} command
  * @param {object} data
  */
-export async function sendCommand(url: endpoints, command: string, data?: any) {
+export async function sendCommand<T>(
+  url: endpoints,
+  command: string,
+  data?: any
+): Promise<T | void> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
   const request = {

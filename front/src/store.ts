@@ -55,7 +55,12 @@ type Song = {
   Track: string;
   Duration: string;
 };
-
+export type File = { File: string };
+export type Directory = { Directory: string };
+export type FoldersResponse = {
+  Directories: Array<Directory>;
+  Files: Array<File>;
+};
 type SongInfoResponse = {
   Info: Array<string>;
   Stickers: Array<Stickers>;
@@ -110,7 +115,7 @@ export const useStore = defineStore("main", {
       storedPlaylist: [] as Array<StoredPlaylist>,
       queue: {} as Queue,
       song: {} as SongInfoResponse,
-      serverFolders: [],
+      serverFolders: {} as FoldersResponse,
       settings: {} as SettingsResponse,
     };
   },
@@ -140,8 +145,8 @@ export const useStore = defineStore("main", {
         this.queue = {} as Queue;
       }
     },
-    setServerFolders(response) {
-      this.serverFolders = [...response.Folders, ...response.Files];
+    setServerFolders(response: FoldersResponse) {
+      this.serverFolders = response;
     },
     setSettings(settings: SettingsResponse) {
       this.settings = settings;

@@ -1,12 +1,12 @@
 <template>
-  <details :open="folders.data != null && folders.data.length > 0">
+  <details :open="IsOpen">
     <summary
       class="group flex justify-between rounded px-2 py-4 duration-200 hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70 md:p-2"
       @click="listFolders()"
     >
       <span class="w-4/6 overflow-x-hidden text-ellipsis">
         <FontAwesomeIcon
-          :icon="data.Directory ? 'folder' : 'music'"
+          :icon="directory?.Directory !== undefined ? 'folder' : 'music'"
           class="menuIcon"
         />
         {{ folderName() }}
@@ -23,13 +23,19 @@
     <transition name="fade">
       <div
         class="m-1 flex flex-col border-l-2 border-primary dark:border-lightest"
-        v-if="folders.data.length > 0"
+        v-if="IsOpen"
       >
         <Folder
           class="m-1"
-          v-for="(folder, index) in folders.data"
+          v-for="(directory, index) in folders.Directories"
           :key="index"
-          :data="folder"
+          :directory="directory"
+        />
+        <Folder
+          class="m-1"
+          v-for="(file, index) in folders.Files"
+          :key="index"
+          :file="file"
         />
       </div>
     </transition>
@@ -44,46 +50,69 @@
 </template>
 <script setup lang="ts">
 import { sendCommand } from "../helpers";
-import { useStore } from "../store";
+import {
+  useStore,
+  type Directory,
+  type File,
+  type FoldersResponse,
+} from "../store";
 import endpoints from "../endpoints";
 
-const props = defineProps(["data"]);
-const folders = reactive({ data: [] });
+const props = defineProps<{
+  directory?: Directory;
+  file?: File;
+}>();
+
+const folders = reactive({
+  Files: [] as Array<File>,
+  Directories: [] as Array<Directory>,
+});
+
 const AddOpen = ref(false);
+const IsOpen = computed(
+  () => folders.Directories.length > 0 || folders.Files.length > 0
+);
 
 const store = useStore();
 const storedPlaylist = computed(() => store.storedPlaylist);
 
 async function listFolders() {
-  // if its not a folder do nothing and if folder list exists delete it
-  if (!props.data.Directory) return;
-  if (folders.data.length > 0) {
-    folders.data = [];
+  if (props.file) return;
+  if (folders.Directories.length > 0 || folders.Files.length > 0) {
+    folders.Directories = [];
+    folders.Files = [];
     return;
   }
-  const response = await sendCommand(endpoints.folders, "list", {
-    File: props.data.Directory,
-  });
-  folders.data = [...response.Folders, ...response.Files];
+  const response = await sendCommand<FoldersResponse>(
+    endpoints.folders,
+    "list",
+    {
+      File: props.directory?.Directory,
+    }
+  );
+  if (response) {
+    folders.Directories = response.Directories;
+    folders.Files = response.Files;
+  }
 }
 
-function FolderCommand(command, position) {
+function FolderCommand(command: string, position?: string) {
   const data = {
-    File: props.data.Directory || props.data.File,
+    File: props.directory?.Directory || props.file?.File,
     Pos: position,
   };
   sendCommand(endpoints.folders, command, data);
 }
 
 function folderName() {
-  const name = props.data.Directory || props.data.File;
+  const name = props.directory?.Directory || props.file?.File || "Empty";
   const index = name.lastIndexOf("/");
   if (index > -1) return name.substring(index + 1);
   return name;
 }
 function openAdd() {
   AddOpen.value = !AddOpen.value;
-  if (storedPlaylist.length) return;
+  if (storedPlaylist.value.length) return;
   store.getStoredPlaylist();
 }
 </script>

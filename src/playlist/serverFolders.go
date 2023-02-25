@@ -22,7 +22,7 @@ func (a action) ListFolders(d FolderData) (list ServerList) {
 	contents, err := a.c.Client.ListInfo(d.File)
 	config.Log(err)
 	list.Files = make(Files, 0)
-	list.Folders = make(Folders, 0)
+	list.Directories = make(Directories, 0)
 	for _, item := range contents {
 		// ignore playlists
 		if _, ok := item["playlist"]; ok {
@@ -33,7 +33,7 @@ func (a action) ListFolders(d FolderData) (list ServerList) {
 			list.Files = append(list.Files, newFile(item))
 			continue
 		}
-		list.Folders = append(list.Folders, newFolder(item))
+		list.Directories = append(list.Directories, newFolder(item))
 	}
 	return
 }
@@ -80,8 +80,8 @@ func (a action) AddFolder(pos string, uris ...string) {
 	}
 }
 
-func newFolder(item mpd.Attrs) Folder {
-	return Folder{
+func newFolder(item mpd.Attrs) Directory {
+	return Directory{
 		Directory: item["directory"],
 	}
 }
