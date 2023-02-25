@@ -26,7 +26,7 @@
           <tbody class="">
             <tr v-for="(map, index) in playbackMappings" :key="index">
               <td class="px-2">
-                {{ index }}
+                {{ map.key }}
               </td>
               <td class="px-2">
                 {{ map.name }}
@@ -34,7 +34,7 @@
             </tr>
             <tr v-for="(map, index) in otherMappings" :key="index">
               <td class="px-2">
-                {{ index }}
+                {{ map.key }}
               </td>
               <td class="px-2">
                 {{ map.name }}
@@ -42,7 +42,7 @@
             </tr>
             <tr v-for="(map, index) in tabMappings" :key="index">
               <td class="px-2">
-                {{ index }}
+                {{ map.key }}
               </td>
               <td class="px-2">
                 {{ map.name }}

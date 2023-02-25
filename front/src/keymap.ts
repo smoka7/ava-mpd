@@ -1,47 +1,66 @@
 import { useStore } from "./store";
-export const playbackMappings = {
-  p: { name: "toggle playback (play/pause)", action: "toggle" },
-  Backspace: { name: "play", action: "play" },
-  ",": { name: "previous song", action: "previous" },
-  ".": { name: "next song", action: "next" },
-  s: { name: "stop", action: "stop" },
-  u: { name: "consume", action: "consume" },
-  y: { name: "single", action: "single" },
-  r: { name: "repeat", action: "repeat" },
-  z: { name: "random", action: "random" },
-  c: { name: "clear queue", action: "clear" },
-  f: { name: "seek forward 15s", action: "seekForward" },
-  b: { name: "seek backward 15s", action: "seekBackward" },
-  9: { name: "Decrease Volume by 5%", action: "volumeDown" },
-  0: { name: "Increase Volume by 5%", action: "volumeUp" },
+type PlaybackKey = {
+  name: string;
+  action: string;
+  key: string;
 };
-export const otherMappings = {
-  l: { name: "like playing song", func: like },
-  i: { name: "show playing song info", func: showInfo },
+export const playbackMappings: Array<PlaybackKey> = [
+  { key: "p", name: "toggle playback (play/pause)", action: "toggle" },
+  { key: "Backspace", name: "play", action: "play" },
+  { key: ",", name: "previous song", action: "previous" },
+  { key: ".", name: "next song", action: "next" },
+  { key: "s", name: "stop", action: "stop" },
+  { key: "u", name: "consume", action: "consume" },
+  { key: "y", name: "single", action: "single" },
+  { key: "r", name: "repeat", action: "repeat" },
+  { key: "z", name: "random", action: "random" },
+  { key: "c", name: "clear queue", action: "clear" },
+  { key: "f", name: "seek forward 15s", action: "seekForward" },
+  { key: "b", name: "seek backward 15s", action: "seekBackward" },
+  { key: "9", name: "Decrease Volume by 5%", action: "volumeDown" },
+  { key: "0", name: "Increase Volume by 5%", action: "volumeUp" },
+];
+
+type OtherKey = {
+  name: string;
+  func: Function;
+  key: string;
+};
+export const otherMappings: Array<OtherKey> = [
+  { key: "l", name: "like playing song", func: like },
+  { key: "i", name: "show playing song info", func: showInfo },
+];
+
+type TabKey = {
+  name: string;
+  key: string;
 };
 
-export const tabMappings = {
-  1: { name: "show queue tab" },
-  2: { name: "show setting tab" },
-  3: { name: "show playlists tab" },
-  4: { name: "show server folders tab" },
-  5: { name: "show folder tab" },
-};
+export const tabMappings: Array<TabKey> = [
+  { key: "1", name: "show queue tab" },
+  { key: "2", name: "show setting tab" },
+  { key: "3", name: "show playlists tab" },
+  { key: "4", name: "show server folders tab" },
+  { key: "5", name: "show folder tab" },
+];
 
-export function handleKey(key) {
+export function handleKey(key: string) {
   const store = useStore();
-  if (playbackMappings[key]) {
-    store.sendPlaybackCommand(playbackMappings[key].action);
+  const playback = playbackMappings.find((mapping) => mapping.key == key);
+  if (playback) {
+    store.sendPlaybackCommand(playback.action);
     return;
   }
 
-  if (otherMappings[key]) {
-    otherMappings[key].func();
+  const func = otherMappings.find((mapping) => mapping.key == key);
+  if (func) {
+    func.func();
     return;
   }
 
-  if (tabMappings[key]) {
-    changeActiveTab(key);
+  const tab = tabMappings.find((mapping) => mapping.key == key);
+  if (tab) {
+    changeActiveTab(Number(key));
   }
 }
 
@@ -50,7 +69,7 @@ function like() {
   store.toggleLike({ File: "" });
 }
 
-function changeActiveTab(tab:number) {
+function changeActiveTab(tab: number) {
   const store = useStore();
   store.setActiveTab(tab - 1);
 }
