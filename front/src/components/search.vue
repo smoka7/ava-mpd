@@ -10,7 +10,7 @@
         </ListboxButton>
         <transition name="fade">
           <ListboxOptions
-            class="fixed mt-14 cursor-pointer space-y-1 rounded bg-white/60 p-1 text-left backdrop-blur-3xl dark:bg-gray-700/60"
+            class="fixed mt-14 cursor-pointer space-y-1 rounded bg-white/60 p-2 text-left backdrop-blur-3xl dark:bg-gray-700/60"
           >
             <ListboxOption
               v-for="tag in searchTags"
@@ -21,7 +21,7 @@
             >
               <li
                 :class="{
-                  'menuItem': true,
+                  ' menuItem': true,
                   'ring-accent ring-2': active,
                 }"
               >
@@ -65,12 +65,13 @@
         </span>
       </summary>
       <div>
-        <Folder
+        <div
           v-for="(file, index) in term"
           :key="index"
-          :data="file"
-          class="last:rounde-b odd:bg-gray-600/10 dark:odd:bg-gray-800/50 dark:hover:odd:bg-gray-800/70"
-        />
+          class="last:rounded-b odd:bg-gray-600/10 dark:odd:bg-gray-800/50 dark:hover:odd:bg-gray-800/70 p-2"
+        >
+          {{ file.File }}
+        </div>
       </div>
     </details>
   </div>
@@ -81,7 +82,8 @@ import endpoints from "../endpoints";
 const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];
 const tag = ref("file");
 const term = ref("");
-const files = ref([]);
+type SearchResult = Array<Array<{ File: string }>>;
+const files = ref([] as SearchResult);
 
 async function search() {
   if (term.value === "") {
@@ -97,7 +99,7 @@ async function search() {
   }
 }
 
-async function command(cm, title) {
+async function command(cm: string, title: string) {
   const request = {
     terms: [tag.value, title],
     command: cm,
