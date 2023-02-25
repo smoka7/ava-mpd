@@ -29,8 +29,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "../store";
-const store = useStore();
+import { settingsStore } from "../settingsStore";
+const store = settingsStore();
 const download = computed({
   get() {
     return store.settings.DownloadCoverArt;

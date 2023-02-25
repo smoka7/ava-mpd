@@ -109,28 +109,6 @@ export type StoredPlaylist = {
   Songs: Array<{ Album: string; Title: string; Artist: string }>;
 };
 
-type DatabaseStats = {
-  albums: number;
-  artists: number;
-  db_playtime: number;
-  db_update: number;
-  playtime: number;
-  songs: number;
-  uptime: number;
-};
-
-type Output = {
-  outputname: string;
-  outputenabled: number;
-  outputid: number;
-};
-
-type SettingsResponse = {
-  Outputs: Array<Output>;
-  DatabaseStats: DatabaseStats;
-  ReplayGain: string;
-  DownloadCoverArt: boolean;
-};
 export const useStore = defineStore("main", {
   state: () => {
     return {
@@ -144,7 +122,6 @@ export const useStore = defineStore("main", {
       queue: {} as Queue,
       song: {} as SongInfoResponse,
       serverFolders: {} as FoldersResponse,
-      settings: {} as SettingsResponse,
     };
   },
   actions: {
@@ -175,9 +152,6 @@ export const useStore = defineStore("main", {
     },
     setServerFolders(response: FoldersResponse) {
       this.serverFolders = response;
-    },
-    setSettings(settings: SettingsResponse) {
-      this.settings = settings;
     },
     setCounter() {
       clearInterval(this.durationInterval);
@@ -299,17 +273,6 @@ export const useStore = defineStore("main", {
     },
     clearSongInfo() {
       this.song.show = false;
-    },
-    async getSettings() {
-      const response = await fetchOrFail<SettingsResponse>(endpoints.setting);
-      this.setSettings(response);
-    },
-    async sendCommandToSetting(payload: {
-      command: string;
-      data?: { Value: number };
-    }) {
-      sendCommand(endpoints.setting, payload.command, payload.data);
-      this.getSettings();
     },
     async toggleLike(data: SongCommandData) {
       sendCommand(endpoints.song, "like", data);

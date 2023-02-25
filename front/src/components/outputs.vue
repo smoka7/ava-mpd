@@ -19,9 +19,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "../store";
+import { settingsStore } from "../settingsStore";
 
-const store = useStore();
+const store = settingsStore();
 const outputs = computed(() => store.settings.Outputs);
 
 function toggleOutput(index: number) {

@@ -43,16 +43,19 @@
 </template>
 <script setup lang="ts">
 import { useStore } from "../store";
+import { settingsStore } from "../settingsStore";
+
 const store = useStore();
+const sStore = settingsStore();
 const replayGainMods = ["off", "track", "album", "auto"];
 
 const replayGain = computed({
   get() {
-    return store.settings.ReplayGain;
+    return sStore.settings.ReplayGain;
   },
   set(value: string) {
     const index = replayGainMods.indexOf(value);
-    store.sendCommandToSetting({
+    sStore.sendCommandToSetting({
       command: "setGain",
       data: { Value: Number(index) },
     });
@@ -64,7 +67,7 @@ const mixRampDB = computed({
     return store.status.mixrampdb || 0;
   },
   set(value) {
-    store.sendCommandToSetting({
+    sStore.sendCommandToSetting({
       command: "mixrampdb",
       data: {
         Value: Number(value),
@@ -78,7 +81,7 @@ const crossFade = computed({
     return store.status.xfade || 0;
   },
   set(value: number) {
-    store.sendCommandToSetting({
+    sStore.sendCommandToSetting({
       command: "crossfade",
       data: { Value: value < 1 ? 0 : value },
     });

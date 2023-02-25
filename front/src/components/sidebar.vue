@@ -53,14 +53,15 @@
   </TabGroup>
 </template>
 <script setup lang="ts">
+import { settingsStore } from "../settingsStore";
 import { toggleMediaController } from "../helpers";
 import { useStore } from "../store";
 
 const store = useStore();
-
 const setting = defineAsyncComponent({
   loader: () => {
-    store.getSettings();
+    const setStore = settingsStore();
+    setStore.getSettings();
     return import("./setting.vue");
   },
   delay: 200,

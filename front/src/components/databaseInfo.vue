@@ -46,21 +46,24 @@
   </div>
 </template>
 <script setup lang="ts">
+import { settingsStore } from "../settingsStore";
 import { humanizeTime } from "../helpers";
 import { useStore } from "../store";
 
 const store = useStore();
-const stats = computed(() => store.settings.DatabaseStats);
+const sStore = settingsStore();
+
+const stats = computed(() => sStore.settings.DatabaseStats);
 const updating = computed(() => store.status.updating_db);
 
 function updateDatabase() {
-  store.sendCommandToSetting({
+  sStore.sendCommandToSetting({
     command: "updateDatabase",
   });
 }
 
 function deleteCache() {
-  store.sendCommandToSetting({
+  sStore.sendCommandToSetting({
     command: "deleteCache",
   });
 }
