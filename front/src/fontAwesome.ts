@@ -74,4 +74,4 @@ const icons = [
   faRefresh,
 ];
 
-library.add(icons);
+library.add(...icons);

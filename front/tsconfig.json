@@ -10,6 +10,7 @@
     "auto-imports.d.ts"
   ],
   "compilerOptions": {
+    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

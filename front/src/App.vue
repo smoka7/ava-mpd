@@ -34,8 +34,12 @@ onUnmounted(() => {
 });
 
 function listenKeyEvents(event: KeyboardEvent) {
+  if (!event.target) {
+    return;
+  }
   const pressedModifire = event.ctrlKey || event.altKey || event.shiftKey;
-  const pressdInInput = event.target.tagName.toUpperCase() == "INPUT";
+  const target = event.target as HTMLTextAreaElement;
+  const pressdInInput = target.tagName.toUpperCase() == "INPUT";
   if (pressdInInput || pressedModifire) {
     return;
   }

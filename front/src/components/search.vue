@@ -82,18 +82,18 @@ import endpoints from "../endpoints";
 const searchTags = ["file", "Artist", "Album", "Genre", "Date", "Title"];
 const tag = ref("file");
 const term = ref("");
-type SearchResult = Array<Array<{ File: string }>>;
-const files = ref([] as SearchResult);
+type SearchResult = Record<string, Array<{ File: string }>>;
+const files = ref({} as SearchResult);
 
 async function search() {
   if (term.value === "") {
-    files.value = [];
+    files.value = {};
     return;
   }
   const response = await command("search", term.value);
   if (response.ok) {
     const json = await response.json();
-    if (files.value.length) files.value = [];
+    if (files.value.length) files.value = {};
     files.value = json.Songs;
     return;
   }

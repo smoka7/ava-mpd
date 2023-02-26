@@ -13,8 +13,8 @@ type CurrentSong = {
   Artist: string;
   Date: string;
   Genre: string;
-  Id: string;
-  Pos: string;
+  Id: number;
+  Pos: number;
   Title: string;
   File: string;
   Liked: boolean;

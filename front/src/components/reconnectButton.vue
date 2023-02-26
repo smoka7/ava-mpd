@@ -28,7 +28,7 @@ function reConnect() {
   }, 150);
 
   setTimeout(() => {
-    btnClass.value = "btn-normal btn-animate";
+    btnClass.value = ["btn-normal", "btn-animate"];
   }, 300);
 
   store.getCurrentSong();

@@ -9,7 +9,7 @@
         :album="album"
         :currentAlbum="currentAlbum(album)"
         :selectedIds="state.selectedIds"
-        :currentSongPos="currentSongPos"
+        :currentSongPos="Number(currentSongPos)"
         @showMenu="showMenu"
         @selectAlbum="selectAlbum"
         @select="selectSong"
