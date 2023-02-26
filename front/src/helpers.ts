@@ -60,16 +60,33 @@ export function humanizeTime(time: number): string {
   function spanZero(time: number): string {
     return time < 10 ? "0" + time : time.toString();
   }
-  const second = Math.floor(Number(time) % 60);
+  const second = Math.floor(time % 60);
   if (time <= 60) {
-    return 0 + ":" + second.toString();
+    return "00:" + second.toString();
   }
-  const minute = Math.floor(Number(time) / 60);
+
   if (time < 3600) {
-    return minute + ":" + spanZero(second);
+    const minute = Math.floor(time / 60);
+    return spanZero(minute) + ":" + spanZero(second);
   }
-  const hour = Math.floor(Number(time) / 3600);
-  return hour + ":" + spanZero(minute) + ":" + spanZero(second);
+
+  let hour = Math.floor(time / 3600);
+  time -= hour * 3600;
+  const minute = Math.floor(time / 60);
+  if (hour < 24) {
+    return hour + ":" + spanZero(minute) + ":" + spanZero(second);
+  }
+  const day = Math.floor(hour / 24);
+  hour = hour % 24;
+  return (
+    day +
+    "d, " +
+    spanZero(hour) +
+    ":" +
+    spanZero(minute) +
+    ":" +
+    spanZero(second)
+  );
 }
 
 /** toggles media controller visibility in mobile */
