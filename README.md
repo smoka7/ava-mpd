@@ -1,8 +1,5 @@
 # Ava
 Ava is a web client for MPD.
-![web screenshot](https://raw.githubusercontent.com/smoka7/ava-mpd/main/assets/screen.webp)
-
-![mobile screenshot](https://raw.githubusercontent.com/smoka7/ava-mpd/main/assets/screen-mob.webp)
 
 ## Installation
 
