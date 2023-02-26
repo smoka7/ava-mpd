@@ -49,6 +49,7 @@ func (c *Connection) copyConfig(newConfig Connection) {
 	if newConfig.AppPort != "" {
 		c.AppPort = newConfig.AppPort
 	}
+	c.DownloadCoverArt = newConfig.DownloadCoverArt
 }
 
 // Reads the MPD server connection from environment values
