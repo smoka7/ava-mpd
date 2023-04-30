@@ -218,27 +218,6 @@ func (c *Connection) ToggleDownloadCover() {
 	c.SaveConfig()
 }
 
-// returns the mpd outputs
-func (c Connection) ListOutputs() (stats []mpd.Attrs) {
-	c.Connect()
-	defer c.Close()
-	stats, err := c.Client.ListOutputs()
-	Log(err)
-	return
-}
-
-// enables the output
-func (c Connection) EnableOutput(id int) {
-	err := c.Client.EnableOutput(id)
-	Log(err)
-}
-
-// Disables the output
-func (c Connection) DisableOutput(id int) {
-	err := c.Client.DisableOutput(id)
-	Log(err)
-}
-
 // sets the crossFade
 func (c Connection) ChangeCrossfade(second int) {
 	err := c.Client.Command("crossfade %d", second).OK()

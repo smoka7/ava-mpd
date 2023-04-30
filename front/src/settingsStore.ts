@@ -30,9 +30,9 @@ type DatabaseStats = {
 };
 
 type Output = {
-  outputid: number;
-  outputname: string;
-  outputenabled: number;
+  ID: number;
+  Name: string;
+  Enabled: boolean;
 };
 
 type SettingsResponse = {

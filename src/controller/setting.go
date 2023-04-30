@@ -8,21 +8,37 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
+type (
+	settingCommand  string
+	settingCommands map[settingCommand]func(int)
+)
+
 type SettingRequest struct {
-	Command string      `json:"command"`
-	Data    SettingData `json:"data"`
+	Command settingCommand `json:"command"`
+	Data    settingData    `json:"data"`
 }
 
-type SettingData struct {
+type settingData struct {
 	Value int
 }
 
 type SettingsResponse struct {
-	Outputs          []mpd.Attrs
+	Outputs          config.Outputs
 	DatabaseStats    mpd.Attrs
 	ReplayGain       string
 	DownloadCoverArt bool
 }
+
+var (
+	crossfade      settingCommand = "crossfade"
+	download       settingCommand = "download"
+	mixrampdb      settingCommand = "mixrampdb"
+	enableOutput   settingCommand = "enableOutput"
+	disableOutput  settingCommand = "disableOutput"
+	deleteCache    settingCommand = "deleteCache"
+	setGain        settingCommand = "setGain"
+	updateDatabase settingCommand = "updateDatabase"
+)
 
 func (c Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -47,22 +63,35 @@ func (c Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 func (c Mpd) setingcommand(request SettingRequest) {
 	c.Client.Connect()
 	defer c.Client.Close()
-	switch request.Command {
-	case "crossfade":
-		c.Client.ChangeCrossfade(request.Data.Value)
-	case "download":
-		c.Client.ToggleDownloadCover()
-	case "mixrampdb":
-		c.Client.ChangeMixRampdb(request.Data.Value)
-	case "enableOutput":
-		c.Client.EnableOutput(request.Data.Value)
-	case "disableOutput":
-		c.Client.DisableOutput(request.Data.Value)
-	case "deleteCache":
-		config.DeleteCache()
-	case "setGain":
-		c.Client.ChangeReplayGain(request.Data.Value)
-	case "updateDatabase":
-		c.Client.UpdateDatabase()
+
+	cmd := settingCommands{
+		crossfade: func(value int) {
+			c.Client.ChangeCrossfade(value)
+		},
+		download: func(value int) {
+			c.Client.ToggleDownloadCover()
+		},
+		mixrampdb: func(value int) {
+			c.Client.ChangeMixRampdb(value)
+		},
+		enableOutput: func(value int) {
+			c.Client.ToggleOutput(value, true)
+		},
+		disableOutput: func(value int) {
+			c.Client.ToggleOutput(value, false)
+		},
+		deleteCache: func(value int) {
+			config.DeleteCache()
+		},
+		setGain: func(value int) {
+			c.Client.ChangeReplayGain(value)
+		},
+		updateDatabase: func(value int) {
+			c.Client.UpdateDatabase()
+		},
+	}
+
+	if action, ok := cmd[request.Command]; ok {
+		action(request.Data.Value)
 	}
 }

@@ -9,12 +9,12 @@
     <input
       type="checkbox"
       class="accent-secondary"
-      :checked="output.outputenabled == 1"
-      :name="output.outputname"
-      :aria-label="output.outputname"
+      :checked="output.Enabled"
+      :name="output.Name"
+      :aria-label="output.Name"
     />
-    <label :for="output.outputname">
-      {{ output.outputname }}
+    <label :for="output.Name">
+      {{ output.Name }}
     </label>
   </div>
 </template>
@@ -25,10 +25,10 @@ const store = settingsStore();
 const outputs = computed(() => store.settings.Outputs);
 
 function toggleOutput(index: number) {
-  const id = Number(outputs.value[index].outputid);
+  const id = Number(outputs.value[index].ID);
 
   let command = "enableOutput";
-  if (outputs.value[index].outputenabled == 1) {
+  if (outputs.value[index].Enabled) {
     command = "disableOutput";
   }
 
