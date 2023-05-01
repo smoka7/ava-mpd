@@ -23,7 +23,7 @@ type PlaylistData struct {
 // loads the playlist after the current song in queue
 func (a action) addAfterPos(name, pos string) {
 	// 0: means load whole playlist
-	err = a.c.Client.Command("load %s 0: %s", name, pos).OK()
+	err = a.Command("load %s 0: %s", name, pos).OK()
 }
 
 // removes duplicate songs based on their file address from the playlist name
@@ -32,17 +32,17 @@ func (a action) RemoveDuplicatesongs(name string) {
 	removeFromQueue := name == ""
 	getQueue := func() (queue []mpd.Attrs) {
 		if removeFromQueue {
-			queue, err = a.c.Client.PlaylistInfo(-1, -1)
+			queue, err = a.PlaylistInfo(-1, -1)
 			config.Log(err)
 			return
 		}
-		queue, err = a.c.Client.PlaylistContents(name)
+		queue, err = a.PlaylistContents(name)
 		config.Log(err)
 		return
 	}
 
 	queue := getQueue()
-	cmds := a.c.Client.BeginCommandList()
+	cmds := a.BeginCommandList()
 
 	// cmd used to delete duplicates
 	var removeDuplicates func(int)
@@ -73,9 +73,9 @@ func (a action) RemoveDuplicatesongs(name string) {
 
 // removes songs that are removed or replaced from the server
 func (a action) RemoveInvalidsongs(name string) {
-	queue, err := a.c.Client.PlaylistContents(name)
+	queue, err := a.PlaylistContents(name)
 	config.Log(err)
-	cmds := a.c.Client.BeginCommandList()
+	cmds := a.BeginCommandList()
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, ok := queue[i]["Title"]; !ok {
 			cmds.PlaylistDelete(name, i)
@@ -87,12 +87,12 @@ func (a action) RemoveInvalidsongs(name string) {
 
 // return a list of playlists
 func (a action) ListStoredPlaylist() (playlists Playlists) {
-	a.c.Connect()
-	defer a.c.Close()
-	list, err := a.c.Client.ListPlaylists()
+	a.Connect()
+	defer a.Close()
+	list, err := a.ListPlaylists()
 	config.Log(err)
 	for _, v := range list {
-		songs, _ := a.c.Client.PlaylistContents(v["playlist"])
+		songs, _ := a.PlaylistContents(v["playlist"])
 		playlists = append(playlists, Playlist{
 			Name:       v["playlist"],
 			Duration:   getDurationSum(songs),
@@ -104,7 +104,7 @@ func (a action) ListStoredPlaylist() (playlists Playlists) {
 
 // returns list of playlist's song
 func (a action) ListSongsIn(playlist string) (songs Songs) {
-	contents, err := a.c.Client.PlaylistContents(playlist)
+	contents, err := a.PlaylistContents(playlist)
 	config.Log(err)
 	for _, song := range contents {
 		songs = append(songs, Song{
@@ -118,13 +118,13 @@ func (a action) ListSongsIn(playlist string) (songs Songs) {
 
 // clears the stored playlist from server
 func (a action) ClearPlaylist(playlist string) {
-	err := a.c.Client.PlaylistClear(playlist)
+	err := a.PlaylistClear(playlist)
 	config.Log(err)
 }
 
 // deletes the stored playlist from server
 func (a action) DeletePlaylist(playlist string) {
-	err := a.c.Client.Command("rm %s", playlist).OK()
+	err := a.Command("rm %s", playlist).OK()
 	config.Log(err)
 }
 
@@ -134,7 +134,7 @@ func (a action) LoadPlaylist(d PlaylistData) {
 	case "currentSong":
 		a.addAfterPos(d.Playlist, "+0")
 	case "endOfQueue":
-		err := a.c.Client.PlaylistLoad(d.Playlist, -1, -1)
+		err := a.PlaylistLoad(d.Playlist, -1, -1)
 		config.Log(err)
 	case "currentAlbum":
 		pos := a.getCurrentSongPos()
@@ -145,7 +145,7 @@ func (a action) LoadPlaylist(d PlaylistData) {
 
 // clears the current queue and plays the playlist
 func (a action) PlayPlaylist(d PlaylistData) {
-	cm := a.c.Client.BeginCommandList()
+	cm := a.BeginCommandList()
 	cm.Clear()
 	cm.PlaylistLoad(d.Playlist, -1, -1)
 	cm.Play(0)
@@ -155,19 +155,19 @@ func (a action) PlayPlaylist(d PlaylistData) {
 
 // renames the name playlist to newName
 func (a action) RenamePlaylist(d PlaylistData) {
-	err := a.c.Client.PlaylistRename(d.Playlist, d.NewPlaylist)
+	err := a.PlaylistRename(d.Playlist, d.NewPlaylist)
 	config.Log(err)
 }
 
 // adds the song to playlist
 func (a action) AddSongToPlaylist(playlist, file string) {
-	err := a.c.Client.PlaylistAdd(playlist, file)
+	err := a.PlaylistAdd(playlist, file)
 	config.Log(err)
 }
 
 // returns a list of liked songs
 func (a action) GetLikedSongs() []string {
-	uris, stickers, e := a.c.Client.StickerFind("", "liked")
+	uris, stickers, e := a.StickerFind("", "liked")
 	config.Log(e)
 	likedSongs := make([]string, 0)
 	for i := 0; i < len(stickers); i++ {
@@ -180,7 +180,7 @@ func (a action) GetLikedSongs() []string {
 
 // returns the list of most played songs
 func (a action) GetMostPlayed() []string {
-	uris, stickers, err := a.c.Client.StickerFind("", "playedcount")
+	uris, stickers, err := a.StickerFind("", "playedcount")
 	config.Log(err)
 	count := len(uris)
 	unOrdered := make([]map[string]string, 0)

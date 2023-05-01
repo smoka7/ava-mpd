@@ -31,7 +31,7 @@ func NewSong(c config.Connection, path string) Song {
 func GetStatus(c config.Connection) (status mpd.Attrs) {
 	c.Connect()
 	defer c.Close()
-	status, err = c.Client.Status()
+	status, err = c.Status()
 	config.Log(err)
 	return
 }
@@ -40,7 +40,7 @@ func GetStatus(c config.Connection) (status mpd.Attrs) {
 func GetCurrentSong(c config.Connection) (song Song) {
 	c.Connect()
 	defer c.Close()
-	song.Info, err = c.Client.CurrentSong()
+	song.Info, err = c.CurrentSong()
 	config.Log(err)
 	liked := getSticker(c, song.Info["file"], "liked")
 	if liked != nil && liked.Value != "false" {
@@ -53,7 +53,7 @@ func GetCurrentSong(c config.Connection) (song Song) {
 
 // gets the song info
 func (s *Song) setSongInfo(c config.Connection, file string) {
-	info, err := c.Client.ListAllInfo(file)
+	info, err := c.ListAllInfo(file)
 	config.Log(err)
 	if len(info) > 0 {
 		s.Info = info[0]
@@ -62,20 +62,20 @@ func (s *Song) setSongInfo(c config.Connection, file string) {
 
 // set the sticker name to value for song
 func setSticker(c config.Connection, song, name, value string) {
-	err = c.Client.StickerSet(song, name, value)
+	err = c.StickerSet(song, name, value)
 	config.Log(err)
 }
 
 // returns all the stickers of a song
 func GetStickers(c config.Connection, file string) []mpd.Sticker {
-	stickers, err := c.Client.StickerList(file)
+	stickers, err := c.StickerList(file)
 	config.Log(err)
 	return stickers
 }
 
 // return the sticker name of a song
 func getSticker(c config.Connection, file, name string) (status *mpd.Sticker) {
-	status, err = c.Client.StickerGet(file, name)
+	status, err = c.StickerGet(file, name)
 	if err != nil && err.Error() != "command 'sticker' failed: no such sticker" {
 		config.Log(err)
 	}

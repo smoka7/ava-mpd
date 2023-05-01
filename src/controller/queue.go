@@ -9,8 +9,8 @@ import (
 )
 
 func (c Mpd) Queue(w http.ResponseWriter, r *http.Request) {
-	c.Client.Connect()
-	defer c.Client.Close()
+	c.Connect()
+	defer c.Close()
 
 	switch r.Method {
 	case http.MethodPost:
@@ -23,7 +23,7 @@ func (c Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 		err = r.ParseForm()
 		config.Log(err)
 
-		playlist := playlist.GetQueue(c.Client, r.Form.Get("page"))
+		playlist := playlist.GetQueue(c.Connection, r.Form.Get("page"))
 		err = json.NewEncoder(w).Encode(playlist)
 		config.Log(err)
 	}
@@ -32,7 +32,7 @@ func (c Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 type Commands map[string]func()
 
 func (c Mpd) runCommand(request playlist.QueueRequest) {
-	a := playlist.NewAction(c.Client)
+	a := playlist.NewAction(c.Connection)
 	cmd := Commands{
 		"play":         func() { a.PlaySong(request.Data) },
 		"delete":       func() { a.DeleteSong(request.Data) },

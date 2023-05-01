@@ -14,14 +14,14 @@ func (c Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 
-		c.Client.Connect()
-		defer c.Client.Close()
+		c.Connect()
+		defer c.Close()
 		c.runFolderCommand(w, request)
 	}
 }
 
 func (c Mpd) runFolderCommand(w http.ResponseWriter, request playlist.FolderRequest) {
-	a := playlist.NewAction(c.Client)
+	a := playlist.NewAction(c.Connection)
 	folderCmds := Commands{
 		"add": func() {
 			a.AddFolder(request.Data.Pos, request.Data.File)

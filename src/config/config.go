@@ -10,11 +10,11 @@ import (
 )
 
 type Connection struct {
-	DownloadCoverArt bool        `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
-	Address          string      `json:"address"`            // address of mpd server
-	Password         string      `json:"password,omitempty"` // password of mpd server
-	AppPort          string      `json:"app_port"`           // port of current app
-	Client           *mpd.Client `json:"-"`                  // connected client
+	DownloadCoverArt bool       `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
+	Address          string     `json:"address"`            // address of mpd server
+	Password         string     `json:"password,omitempty"` // password of mpd server
+	AppPort          string     `json:"app_port"`           // port of current app
+	*mpd.Client      `json:"-"` // connected client
 }
 
 const (
@@ -198,7 +198,7 @@ func LogAndExit(err error) {
 
 // updates the MPD server database
 func (c Connection) UpdateDatabase() {
-	_, err := c.Client.Update("")
+	_, err := c.Update("")
 	Log(err)
 }
 
@@ -206,7 +206,7 @@ func (c Connection) UpdateDatabase() {
 func (c Connection) DatabaseStats() (stats mpd.Attrs) {
 	c.Connect()
 	defer c.Close()
-	stats, err := c.Client.Stats()
+	stats, err := c.Stats()
 	Log(err)
 
 	return
@@ -220,13 +220,13 @@ func (c *Connection) ToggleDownloadCover() {
 
 // sets the crossFade
 func (c Connection) ChangeCrossfade(second int) {
-	err := c.Client.Command("crossfade %d", second).OK()
+	err := c.Command("crossfade %d", second).OK()
 	Log(err)
 }
 
 // sets the crossFade
 func (c Connection) ChangeMixRampdb(second int) {
-	err := c.Client.Command("mixrampdb %d", second).OK()
+	err := c.Command("mixrampdb %d", second).OK()
 	Log(err)
 }
 
@@ -239,7 +239,7 @@ func (c Connection) ChangeReplayGain(id int) {
 		3: "auto",
 	}
 	if mode, ok := modes[id]; ok {
-		err := c.Client.Command("replay_gain_mode %s", mode).OK()
+		err := c.Command("replay_gain_mode %s", mode).OK()
 		Log(err)
 	}
 }
@@ -248,7 +248,7 @@ func (c Connection) ChangeReplayGain(id int) {
 func (c Connection) GetReplayGain() string {
 	c.Connect()
 	defer c.Close()
-	status, err := c.Client.Command("replay_gain_status").Attrs()
+	status, err := c.Command("replay_gain_status").Attrs()
 	if err != nil {
 		return ""
 	}

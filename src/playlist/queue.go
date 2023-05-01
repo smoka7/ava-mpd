@@ -19,7 +19,7 @@ type QueueData struct {
 }
 
 type action struct {
-	c config.Connection
+	config.Connection
 }
 
 const ClientQueueLimit = 200
@@ -36,7 +36,7 @@ func NewAction(c config.Connection) action {
 // returns current queue list
 func GetQueue(c config.Connection, pageNumber string) (q Queue) {
 	c.Connect()
-	queue, err := c.Client.PlaylistInfo(-1, -1)
+	queue, err := c.PlaylistInfo(-1, -1)
 	c.Close()
 	config.Log(err)
 	q.Length = uint(len(queue))
@@ -59,19 +59,19 @@ func GetQueue(c config.Connection, pageNumber string) (q Queue) {
 
 // plays the id song in current Queue
 func (a action) PlaySong(d QueueData) {
-	err := a.c.Client.PlayID(d.ID)
+	err := a.PlayID(d.ID)
 	config.Log(err)
 }
 
 // deletes the song from start to end from current Queue
 func (a action) DeleteSong(d QueueData) {
-	err := a.c.Client.DeleteID(d.ID)
+	err := a.DeleteID(d.ID)
 	config.Log(err)
 }
 
 // moves the song from position in queue to newPosition
 func (a action) MoveSong(d QueueData) {
-	err := a.c.Client.MoveID(d.Start, d.Finish)
+	err := a.MoveID(d.Start, d.Finish)
 	config.Log(err)
 }
 
@@ -79,19 +79,19 @@ func (a action) MoveSong(d QueueData) {
 func (a action) ShuffleAlbum(d QueueData) {
 	firstSongIndex, lastSongIndex := a.findSongsAlbum(d.Start)
 
-	err = a.c.Client.Shuffle(firstSongIndex+1, lastSongIndex)
+	err = a.Shuffle(firstSongIndex+1, lastSongIndex)
 	config.Log(err)
 }
 
 // saves the current queue as a new playlist
 func (a action) SaveQueue(d QueueData) {
-	err := a.c.Client.PlaylistSave(d.Playlist)
+	err := a.PlaylistSave(d.Playlist)
 	config.Log(err)
 }
 
 // gets the file path of song with id in Queue
 func (a action) GetSongFile(id int) (string, error) {
-	song, err := a.c.Client.Command("playlistid %d", id).Attrs()
+	song, err := a.Command("playlistid %d", id).Attrs()
 	if err != nil {
 		return "", err
 	}
@@ -100,7 +100,7 @@ func (a action) GetSongFile(id int) (string, error) {
 
 // returns the boundaries of song in Queue
 func (a action) findSongsAlbum(pos int) (int, int) {
-	queue, err := a.c.Client.PlaylistInfo(-1, -1)
+	queue, err := a.PlaylistInfo(-1, -1)
 	if err != nil {
 		config.Log(err)
 		return 0, 0
@@ -124,7 +124,7 @@ func (a action) findSongsAlbum(pos int) (int, int) {
 
 // returns the current song position in queue
 func (a action) getCurrentSongPos() int {
-	cs, err := a.c.Client.CurrentSong()
+	cs, err := a.CurrentSong()
 	// check for empty queue
 	if err != nil || cs == nil {
 		config.Log(err)
@@ -172,7 +172,7 @@ func (a *Album) newSong(song mpd.Attrs) {
 
 func (q *Queue) getQueueInPage(c config.Connection, page string) (downLimit, upLimt int) {
 	c.Connect()
-	currentSong, err := c.Client.CurrentSong()
+	currentSong, err := c.CurrentSong()
 	c.Close()
 	config.Log(err)
 

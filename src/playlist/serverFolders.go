@@ -19,7 +19,7 @@ type FolderData struct {
 
 // returns content of the folder
 func (a action) ListFolders(d FolderData) (list ServerList) {
-	contents, err := a.c.Client.ListInfo(d.File)
+	contents, err := a.ListInfo(d.File)
 	config.Log(err)
 	list.Files = make(Files, 0)
 	list.Directories = make(Directories, 0)
@@ -40,7 +40,7 @@ func (a action) ListFolders(d FolderData) (list ServerList) {
 
 // clears the current queue and plays the folder
 func (a action) PlayFolder(uris ...string) {
-	cm := a.c.Client.BeginCommandList()
+	cm := a.BeginCommandList()
 	cm.Clear()
 	for _, uri := range uris {
 		cm.Add(uri)
@@ -54,14 +54,14 @@ func (a action) PlayFolder(uris ...string) {
 func (a action) AddFolder(pos string, uris ...string) {
 	add := func(pos string) {
 		for _, uri := range uris {
-			err := a.c.Client.Command("add %s %s", uri, pos).OK()
+			err := a.Command("add %s %s", uri, pos).OK()
 			config.Log(err)
 		}
 	}
 	switch pos {
 	case "currentSong":
 		// check for empty queue
-		cs, err := a.c.Client.CurrentSong()
+		cs, err := a.CurrentSong()
 		if err != nil || cs == nil {
 			config.Log(err)
 			return
@@ -70,7 +70,7 @@ func (a action) AddFolder(pos string, uris ...string) {
 		add("+0")
 	case "endOfQueue":
 		for _, uri := range uris {
-			err := a.c.Client.Add(uri)
+			err := a.Add(uri)
 			config.Log(err)
 		}
 	case "currentAlbum":

@@ -53,37 +53,37 @@ func Command(c config.Connection, cmd string, data int) error {
 func toggle(c config.Connection) error {
 	status := song.GetStatus(c)
 	if status["state"] == "play" {
-		err = c.Client.Pause(true)
+		err = c.Pause(true)
 		return err
 	}
-	err = c.Client.Play(-1)
+	err = c.Play(-1)
 	return err
 }
 
 // play starts playing the current song in queue
 func play(c config.Connection) error {
-	err = c.Client.Play(-1)
+	err = c.Play(-1)
 	config.Log(err)
 	return err
 }
 
 // stops the current queue
 func stop(c config.Connection) error {
-	err = c.Client.Stop()
+	err = c.Stop()
 	config.Log(err)
 	return err
 }
 
 // goes to next song in queue
 func nextSong(c config.Connection) error {
-	err = c.Client.Next()
+	err = c.Next()
 	config.Log(err)
 	return err
 }
 
 // goes to Previous song in queue
 func prevSong(c config.Connection) error {
-	err = c.Client.Previous()
+	err = c.Previous()
 	config.Log(err)
 	return err
 }
@@ -92,21 +92,21 @@ func prevSong(c config.Connection) error {
 func seek(c config.Connection, t int) error {
 	seekDuration, err := time.ParseDuration(fmt.Sprintf("%ds", t))
 	config.Log(err)
-	err = c.Client.SeekCur(seekDuration, false)
+	err = c.SeekCur(seekDuration, false)
 	config.Log(err)
 	return err
 }
 
 // seeks 15 seconds forward in current song
 func seekForward(c config.Connection) error {
-	err = c.Client.SeekCur(15*time.Second, true)
+	err = c.SeekCur(15*time.Second, true)
 	config.Log(err)
 	return err
 }
 
 // seeks 15 seconds backward in current song
 func seekBackward(c config.Connection) error {
-	err = c.Client.SeekCur(-15*time.Second, true)
+	err = c.SeekCur(-15*time.Second, true)
 	config.Log(err)
 	return err
 }
@@ -118,7 +118,7 @@ func single(c config.Connection) error {
 	if status["single"] == "0" {
 		single = true
 	}
-	err = c.Client.Single(single)
+	err = c.Single(single)
 	config.Log(err)
 	return err
 }
@@ -130,7 +130,7 @@ func repeat(c config.Connection) error {
 	if status["repeat"] == "0" {
 		repeat = true
 	}
-	err = c.Client.Repeat(repeat)
+	err = c.Repeat(repeat)
 	config.Log(err)
 	return err
 }
@@ -142,7 +142,7 @@ func consume(c config.Connection) error {
 	if status["consume"] == "0" {
 		consume = true
 	}
-	err = c.Client.Consume(consume)
+	err = c.Consume(consume)
 	config.Log(err)
 	return err
 }
@@ -154,7 +154,7 @@ func random(c config.Connection) error {
 	if status["random"] == "0" {
 		repeat = true
 	}
-	err = c.Client.Random(repeat)
+	err = c.Random(repeat)
 	config.Log(err)
 	return err
 }
@@ -168,14 +168,14 @@ func changeVolume(c config.Connection, volume int) error {
 		volume = 0
 	}
 
-	err = c.Client.SetVolume(volume)
+	err = c.SetVolume(volume)
 	config.Log(err)
 	return err
 }
 
 // returns the volume
 func getVolume(c config.Connection) int {
-	volAttr, err := c.Client.Command("getvol").Attrs()
+	volAttr, err := c.Command("getvol").Attrs()
 	config.Log(err)
 	volume, _ := strconv.Atoi(volAttr["volume"])
 	return volume
@@ -199,7 +199,7 @@ func volumeDown(c config.Connection) error {
 
 // clears the current queue
 func clearQueue(c config.Connection) error {
-	err = c.Client.Clear()
+	err = c.Clear()
 	config.Log(err)
 	return err
 }

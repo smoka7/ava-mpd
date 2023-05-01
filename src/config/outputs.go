@@ -25,9 +25,9 @@ func newOutput(value mpd.Attrs) Output {
 }
 
 // returns the mpd outputs
-func (c Connection) ListOutputs() Outputs {
+func (c Connection) GetOutputs() Outputs {
 	c.Connect()
-	list, err := c.Client.ListOutputs()
+	list, err := c.ListOutputs()
 	defer c.Close()
 
 	Log(err)
@@ -45,10 +45,10 @@ func (c Connection) ListOutputs() Outputs {
 
 func (c Connection) ToggleOutput(id int, enabled bool) {
 	if enabled {
-		err := c.Client.EnableOutput(id)
+		err := c.EnableOutput(id)
 		Log(err)
 		return
 	}
-	err := c.Client.DisableOutput(id)
+	err := c.DisableOutput(id)
 	Log(err)
 }

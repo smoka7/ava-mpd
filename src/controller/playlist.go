@@ -11,7 +11,7 @@ import (
 func (c Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		a := playlist.NewAction(c.Client)
+		a := playlist.NewAction(c.Connection)
 		playlist := a.ListStoredPlaylist()
 		err = json.NewEncoder(w).Encode(playlist)
 		config.Log(err)
@@ -21,14 +21,14 @@ func (c Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 		err = json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 
-		c.Client.Connect()
-		defer c.Client.Close()
+		c.Connect()
+		defer c.Close()
 		c.runPlCommand(w, request)
 	}
 }
 
 func (c Mpd) runPlCommand(w http.ResponseWriter, request playlist.PlaylistRequest) {
-	a := playlist.NewAction(c.Client)
+	a := playlist.NewAction(c.Connection)
 	cmd := Commands{
 		"load":            func() { a.LoadPlaylist(request.Data) },
 		"clear":           func() { a.ClearPlaylist(request.Data.Playlist) },

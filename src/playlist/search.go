@@ -19,7 +19,7 @@ func SearchServer(c config.Connection, term ...string) (SearchResult, error) {
 		return nil, err
 	}
 	// search the server
-	query, err := c.Client.Search(term...)
+	query, err := c.Search(term...)
 	config.Log(err)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func SearchPlay(c config.Connection, term ...string) error {
 	if err != nil {
 		return err
 	}
-	err = c.Client.Clear()
+	err = c.Clear()
 	if err != nil {
 		return err
 	}
@@ -70,12 +70,12 @@ func SearchPlay(c config.Connection, term ...string) error {
 	if err != nil {
 		return err
 	}
-	c.Client.Play(-1)
+	c.Play(-1)
 	return nil
 }
 
 func searchAdd(c config.Connection, term ...string) error {
-	err = c.Client.Command("searchadd %s %s", term[0], term[1]).OK()
+	err = c.Command("searchadd %s %s", term[0], term[1]).OK()
 	return err
 }
 

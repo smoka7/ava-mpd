@@ -33,7 +33,7 @@ func InitConnections(frontDist fs.FS, config config.Connection) {
 	wc = watcher.NewClient(config)
 
 	ip := getHostIP()
-	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.Client.AppPort)
+	fmt.Printf("\n--- serving on %s:%s\n", ip, cl.AppPort)
 
 	go wc.RecordPlayCount()
 
@@ -44,7 +44,7 @@ func InitConnections(frontDist fs.FS, config config.Connection) {
 	serveRoutes()
 
 	srv := http.Server{
-		Addr:         ":" + cl.Client.AppPort,
+		Addr:         ":" + cl.AppPort,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 	}

@@ -53,13 +53,13 @@ func ServeAlbumArt(c config.Connection, songPath string) string {
 
 // gets the cover from mpd
 func (s *Song) getAlbumArt(c config.Connection) error {
-	coverBin, err := c.Client.AlbumArt(s.Info["file"])
+	coverBin, err := c.AlbumArt(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return nil
 	}
 	//  get the embed cover
-	coverBin, err = c.Client.ReadPicture(s.Info["file"])
+	coverBin, err = c.ReadPicture(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return nil

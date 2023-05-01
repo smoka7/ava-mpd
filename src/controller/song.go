@@ -34,10 +34,10 @@ func (c Mpd) Song(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
-		c.Client.Connect()
+		c.Connect()
 		switch request.Command {
 		case "like":
-			song.ToggleLike(c.Client, request.Data.File)
+			song.ToggleLike(c.Connection, request.Data.File)
 		case "info":
 			response := c.getSongResponse(request.Data.ID)
 			err := json.NewEncoder(w).Encode(response)
@@ -47,25 +47,25 @@ func (c Mpd) Song(w http.ResponseWriter, r *http.Request) {
 			err := json.NewEncoder(w).Encode(response)
 			config.Log(err)
 		}
-		c.Client.Close()
+		c.Close()
 	}
 }
 
 func (c Mpd) getSongResponse(songPos int) SongInfoResponse {
-	a := playlist.NewAction(c.Client)
+	a := playlist.NewAction(c.Connection)
 	file, err := a.GetSongFile(songPos)
 	if err != nil {
 		return SongInfoResponse{}
 	}
 
 	return SongInfoResponse{
-		Info:     song.NewSong(c.Client, file).Info,
-		Stickers: song.GetStickers(c.Client, file),
+		Info:     song.NewSong(c.Connection, file).Info,
+		Stickers: song.GetStickers(c.Connection, file),
 	}
 }
 
 func (c Mpd) getSongCover(songPos int) CoverArtResponse {
-	a := playlist.NewAction(c.Client)
+	a := playlist.NewAction(c.Connection)
 	file, err := a.GetSongFile(songPos)
 	if err != nil {
 		config.Log(err)
@@ -75,6 +75,6 @@ func (c Mpd) getSongCover(songPos int) CoverArtResponse {
 	}
 
 	return CoverArtResponse{
-		Url: song.ServeAlbumArt(c.Client, file),
+		Url: song.ServeAlbumArt(c.Connection, file),
 	}
 }

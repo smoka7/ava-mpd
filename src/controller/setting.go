@@ -50,10 +50,10 @@ func (c Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodGet:
 		response := SettingsResponse{
-			DatabaseStats:    c.Client.DatabaseStats(),
-			ReplayGain:       c.Client.GetReplayGain(),
-			Outputs:          c.Client.ListOutputs(),
-			DownloadCoverArt: c.Client.DownloadCoverArt,
+			DatabaseStats:    c.DatabaseStats(),
+			ReplayGain:       c.GetReplayGain(),
+			Outputs:          c.GetOutputs(),
+			DownloadCoverArt: c.DownloadCoverArt,
 		}
 		err := json.NewEncoder(w).Encode(response)
 		config.Log(err)
@@ -61,33 +61,33 @@ func (c Mpd) Settings(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c Mpd) setingcommand(request SettingRequest) {
-	c.Client.Connect()
-	defer c.Client.Close()
+	c.Connect()
+	defer c.Close()
 
 	cmd := settingCommands{
 		crossfade: func(value int) {
-			c.Client.ChangeCrossfade(value)
+			c.ChangeCrossfade(value)
 		},
 		download: func(value int) {
-			c.Client.ToggleDownloadCover()
+			c.ToggleDownloadCover()
 		},
 		mixrampdb: func(value int) {
-			c.Client.ChangeMixRampdb(value)
+			c.ChangeMixRampdb(value)
 		},
 		enableOutput: func(value int) {
-			c.Client.ToggleOutput(value, true)
+			c.ToggleOutput(value, true)
 		},
 		disableOutput: func(value int) {
-			c.Client.ToggleOutput(value, false)
+			c.ToggleOutput(value, false)
 		},
 		deleteCache: func(value int) {
 			config.DeleteCache()
 		},
 		setGain: func(value int) {
-			c.Client.ChangeReplayGain(value)
+			c.ChangeReplayGain(value)
 		},
 		updateDatabase: func(value int) {
-			c.Client.UpdateDatabase()
+			c.UpdateDatabase()
 		},
 	}
 

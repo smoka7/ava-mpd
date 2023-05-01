@@ -12,7 +12,7 @@ import (
 )
 
 type Mpd struct {
-	Client config.Connection
+	config.Connection
 }
 
 type CurrentSongResponse struct {
@@ -62,7 +62,7 @@ type ErorrResponse struct {
 var err error
 
 func NewClient(c config.Connection) (cl Mpd) {
-	cl.Client = c
+	cl.Connection = c
 	return
 }
 
@@ -72,21 +72,21 @@ func (c Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 
-		err = playback.Command(c.Client, request.Command, request.Data.Start)
+		err = playback.Command(c.Connection, request.Command, request.Data.Start)
 		sendErrorResponse(w, err)
 	}
 }
 
 // writes the current mpd server status
 func (c Mpd) Status(w http.ResponseWriter, r *http.Request) {
-	currentSong := song.GetCurrentSong(c.Client)
+	currentSong := song.GetCurrentSong(c.Connection)
 
-	c.Client.Connect()
+	c.Connect()
 	response := StatusResponse{
-		Status:      newStatus(song.GetStatus(c.Client)),
+		Status:      newStatus(song.GetStatus(c.Connection)),
 		CurrentSong: newCurrentSong(currentSong),
 	}
-	c.Client.Close()
+	c.Close()
 
 	err := json.NewEncoder(w).Encode(response)
 	config.Log(err)

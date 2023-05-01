@@ -8,7 +8,7 @@ import (
 )
 
 type Mpd struct {
-	Client config.Connection
+	config.Connection
 }
 
 type status struct {
@@ -20,14 +20,14 @@ type eventMessage struct {
 }
 
 func NewClient(c config.Connection) Mpd {
-	return Mpd{Client: c}
+	return Mpd{c}
 }
 
 // sends the mpd events to client's Socket
 func (m Mpd) Serve(ws *websocket.Conn) {
 	event := make(chan string, 4)
 	message := eventMessage{}
-	eventWatcher(m.Client, event)
+	eventWatcher(m.Connection, event)
 	for {
 		message.Subsystem = <-event
 		err := websocket.JSON.Send(ws, message)
@@ -54,8 +54,7 @@ func eventWatcher(c config.Connection, event chan string) {
 
 // saves the each songs play count
 func (m Mpd) RecordPlayCount() {
-	client := m.Client
-	watcher, err := mpd.NewWatcher("tcp", client.Address, client.Password)
+	watcher, err := mpd.NewWatcher("tcp", m.Address, m.Password)
 	config.LogAndExit(err)
 
 	defer watcher.Close()
@@ -67,12 +66,12 @@ func (m Mpd) RecordPlayCount() {
 	}()
 
 	status := newStatus()
-	status.compareStatus(client)
+	status.compareStatus(m.Connection)
 	for subsystem := range watcher.Event {
 		if subsystem != "player" {
 			continue
 		}
-		status.compareStatus(client)
+		status.compareStatus(m.Connection)
 	}
 }
 
@@ -90,7 +89,7 @@ func (s *status) compareStatus(c config.Connection) {
 	defer c.Close()
 
 	s.state = song.GetStatus(c)["state"]
-	currentSong, err := c.Client.CurrentSong()
+	currentSong, err := c.CurrentSong()
 	config.Log(err)
 
 	if s.path != currentSong["file"] &&
