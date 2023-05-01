@@ -1,5 +1,7 @@
 import { fetchOrFail, sendCommand } from "./helpers";
 import endpoints from "./endpoints";
+import { settingsStore } from "./settingsStore";
+
 type StatusResponse = {
   Status: Status;
   CurrentSong: CurrentSong;
@@ -231,6 +233,14 @@ export const useStore = defineStore("main", {
         ) {
           this.getCurrentSong();
           this.setCounter();
+        }
+
+        if (event == "output" || event == "database" || event == "options") {
+          settingsStore().getSettings();
+        }
+
+        if (event == "stored_playlist") {
+          this.getStoredPlaylist();
         }
 
         if (event == "playlist") {
