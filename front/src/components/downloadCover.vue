@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card-class">
     <SwitchGroup as="div" class="flex items-center justify-between p-2">
       <SwitchLabel class="mr-4 w-4/6 text-lg md:mr-2"
         >Download missing covers from

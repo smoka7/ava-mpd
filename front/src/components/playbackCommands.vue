@@ -39,7 +39,7 @@
       @click="Command('toggle')"
       :class="[
         status.state === 'pause' ? 'bg-secondary' : 'bg-accent',
-        'flex aspect-square items-center justify-center rounded-full text-lightest duration-200 hover:scale-105 hover:border-8 hover:border-primary/40 hover:text-lighter',
+        'flex h-24 w-24 items-center justify-center rounded-full text-lightest duration-200 hover:scale-105 hover:border-8 hover:border-primary/40 hover:text-lighter',
       ]"
     >
       <font-awesome-icon

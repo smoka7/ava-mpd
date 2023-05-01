@@ -10,6 +10,10 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,jsx}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
+    screens: {
+      sm: "768px",
+      md: "900px",
+    },
     extend: {
       colors: {
         primary: withOpacityValue("--primary-color"),

@@ -3,21 +3,25 @@
     class="flex h-full max-h-full flex-col justify-around space-y-4 bg-primary p-2 text-white md:rounded"
   >
     <div
-      class="my-2 flex w-full flex-col self-center overflow-hidden text-ellipsis text-left text-xl md:max-h-[30dvh]"
+      class="flex w-full flex-col space-y-2 self-center sm:flex-row sm:justify-between md:max-h-[50dvh] md:flex-col md:justify-end"
       v-if="currentSong.Title"
     >
-      <span class="text-ellipsis">
-        {{ currentSong.Title }}
-      </span>
-      <span> {{ currentSong.Album }} </span>
-      <span> {{ currentSong.Artist }} ({{ currentSong.Date }}) </span>
+      <div
+        class="my-2 flex w-full flex-col self-start overflow-hidden text-ellipsis text-left text-xl sm:w-2/3"
+      >
+        <span class="text-ellipsis">
+          {{ currentSong.Title }}
+        </span>
+        <span> {{ currentSong.Album }} </span>
+        <span> {{ currentSong.Artist }} ({{ currentSong.Date }}) </span>
+      </div>
+      <album-art
+        :url="AlbumArtUrl"
+        :altText="currentSong.Title + 'cover'"
+        id="albumArt"
+        class="aspect-square w-2/3 flex-shrink-0 self-center sm:w-1/5 md:w-2/3"
+      />
     </div>
-    <album-art
-      :url="AlbumArtUrl"
-      :altText="currentSong.Title + 'cover'"
-      id="albumArt"
-      class="aspect-square w-2/3 flex-shrink-0 self-center md:w-1/2"
-    />
     <volume-control :v-if="status != null" :volume="Number(status.volume)" />
     <PlaybackCommands />
     <div class="flex w-full flex-col justify-start" v-if="status.elapsed">
