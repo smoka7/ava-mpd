@@ -110,7 +110,7 @@ func (a action) GetSongFile(id int) (string, error) {
 // returns the boundaries of song in Queue
 func (a action) findSongsAlbum(pos int) (int, int) {
 	queue, err := a.PlaylistInfo(-1, -1)
-	if err != nil {
+	if err != nil || len(queue) == 0 {
 		config.Log(err)
 		return 0, 0
 	}
@@ -135,15 +135,19 @@ func (a action) findSongsAlbum(pos int) (int, int) {
 func (a action) getCurrentSongPos() int {
 	cs, err := a.CurrentSong()
 	// check for empty queue
-	if err != nil || cs == nil {
+	if err != nil {
 		config.Log(err)
-		return 0
+		return -1
+	}
+
+	if len(cs) == 0 {
+		return -1
 	}
 
 	pos, err := strconv.Atoi(cs["Pos"])
 	if err != nil {
 		config.Log(err)
-		return 0
+		return -1
 	}
 	return pos
 }

@@ -58,26 +58,32 @@ func (a action) AddFolder(pos string, uris ...string) {
 			config.Log(err)
 		}
 	}
+	current := a.getCurrentSongPos()
+	if current < 0 {
+		a.addToEndOfQueue(uris)
+		return
+	}
+
 	switch pos {
 	case "currentSong":
-		// check for empty queue
-		cs, err := a.CurrentSong()
-		if err != nil || cs == nil {
-			config.Log(err)
-			return
-		}
-
 		add("+0")
+
 	case "endOfQueue":
-		for _, uri := range uris {
-			err := a.Add(uri)
-			config.Log(err)
-		}
+		a.addToEndOfQueue(uris)
+
 	case "currentAlbum":
-		pos := a.getCurrentSongPos()
-		_, endOfAlbum := a.findSongsAlbum(pos)
+		_, endOfAlbum := a.findSongsAlbum(current)
 		add(fmt.Sprint(endOfAlbum))
 	}
+}
+
+func (a action) addToEndOfQueue(uris []string) {
+	list := a.BeginCommandList()
+	for _, uri := range uris {
+		list.Add(uri)
+	}
+	err := list.End()
+	config.Log(err)
 }
 
 func newFolder(item mpd.Attrs) Directory {

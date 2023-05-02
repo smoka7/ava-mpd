@@ -130,14 +130,21 @@ func (a action) DeletePlaylist(playlist string) {
 
 // adds the playlist to the current queue
 func (a action) LoadPlaylist(d PlaylistData) {
+	pos := a.getCurrentSongPos()
+	if pos < 0 {
+		a.PlaylistLoad(d.Playlist, -1, -1)
+		return
+	}
+
 	switch d.Pos {
 	case "currentSong":
 		a.addAfterPos(d.Playlist, "+0")
+
 	case "endOfQueue":
 		err := a.PlaylistLoad(d.Playlist, -1, -1)
 		config.Log(err)
+
 	case "currentAlbum":
-		pos := a.getCurrentSongPos()
 		_, endOfAlbum := a.findSongsAlbum(pos)
 		a.addAfterPos(d.Playlist, fmt.Sprint(endOfAlbum))
 	}
