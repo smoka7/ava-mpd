@@ -167,13 +167,12 @@ func (a action) AddSongToPlaylist(playlist, file string) {
 
 // returns a list of liked songs
 func (a action) GetLikedSongs() []string {
-	uris, stickers, e := a.StickerFind("", "liked")
-	config.Log(e)
-	likedSongs := make([]string, 0)
-	for i := 0; i < len(stickers); i++ {
-		if stickers[i].Value == "true" {
-			likedSongs = append(likedSongs, uris[i])
-		}
+	uris := getLikedURIS(a.Connection)
+	likedSongs := make([]string, len(uris))
+	i := 0
+	for uri := range uris {
+		likedSongs[i] = uri
+		i++
 	}
 	return likedSongs
 }
@@ -204,6 +203,21 @@ func (a action) GetMostPlayed() []string {
 		mostPlayed = append(mostPlayed, unOrdered[i]["uri"])
 	}
 	return mostPlayed
+}
+
+func getLikedURIS(c config.Connection) map[string]struct{} {
+	c.Connect()
+	attrs, err := c.Command("sticker find song %s %s = %s", "", "liked", "true").AttrsList("file")
+	c.Close()
+	if err != nil {
+		return nil
+	}
+	config.Log(err)
+	uris := make(map[string]struct{}, len(attrs))
+	for _, song := range attrs {
+		uris[song["file"]] = struct{}{}
+	}
+	return uris
 }
 
 // returns the duration of a list of songs

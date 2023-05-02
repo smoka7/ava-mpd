@@ -24,6 +24,7 @@ type Song struct {
 	Id       string `json:",omitempty"`
 	Track    string `json:",omitempty"`
 	Duration string `json:",omitempty"`
+	Liked    bool
 }
 
 type Songs []Song

@@ -47,7 +47,16 @@ func GetQueue(c config.Connection, pageNumber string) (q Queue) {
 	d, u := q.getQueueInPage(c, pageNumber)
 	page := queue[d:u]
 	q.newAlbum(page[0])
+	liked := getLikedURIS(c)
+
 	for i := 1; i < len(page); i++ {
+
+		// find liked songs
+		if _, ok := liked[page[i]["file"]]; ok {
+			page[i]["liked"] = ""
+		}
+
+		// group album's songs together
 		if page[i]["Album"] != page[i-1]["Album"] {
 			q.newAlbum(page[i])
 			continue
@@ -161,12 +170,14 @@ func (a *Album) newSong(song mpd.Attrs) {
 		split := strings.Split(song["file"], "/")
 		song["Title"] = split[len(split)-1]
 	}
+	_, liked := song["liked"]
 	a.Songs = append(a.Songs, Song{
 		Title:    song["Title"],
 		Pos:      song["Pos"],
 		Id:       song["Id"],
 		Track:    song["Track"],
 		Duration: song["duration"],
+		Liked:    liked,
 	})
 }
 
