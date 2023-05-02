@@ -174,6 +174,11 @@ func (a action) GetLikedSongs() []string {
 		likedSongs[i] = uri
 		i++
 	}
+
+	sort.Slice(likedSongs, func(i, j int) bool {
+		return likedSongs[i] < likedSongs[j]
+	})
+
 	return likedSongs
 }
 
