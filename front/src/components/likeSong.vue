@@ -1,19 +1,23 @@
 <template>
   <button aria-label="like-song" :class="btnClass" @click="likeSong">
-    <font-awesome-icon :icon="[pLiked ? 'fas' : 'far', 'heart']" size="2x" />
+    <font-awesome-icon
+      :icon="[pLiked ? 'fas' : 'far', 'heart']"
+      :size="iconSize"
+    />
   </button>
 </template>
 <script setup lang="ts">
 import { useStore } from "../store";
 
 const props = defineProps<{
-  pLiked?: boolean;
-  file?: string;
+  pLiked: boolean;
+  file: string;
+  iconSize: "2x" | "lg";
 }>();
 
 const classes = {
   normal:
-    "px-2 md:p-0 text-red-500 transition-all duration-200 transform hover:scale-125",
+    "px-2 md:p-0 text-rose-500 transition-all duration-200 transform hover:scale-125",
   scale: "scale-105",
   right: "rotate-45",
   left: "-rotate-45",

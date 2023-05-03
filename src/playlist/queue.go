@@ -179,6 +179,7 @@ func (a *Album) newSong(song mpd.Attrs) {
 		Title:    song["Title"],
 		Pos:      song["Pos"],
 		Id:       song["Id"],
+		File:     song["file"],
 		Track:    song["Track"],
 		Duration: song["duration"],
 		Liked:    liked,

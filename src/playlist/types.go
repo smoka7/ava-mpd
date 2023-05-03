@@ -22,6 +22,7 @@ type Song struct {
 	Title    string `json:",omitempty"`
 	Pos      string `json:",omitempty"`
 	Id       string `json:",omitempty"`
+	File     string `json:",omitempty"`
 	Track    string `json:",omitempty"`
 	Duration string `json:",omitempty"`
 	Liked    bool

@@ -52,6 +52,8 @@ type Song = {
   Album: string;
   Artist: string;
   Title: string;
+  File: string;
+  Liked: boolean;
   Pos: number;
   Id: number;
   Track: number;
@@ -232,6 +234,7 @@ export const useStore = defineStore("main", {
           event == "update"
         ) {
           this.getCurrentSong();
+          this.getQueue(this.queue.CurrentPage);
           this.setCounter();
         }
 

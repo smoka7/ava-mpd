@@ -10,7 +10,7 @@
         <span>
           {{ state.Info["Title"] }}
         </span>
-        <likeSong :pLiked="state.liked" :file="state.Info['file']" />
+        <likeSong :pLiked="state.liked" :file="state.Info['file']" icon-size="2x"/>
       </h1>
       <button
         aria-label="close-info"

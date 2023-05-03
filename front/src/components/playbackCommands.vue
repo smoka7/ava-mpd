@@ -33,7 +33,7 @@
     >
       <font-awesome-icon icon="step-backward" size="2x" />
     </button>
-    <like-song :pLiked="liked" :file="currentSong.File" />
+    <like-song :pLiked="liked" :file="currentSong.File" icon-size="2x"/>
     <button
       aria-label="toggle-playback"
       @click="Command('toggle')"
