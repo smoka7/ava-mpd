@@ -58,13 +58,13 @@ func (a action) RemoveDuplicatesongs(name string) {
 	}
 
 	// find the duplicate songs
-	songs := make(map[string]bool)
+	songs := make(map[string]struct{})
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, duplicate := songs[queue[i]["file"]]; duplicate {
 			removeDuplicates(i)
 			continue
 		}
-		songs[queue[i]["file"]] = true
+		songs[queue[i]["file"]] = struct{}{}
 	}
 
 	err := cmds.End()
@@ -189,30 +189,36 @@ func (a action) GetLikedSongs() []string {
 	return likedSongs
 }
 
+type song struct {
+	uri         string
+	playedCount string
+}
+
 // returns the list of most played songs
 func (a action) GetMostPlayed() []string {
 	uris, stickers, err := a.StickerFind("", "playedcount")
 	config.Log(err)
 	count := len(uris)
-	unOrdered := make([]map[string]string, 0)
-	mostPlayed := make([]string, 0)
+
+	unOrdered := make([]song, count)
 	for i := 0; i < count; i++ {
-		m := map[string]string{"uri": uris[i], "count": stickers[i].Value}
-		unOrdered = append(unOrdered, m)
+		unOrdered[i] = song{uri: uris[i], playedCount: stickers[i].Value}
 	}
+
 	// sort songs based on played time
 	sort.Slice(unOrdered, func(i, j int) bool {
-		a, err := strconv.Atoi(unOrdered[i]["count"])
-		config.Log(err)
-		b, err := strconv.Atoi(unOrdered[j]["count"])
-		config.Log(err)
+		a, _ := strconv.Atoi(unOrdered[i].playedCount)
+		b, _ := strconv.Atoi(unOrdered[j].playedCount)
 		return a > b
 	})
+
 	if count > 100 {
 		count = 100
 	}
+	mostPlayed := make([]string, count)
+
 	for i := 0; i < count; i++ {
-		mostPlayed = append(mostPlayed, unOrdered[i]["uri"])
+		mostPlayed[i] = unOrdered[i].uri
 	}
 	return mostPlayed
 }

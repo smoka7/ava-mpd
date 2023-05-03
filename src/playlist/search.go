@@ -6,9 +6,9 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-var tags = map[string]bool{
-	"file": true, "Artist": true, "Album": true,
-	"Genre": true, "Date": true, "Title": true,
+var tags = map[string]struct{}{
+	"file": {}, "Artist": {}, "Album": {},
+	"Genre": {}, "Date": {}, "Title": {},
 }
 
 // search for songs in the server
