@@ -1,68 +1,17 @@
 run:
 output:
 linters-settings:
+  govet:
+    enable-all: true
 linters:
-  enable-all: true
-  disable:
-    - interfacer
-    - maligned
-    - scopelint
-    - golint
-    - asciicheck
-    - bodyclose
-    - bidichk
-    - contextcheck
-    - depguard
-    - dogsled
-    - durationcheck
-    - decorder
-    - forbidigo
-    - funlen
-    - gci
-    - gochecknoglobals
-    - gochecknoinits
-    - gocyclo
-    - godot
-    - godox
-    - goerr113
-    - gofmt
-    - goheader
-    - golint
-    - gomnd
-    - gomoddirectives
-    - gomodguard
-    - goprintffuncname
-    - importas
-    - ineffassign
-    - interfacer
-    - lll
-    - makezero
-    - misspell
-    - nestif
-    - nilnil
-    - nilerr
-    - nakedret
-    - nlreturn
-    - nolintlint
-    - paralleltest
-    - promlinter
-    - rowserrcheck
-    - scopelint
-    - stylecheck
-    - unparam
-    - tagliatelle
-    - sqlclosecheck
-    - testpackage
-    - thelper
-    - tparallel
-    - typecheck
-    - unconvert
+  enable:
+    - govet
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - import
+    - performance
     - unused
-    - varcheck
-    - varnamelen
-    - wastedassign
-    - whitespace
-    - wrapcheck
-    - wsl
-issues:
-severity:
+  issues:
+  severity:
