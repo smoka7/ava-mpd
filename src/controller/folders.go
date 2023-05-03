@@ -11,7 +11,7 @@ import (
 func (c Mpd) ServerFolders(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		var request playlist.FolderRequest
-		err = json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 
 		c.Connect()
@@ -35,7 +35,7 @@ func (c Mpd) runFolderCommand(w http.ResponseWriter, request playlist.FolderRequ
 		"list": func() {
 			// TODO change to get
 			folders := a.ListFolders(request.Data)
-			err = json.NewEncoder(w).Encode(folders)
+			err := json.NewEncoder(w).Encode(folders)
 			config.Log(err)
 		},
 	}

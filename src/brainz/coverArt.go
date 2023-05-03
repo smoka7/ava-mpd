@@ -11,12 +11,12 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-// api endpoint of coverArts
+// api endpoint of coverArts.
 const CAURL = "https://coverartarchive.org/release/"
 
 type CoverArtResponse struct {
-	Images  []images `json:"images"`
 	Release string   `json:"release"`
+	Images  []images `json:"images"`
 }
 
 type images struct {
@@ -61,7 +61,7 @@ func fetch(url string) ([]byte, error) {
 	return body, nil
 }
 
-// gets the cover for release releaseID from musicbrainz
+// gets the cover for release releaseID from musicbrainz.
 func GetCover(releaseID string) ([]byte, error) {
 	res, err := fetch(CAURL + releaseID)
 	if err != nil {
@@ -77,7 +77,7 @@ func GetCover(releaseID string) ([]byte, error) {
 	return cover, err
 }
 
-// parses the cover art response and returns the cover url
+// parses the cover art response and returns the cover url.
 func getCoverURL(body []byte) string {
 	var resp CoverArtResponse
 	if err := json.Unmarshal(body, &resp); err != nil {

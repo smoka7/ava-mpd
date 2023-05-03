@@ -17,7 +17,7 @@ type FolderData struct {
 	File string
 }
 
-// returns content of the folder
+// returns content of the folder.
 func (a action) ListFolders(d FolderData) (list ServerList) {
 	contents, err := a.ListInfo(d.File)
 	config.Log(err)
@@ -38,7 +38,7 @@ func (a action) ListFolders(d FolderData) (list ServerList) {
 	return
 }
 
-// clears the current queue and plays the folder
+// clears the current queue and plays the folder.
 func (a action) PlayFolder(uris ...string) {
 	cm := a.BeginCommandList()
 	cm.Clear()
@@ -50,7 +50,7 @@ func (a action) PlayFolder(uris ...string) {
 	config.Log(err)
 }
 
-// adds the folder to the current queue
+// adds the folder to the current queue.
 func (a action) AddFolder(pos string, uris ...string) {
 	add := func(pos string) {
 		for _, uri := range uris {

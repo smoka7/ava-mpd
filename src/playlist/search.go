@@ -11,9 +11,9 @@ var tags = map[string]struct{}{
 	"Genre": {}, "Date": {}, "Title": {},
 }
 
-// search for songs in the server
+// search for songs in the server.
 func SearchServer(c config.Connection, term ...string) (SearchResult, error) {
-	err = validFilter(term...)
+	err := validFilter(term...)
 	config.Log(err)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func SearchServer(c config.Connection, term ...string) (SearchResult, error) {
 	return result, nil
 }
 
-// searchs for the term in server and adds them to current queue
+// searches for the term in server and adds them to current queue.
 func SearchAdd(c config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {
@@ -56,7 +56,7 @@ func SearchAdd(c config.Connection, term ...string) error {
 	return err
 }
 
-// clears the queue then adds the founded songs to queue and plays it
+// clears the queue then adds the founded songs to queue and plays it.
 func SearchPlay(c config.Connection, term ...string) error {
 	err := validFilter(term...)
 	if err != nil {
@@ -70,13 +70,14 @@ func SearchPlay(c config.Connection, term ...string) error {
 	if err != nil {
 		return err
 	}
-	c.Play(-1)
+	err = c.Play(-1)
+	config.Log(err)
+
 	return nil
 }
 
 func searchAdd(c config.Connection, term ...string) error {
-	err = c.Command("searchadd %s %s", term[0], term[1]).OK()
-	return err
+	return c.Command("searchadd %s %s", term[0], term[1]).OK()
 }
 
 func validFilter(filters ...string) error {

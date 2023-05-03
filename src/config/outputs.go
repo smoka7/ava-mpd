@@ -9,8 +9,8 @@ import (
 type (
 	Outputs []Output
 	Output  struct {
-		ID      int
 		Name    string
+		ID      int
 		Enabled bool
 	}
 )
@@ -24,7 +24,7 @@ func newOutput(value mpd.Attrs) Output {
 	}
 }
 
-// returns the mpd outputs
+// returns the mpd outputs.
 func (c Connection) GetOutputs() Outputs {
 	c.Connect()
 	list, err := c.ListOutputs()

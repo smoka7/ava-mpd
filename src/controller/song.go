@@ -16,8 +16,8 @@ type SongRequest struct {
 }
 
 type SongData struct {
-	ID   int
 	File string
+	ID   int
 }
 
 type SongInfoResponse struct {

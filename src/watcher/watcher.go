@@ -23,11 +23,13 @@ func NewClient(c config.Connection) Mpd {
 	return Mpd{c}
 }
 
-// sends the mpd events to client's Socket
+// sends the mpd events to client's Socket.
 func (m Mpd) Serve(ws *websocket.Conn) {
 	event := make(chan string, 4)
-	message := eventMessage{}
 	eventWatcher(m.Connection, event)
+
+	message := eventMessage{}
+
 	for {
 		message.Subsystem = <-event
 		err := websocket.JSON.Send(ws, message)
@@ -35,7 +37,7 @@ func (m Mpd) Serve(ws *websocket.Conn) {
 	}
 }
 
-// connect to mpd server and watches for the subsystem change
+// connect to mpd server and watches for the subsystem change.
 func eventWatcher(c config.Connection, event chan string) {
 	watcher, err := mpd.NewWatcher("tcp", c.Address, c.Password)
 	config.LogAndExit(err)
@@ -52,7 +54,7 @@ func eventWatcher(c config.Connection, event chan string) {
 	}()
 }
 
-// saves the each songs play count
+// saves the each songs play count.
 func (m Mpd) RecordPlayCount() {
 	watcher, err := mpd.NewWatcher("tcp", m.Address, m.Password)
 	config.LogAndExit(err)
@@ -65,13 +67,16 @@ func (m Mpd) RecordPlayCount() {
 		}
 	}()
 
-	status := newStatus()
-	status.compareStatus(m.Connection)
+	playerStatus := newStatus()
+
+	playerStatus.compareStatus(m.Connection)
 	for subsystem := range watcher.Event {
+
 		if subsystem != "player" {
 			continue
 		}
-		status.compareStatus(m.Connection)
+		playerStatus.compareStatus(m.Connection)
+
 	}
 }
 
@@ -83,7 +88,7 @@ func newStatus() status {
 }
 
 // compareStatus compares current and last playing status of server
-// and increments playing count accordingly
+// and increments playing count accordingly.
 func (s *status) compareStatus(c config.Connection) {
 	c.Connect()
 	defer c.Close()
@@ -96,5 +101,6 @@ func (s *status) compareStatus(c config.Connection) {
 		s.state == "play" {
 		song.IncrementPCount(c, currentSong["file"])
 	}
+
 	s.path = currentSong["file"]
 }

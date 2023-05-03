@@ -13,12 +13,12 @@ func (c Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		a := playlist.NewAction(c.Connection)
 		playlist := a.ListStoredPlaylist()
-		err = json.NewEncoder(w).Encode(playlist)
+		err := json.NewEncoder(w).Encode(playlist)
 		config.Log(err)
 
 	case http.MethodPost:
-		var request playlist.PlaylistRequest
-		err = json.NewDecoder(r.Body).Decode(&request)
+		var request playlist.Request
+		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 
 		c.Connect()
@@ -27,7 +27,7 @@ func (c Mpd) StoredPlaylist(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c Mpd) runPlCommand(w http.ResponseWriter, request playlist.PlaylistRequest) {
+func (c Mpd) runPlCommand(w http.ResponseWriter, request playlist.Request) {
 	a := playlist.NewAction(c.Connection)
 	cmd := Commands{
 		"load":            func() { a.LoadPlaylist(request.Data) },
@@ -55,7 +55,7 @@ func (c Mpd) runPlCommand(w http.ResponseWriter, request playlist.PlaylistReques
 		},
 		"list": func() {
 			songs := a.ListSongsIn(request.Data.Playlist)
-			err = json.NewEncoder(w).Encode(songs)
+			err := json.NewEncoder(w).Encode(songs)
 			config.Log(err)
 		},
 	}

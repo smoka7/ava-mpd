@@ -10,11 +10,11 @@ import (
 )
 
 type Connection struct {
-	DownloadCoverArt bool       `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
+	*mpd.Client      `json:"-"` // connected client
 	Address          string     `json:"address"`            // address of mpd server
 	Password         string     `json:"password,omitempty"` // password of mpd server
 	AppPort          string     `json:"app_port"`           // port of current app
-	*mpd.Client      `json:"-"` // connected client
+	DownloadCoverArt bool       `json:"download_cover_art"` // whether to Download missing coverart from musicbrainz
 }
 
 const (
@@ -24,9 +24,7 @@ const (
 	ConfigFileName = "ava.json"
 )
 
-var err error
-
-// return a connection with default values
+// return a connection with default values.
 func newDefaultConfig() Connection {
 	return Connection{
 		Address:          "localhost:6600",
@@ -36,7 +34,7 @@ func newDefaultConfig() Connection {
 	}
 }
 
-// copies the config from to connection to struct and ignores the empty values
+// copies the config from to connection to struct and ignores the empty values.
 func (c *Connection) copyConfig(newConfig Connection) {
 	if newConfig.Address != "" {
 		c.Address = newConfig.Address
@@ -52,7 +50,7 @@ func (c *Connection) copyConfig(newConfig Connection) {
 	c.DownloadCoverArt = newConfig.DownloadCoverArt
 }
 
-// Reads the MPD server connection from environment values
+// Reads the MPD server connection from environment values.
 func (c *Connection) readEnv() {
 	host := os.Getenv("MPD_HOST")
 	port := os.Getenv("MPD_PORT")
@@ -74,7 +72,7 @@ func (c *Connection) parseFlags() (configPath string) {
 	return
 }
 
-// parse the MPD server connection from bin flag
+// parse the MPD server connection from bin flag.
 func ReadConfigs() Connection {
 	c := newDefaultConfig()
 
@@ -86,7 +84,7 @@ func ReadConfigs() Connection {
 	return c
 }
 
-// saves the app configurations to file
+// saves the app configurations to file.
 func (c Connection) SaveConfig() {
 	bytes, err := json.MarshalIndent(c, "", " ")
 	if err != nil {
@@ -114,7 +112,7 @@ func (c Connection) SaveConfig() {
 }
 
 func (c *Connection) loadConfigFile(configPath string) {
-	// when config path is omited use the default one
+	// when config path is omitted use the default one
 	var config Connection
 	if configPath == "" {
 		configDir, err := os.UserConfigDir()
@@ -124,7 +122,7 @@ func (c *Connection) loadConfigFile(configPath string) {
 	}
 
 	// if config file doesn't exist let it go
-	if _, err = os.Stat(configPath); os.IsNotExist(err) {
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		return
 	}
 
@@ -137,20 +135,21 @@ func (c *Connection) loadConfigFile(configPath string) {
 	c.copyConfig(config)
 }
 
-// connects to server
+// connects to server.
 func (c *Connection) Connect() {
-	c.Client, err = mpd.DialAuthenticated("tcp", c.Address, c.Password)
+	client, err := mpd.DialAuthenticated("tcp", c.Address, c.Password)
 	Log(err)
+	c.Client = client
 }
 
-// closes the connection to server
+// closes the connection to server.
 func (c *Connection) Close() {
 	if c.Client != nil {
 		c.Client.Close()
 	}
 }
 
-// deletes the albumArts cache
+// deletes the albumArts cache.
 func DeleteCache() {
 	cache, err := os.UserCacheDir()
 	Log(err)
@@ -159,7 +158,7 @@ func DeleteCache() {
 	Log(err)
 }
 
-// checks log and saves it to cache folder
+// checks log and saves it to cache folder.
 func Log(err error) {
 	if err == nil {
 		return
@@ -188,7 +187,7 @@ func Log(err error) {
 	logFile.Close()
 }
 
-// for none nil errors logs to file and then exits
+// for none nil errors logs to file and then exits.
 func LogAndExit(err error) {
 	if err != nil {
 		Log(err)
@@ -196,13 +195,13 @@ func LogAndExit(err error) {
 	}
 }
 
-// updates the MPD server database
+// updates the MPD server database.
 func (c Connection) UpdateDatabase() {
 	_, err := c.Update("")
 	Log(err)
 }
 
-// returns the MPD database stats
+// returns the MPD database stats.
 func (c Connection) DatabaseStats() (stats mpd.Attrs) {
 	c.Connect()
 	defer c.Close()
@@ -212,25 +211,25 @@ func (c Connection) DatabaseStats() (stats mpd.Attrs) {
 	return
 }
 
-// toggles wheter to download missing covers
+// toggles whether to download missing covers.
 func (c *Connection) ToggleDownloadCover() {
 	c.DownloadCoverArt = !c.DownloadCoverArt
 	c.SaveConfig()
 }
 
-// sets the crossFade
+// sets the crossFade.
 func (c Connection) ChangeCrossfade(second int) {
 	err := c.Command("crossfade %d", second).OK()
 	Log(err)
 }
 
-// sets the crossFade
+// sets the crossFade.
 func (c Connection) ChangeMixRampdb(second int) {
 	err := c.Command("mixrampdb %d", second).OK()
 	Log(err)
 }
 
-// sets the Gain status
+// sets the Gain status.
 func (c Connection) ChangeReplayGain(id int) {
 	modes := map[int]string{
 		0: "off",
@@ -244,7 +243,7 @@ func (c Connection) ChangeReplayGain(id int) {
 	}
 }
 
-// returns the Gain status
+// returns the Gain status.
 func (c Connection) GetReplayGain() string {
 	c.Connect()
 	defer c.Close()

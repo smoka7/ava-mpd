@@ -15,12 +15,12 @@ func (c Mpd) Queue(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		var request playlist.QueueRequest
-		err = json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		c.runCommand(request)
 
 	case http.MethodGet:
-		err = r.ParseForm()
+		err := r.ParseForm()
 		config.Log(err)
 
 		playlist := playlist.GetQueue(c.Connection, r.Form.Get("page"))

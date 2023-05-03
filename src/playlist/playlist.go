@@ -9,36 +9,39 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-type PlaylistRequest struct {
-	Command string       `json:"command"`
-	Data    PlaylistData `json:"data"`
+type Request struct {
+	Command string `json:"command"`
+	Data    Data   `json:"data"`
 }
 
-type PlaylistData struct {
+type Data struct {
 	Playlist    string
 	NewPlaylist string
 	Pos         string
 }
 
-// loads the playlist after the current song in queue
+// loads the playlist after the current song in queue.
 func (a action) addAfterPos(name, pos string) {
 	// 0: means load whole playlist
-	err = a.Command("load %s 0: %s", name, pos).OK()
+	err := a.Command("load %s 0: %s", name, pos).OK()
+	config.Log(err)
 }
 
 // removes duplicate songs based on their file address from the playlist name
-// if name is empty then it deletes duplicate songs in current queue
+// if name is empty then it deletes duplicate songs in current queue.
 func (a action) RemoveDuplicatesongs(name string) {
 	removeFromQueue := name == ""
-	getQueue := func() (queue []mpd.Attrs) {
+	getQueue := func() []mpd.Attrs {
 		if removeFromQueue {
-			queue, err = a.PlaylistInfo(-1, -1)
+			queue, err := a.PlaylistInfo(-1, -1)
 			config.Log(err)
-			return
+
+			return queue
 		}
-		queue, err = a.PlaylistContents(name)
+
+		queue, err := a.PlaylistContents(name)
 		config.Log(err)
-		return
+		return queue
 	}
 
 	queue := getQueue()
@@ -62,6 +65,7 @@ func (a action) RemoveDuplicatesongs(name string) {
 	for i := len(queue) - 1; i >= 0; i-- {
 		if _, duplicate := songs[queue[i]["file"]]; duplicate {
 			removeDuplicates(i)
+
 			continue
 		}
 		songs[queue[i]["file"]] = struct{}{}
@@ -71,7 +75,7 @@ func (a action) RemoveDuplicatesongs(name string) {
 	config.Log(err)
 }
 
-// removes songs that are removed or replaced from the server
+// removes songs that are removed or replaced from the server.
 func (a action) RemoveInvalidsongs(name string) {
 	queue, err := a.PlaylistContents(name)
 	config.Log(err)
@@ -85,7 +89,7 @@ func (a action) RemoveInvalidsongs(name string) {
 	config.Log(err)
 }
 
-// return a list of playlists
+// return a list of playlists.
 func (a action) ListStoredPlaylist() (playlists Playlists) {
 	a.Connect()
 	defer a.Close()
@@ -99,10 +103,11 @@ func (a action) ListStoredPlaylist() (playlists Playlists) {
 			SongsCount: uint(len(songs)),
 		})
 	}
+
 	return
 }
 
-// returns list of playlist's song
+// returns list of playlist's song.
 func (a action) ListSongsIn(playlist string) (songs Songs) {
 	contents, err := a.PlaylistContents(playlist)
 	config.Log(err)
@@ -116,23 +121,24 @@ func (a action) ListSongsIn(playlist string) (songs Songs) {
 	return
 }
 
-// clears the stored playlist from server
+// clears the stored playlist from server.
 func (a action) ClearPlaylist(playlist string) {
 	err := a.PlaylistClear(playlist)
 	config.Log(err)
 }
 
-// deletes the stored playlist from server
+// deletes the stored playlist from server.
 func (a action) DeletePlaylist(playlist string) {
 	err := a.Command("rm %s", playlist).OK()
 	config.Log(err)
 }
 
-// adds the playlist to the current queue
-func (a action) LoadPlaylist(d PlaylistData) {
+// adds the playlist to the current queue.
+func (a action) LoadPlaylist(d Data) {
 	pos := a.getCurrentSongPos()
 	if pos < 0 {
-		a.PlaylistLoad(d.Playlist, -1, -1)
+		err := a.PlaylistLoad(d.Playlist, -1, -1)
+		config.Log(err)
 		return
 	}
 
@@ -150,8 +156,8 @@ func (a action) LoadPlaylist(d PlaylistData) {
 	}
 }
 
-// clears the current queue and plays the playlist
-func (a action) PlayPlaylist(d PlaylistData) {
+// clears the current queue and plays the playlist.
+func (a action) PlayPlaylist(d Data) {
 	cm := a.BeginCommandList()
 	cm.Clear()
 	cm.PlaylistLoad(d.Playlist, -1, -1)
@@ -160,19 +166,19 @@ func (a action) PlayPlaylist(d PlaylistData) {
 	config.Log(err)
 }
 
-// renames the name playlist to newName
-func (a action) RenamePlaylist(d PlaylistData) {
+// renames the name playlist to newName.
+func (a action) RenamePlaylist(d Data) {
 	err := a.PlaylistRename(d.Playlist, d.NewPlaylist)
 	config.Log(err)
 }
 
-// adds the song to playlist
+// adds the song to playlist.
 func (a action) AddSongToPlaylist(playlist, file string) {
 	err := a.PlaylistAdd(playlist, file)
 	config.Log(err)
 }
 
-// returns a list of liked songs
+// returns a list of liked songs.
 func (a action) GetLikedSongs() []string {
 	uris := getLikedURIS(a.Connection)
 	likedSongs := make([]string, len(uris))
@@ -194,7 +200,7 @@ type song struct {
 	playedCount string
 }
 
-// returns the list of most played songs
+// returns the list of most played songs.
 func (a action) GetMostPlayed() []string {
 	uris, stickers, err := a.StickerFind("", "playedcount")
 	config.Log(err)
@@ -238,12 +244,13 @@ func getLikedURIS(c config.Connection) map[string]struct{} {
 	return uris
 }
 
-// returns the duration of a list of songs
+// returns the duration of a list of songs.
 func getDurationSum(songs []mpd.Attrs) uint {
 	sum := 0.0
 	for _, song := range songs {
 		duration, _ := strconv.ParseFloat(song["duration"], 64)
 		sum += duration
 	}
+
 	return uint(sum)
 }

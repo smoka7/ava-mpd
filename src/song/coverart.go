@@ -9,23 +9,24 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-// message to send to client when we can't find any cover
+// message to send to client when we can't find any cover.
 const DefaultCover = "default"
 
-// path of coverarts cache directory
+// path of coverarts cache directory.
 var coversDirectory string
 
-// makes the coverArt cache directory for firstTime Use
+// makes the coverArt cache directory for firstTime Use.
 func init() {
 	coversDirectory, _ = os.UserCacheDir()
 	coversDirectory += "/ava-mpd/coverart/"
-	if _, e := os.Stat(coversDirectory); os.IsNotExist(e) {
+
+	if _, err := os.Stat(coversDirectory); os.IsNotExist(err) {
 		err = os.MkdirAll(coversDirectory, 0o777)
 		config.Log(err)
 	}
 }
 
-// returns the URL of the song
+// returns the URL of the song.
 func ServeAlbumArt(c config.Connection, songPath string) string {
 	if songPath == "" {
 		return DefaultCover
@@ -35,14 +36,14 @@ func ServeAlbumArt(c config.Connection, songPath string) string {
 	defer c.Close()
 
 	song := NewSong(c, songPath)
-	err = song.setCoverArtPath()
+	err := song.setCoverArtPath()
 	if err != nil {
 		return DefaultCover
 	}
 
-	//  if cover isn't cached get it from mpd
+	//  if cover isn't cached get it from mpd.
 	if _, err := os.Stat(song.CoverArt.path); os.IsNotExist(err) {
-		err := song.getAlbumArt(c)
+		err = song.getAlbumArt(c)
 		if err != nil {
 			config.Log(err)
 			return DefaultCover
@@ -51,14 +52,14 @@ func ServeAlbumArt(c config.Connection, songPath string) string {
 	return song.CoverArt.url
 }
 
-// gets the cover from mpd
+// gets the cover from mpd.
 func (s *Song) getAlbumArt(c config.Connection) error {
 	coverBin, err := c.AlbumArt(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return nil
 	}
-	//  get the embed cover
+	//  get the embed cover.
 	coverBin, err = c.ReadPicture(s.Info["file"])
 	if err == nil {
 		s.writeCoverToFile(coverBin)
@@ -67,7 +68,7 @@ func (s *Song) getAlbumArt(c config.Connection) error {
 
 	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok && c.DownloadCoverArt &&
 		releaseID != "" {
-		// create a nil temp file so we don't send multiple request for cover
+		// create a nil temp file so we don't send multiple request for cover.
 		s.writeCoverToFile(nil)
 		coverBin, err = brainz.GetCover(releaseID)
 		if err == nil {
@@ -81,13 +82,13 @@ func (s *Song) getAlbumArt(c config.Connection) error {
 	return err
 }
 
-// writes the cover data to cache folder
+// writes the cover data to cache folder.
 func (s *Song) writeCoverToFile(data []byte) {
-	err = os.WriteFile(s.CoverArt.path, data, 0o600)
+	err := os.WriteFile(s.CoverArt.path, data, 0o600)
 	config.Log(err)
 }
 
-// finds the path and URL of the cover art
+// finds the path and URL of the cover art.
 func (s *Song) setCoverArtPath() error {
 	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
 
@@ -96,7 +97,7 @@ func (s *Song) setCoverArtPath() error {
 	}
 
 	if fileName == "" {
-		err = errors.New("couldn't find a name for cover")
+		err := errors.New("couldn't find a name for cover")
 		config.Log(err)
 		return err
 	}
@@ -106,7 +107,7 @@ func (s *Song) setCoverArtPath() error {
 	return nil
 }
 
-// return a valid file name
+// return a valid file name.
 func sanitize(name string) string {
 	return base32.StdEncoding.EncodeToString([]byte(name))
 }

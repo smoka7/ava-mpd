@@ -37,8 +37,8 @@ func TestGetImageURL(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		args    args
 		wantURL string
+		args    args
 	}{
 		{
 			name: "one",

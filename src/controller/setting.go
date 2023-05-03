@@ -23,9 +23,9 @@ type settingData struct {
 }
 
 type SettingsResponse struct {
-	Outputs          config.Outputs
-	DatabaseStats    mpd.Attrs
 	ReplayGain       string
+	DatabaseStats    mpd.Attrs
+	Outputs          config.Outputs
 	DownloadCoverArt bool
 }
 
@@ -68,7 +68,7 @@ func (c Mpd) setingcommand(request SettingRequest) {
 		crossfade: func(value int) {
 			c.ChangeCrossfade(value)
 		},
-		download: func(value int) {
+		download: func(_ int) {
 			c.ToggleDownloadCover()
 		},
 		mixrampdb: func(value int) {
@@ -80,13 +80,13 @@ func (c Mpd) setingcommand(request SettingRequest) {
 		disableOutput: func(value int) {
 			c.ToggleOutput(value, false)
 		},
-		deleteCache: func(value int) {
+		deleteCache: func(_ int) {
 			config.DeleteCache()
 		},
 		setGain: func(value int) {
 			c.ChangeReplayGain(value)
 		},
-		updateDatabase: func(value int) {
+		updateDatabase: func(_ int) {
 			c.UpdateDatabase()
 		},
 	}

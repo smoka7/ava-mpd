@@ -1,17 +1,17 @@
 package playlist
 
 type Queue struct {
+	Albums          Albums `json:",omitempty"`
 	Length          uint
 	CurrentSongPage uint
 	CurrentPage     uint
 	LastPage        uint
 	Duration        uint
-	Albums          Albums `json:",omitempty"`
 }
 
 type Album struct {
-	Songs               Songs
 	Album, Artist, Date string
+	Songs               Songs
 }
 
 type Albums []Album
@@ -56,5 +56,3 @@ type ServerList struct {
 }
 
 type SearchResult map[string]Files
-
-var err error

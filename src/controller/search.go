@@ -10,8 +10,8 @@ import (
 )
 
 type SearchRequest struct {
-	Terms   []string `json:"terms"`
 	Command string   `json:"command"`
+	Terms   []string `json:"terms"`
 }
 
 type SearchResponse struct {
@@ -25,7 +25,7 @@ func (c *Mpd) SearchServer(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		var request SearchRequest
 		var files playlist.SearchResult
-		err = json.NewDecoder(r.Body).Decode(&request)
+		err := json.NewDecoder(r.Body).Decode(&request)
 		config.Log(err)
 		switch request.Command {
 		case "search":

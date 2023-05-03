@@ -63,29 +63,36 @@ func serveRoutes() {
 	http.HandleFunc("/api/setting", cl.Settings)
 }
 
-// implements http.ResponseWriter
+// implements http.ResponseWriter.
 func (w gzipResponseWriter) Write(b []byte) (int, error) {
 	return w.Writer.Write(b)
 }
 
-// sets cache-control max-age's to 2 days and writes response in gzip if it is supported
+// sets cache-control max-age's to 2 days and writes response in gzip if it is supported.
 func cacheControl(h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=172800")
+
+		// do not compress if client doesn't support it
 		if !strings.Contains(r.Header.Get("accept-Encoding"), "gzip") {
 			h.ServeHTTP(w, r)
+
 			return
 		}
+
 		w.Header().Set("Content-Encoding", "gzip")
+
 		gzipWriter := gzip.NewWriter(w)
 		defer gzipWriter.Close()
+
 		gzipResponse := gzipResponseWriter{Writer: gzipWriter, ResponseWriter: w}
 		h.ServeHTTP(gzipResponse, r)
 	}
+
 	return http.HandlerFunc(fn)
 }
 
-// returns caver art files from cache
+// returns caver art files from cache.
 func serveCoverArts() {
 	cache, err := os.UserCacheDir()
 	config.Log(err)
@@ -95,7 +102,7 @@ func serveCoverArts() {
 	http.Handle("/coverart/", cacheControl(http.FileServer(http.Dir(coverArtDir))))
 }
 
-// returns current host IP in LAN
+// returns current host IP in LAN.
 func getHostIP() string {
 	conn, err := net.Dial("udp", "192.168.1.1:80")
 	config.Log(err)

@@ -9,16 +9,14 @@ import (
 	"github.com/smoka7/ava/src/config"
 )
 
-var err error
-
 type CoverArt struct {
 	url, path string
 }
 
 type Song struct {
 	Info     mpd.Attrs
-	Liked    bool
 	CoverArt CoverArt
+	Liked    bool
 }
 
 func NewSong(c config.Connection, path string) Song {
@@ -27,31 +25,35 @@ func NewSong(c config.Connection, path string) Song {
 	return song
 }
 
-// returns the server status
+// returns the server status.
 func GetStatus(c config.Connection) (status mpd.Attrs) {
 	c.Connect()
 	defer c.Close()
-	status, err = c.Status()
+	status, err := c.Status()
 	config.Log(err)
 	return
 }
 
-// returns the currentsong info
+// returns the currentsong info.
 func GetCurrentSong(c config.Connection) (song Song) {
 	c.Connect()
 	defer c.Close()
-	song.Info, err = c.CurrentSong()
+
+	info, err := c.CurrentSong()
 	config.Log(err)
+	song.Info = info
+
 	liked := getSticker(c, song.Info["file"], "liked")
 	if liked != nil && liked.Value != "false" {
 		song.Liked = true
 		return
 	}
 	song.Liked = false
+
 	return
 }
 
-// gets the song info
+// gets the song info.
 func (s *Song) setSongInfo(c config.Connection, file string) {
 	info, err := c.ListAllInfo(file)
 	config.Log(err)
@@ -60,29 +62,29 @@ func (s *Song) setSongInfo(c config.Connection, file string) {
 	}
 }
 
-// set the sticker name to value for song
+// set the sticker name to value for song.
 func setSticker(c config.Connection, song, name, value string) {
-	err = c.StickerSet(song, name, value)
+	err := c.StickerSet(song, name, value)
 	config.Log(err)
 }
 
-// returns all the stickers of a song
+// returns all the stickers of a song.
 func GetStickers(c config.Connection, file string) []mpd.Sticker {
 	stickers, err := c.StickerList(file)
 	config.Log(err)
 	return stickers
 }
 
-// return the sticker name of a song
+// return the sticker name of a song.
 func getSticker(c config.Connection, file, name string) (status *mpd.Sticker) {
-	status, err = c.StickerGet(file, name)
+	status, err := c.StickerGet(file, name)
 	if err != nil && err.Error() != "command 'sticker' failed: no such sticker" {
 		config.Log(err)
 	}
 	return
 }
 
-// Increments played count of current song
+// Increments played count of current song.
 func IncrementPCount(c config.Connection, filepath string) {
 	setLastPlayed(c, filepath)
 	playedCount := getSticker(c, filepath, "playedcount")
@@ -95,13 +97,13 @@ func IncrementPCount(c config.Connection, filepath string) {
 	}
 }
 
-// sets last played time of song
+// sets last played time of song.
 func setLastPlayed(c config.Connection, uri string) {
 	now := time.Now().Unix()
 	setSticker(c, uri, "lastplayed", fmt.Sprintf("%d", now))
 }
 
-// toggles like state of song
+// toggles like state of song.
 func ToggleLike(c config.Connection, uri string) {
 	// when uri is empty toggle current song
 	if uri == "" {

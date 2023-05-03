@@ -28,17 +28,17 @@ type CurrentSongResponse struct {
 }
 
 type Status struct {
-	Consume    bool   `json:"consume,omitempty"`
 	Duration   string `json:"duration,omitempty"`
 	Elapsed    string `json:"elapsed,omitempty"`
 	Mixrampdb  string `json:"mixrampdb,omitempty"`
-	Random     bool   `json:"random,omitempty"`
-	Repeat     bool   `json:"repeat,omitempty"`
-	Single     bool   `json:"single,omitempty"`
 	State      string `json:"state,omitempty"`
 	Volume     string `json:"volume,omitempty"`
 	Xfade      string `json:"xfade,omitempty"`
 	UpdatingDB string `json:"updating_db,omitempty"`
+	Consume    bool   `json:"consume,omitempty"`
+	Random     bool   `json:"random,omitempty"`
+	Repeat     bool   `json:"repeat,omitempty"`
+	Single     bool   `json:"single,omitempty"`
 }
 
 type StatusResponse struct {
@@ -59,8 +59,6 @@ type ErorrResponse struct {
 	Error string `json:"error"`
 }
 
-var err error
-
 func NewClient(c config.Connection) (cl Mpd) {
 	cl.Connection = c
 	return
@@ -77,8 +75,8 @@ func (c Mpd) Playback(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// writes the current mpd server status
-func (c Mpd) Status(w http.ResponseWriter, r *http.Request) {
+// writes the current mpd server status.
+func (c Mpd) Status(w http.ResponseWriter, _ *http.Request) {
 	currentSong := song.GetCurrentSong(c.Connection)
 
 	c.Connect()
@@ -127,11 +125,11 @@ func newStatus(status mpd.Attrs) Status {
 	}
 }
 
-// checks if the request is valid and returns an error if not
+// checks if the request is valid and returns an error if not.
 func sendErrorResponse(w http.ResponseWriter, err error) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		err := json.NewEncoder(w).Encode(ErorrResponse{err.Error()})
+		err = json.NewEncoder(w).Encode(ErorrResponse{err.Error()})
 		config.Log(err)
 	}
 }
