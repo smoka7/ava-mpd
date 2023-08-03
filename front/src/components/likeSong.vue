@@ -10,8 +10,8 @@
 import { useStore } from "../store";
 
 const props = defineProps<{
-  pLiked: boolean;
-  file: string;
+  pLiked?: boolean;
+  file?: string;
   iconSize: "2x" | "lg";
 }>();
 

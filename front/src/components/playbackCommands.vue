@@ -33,7 +33,7 @@
     >
       <font-awesome-icon icon="step-backward" size="2x" />
     </button>
-    <like-song :pLiked="liked" :file="currentSong.File" icon-size="2x"/>
+    <like-song :pLiked="liked" :file="currentSongFile" icon-size="2x" />
     <button
       aria-label="toggle-playback"
       @click="Command('toggle')"
@@ -68,7 +68,7 @@ import { toggleMediaController } from "../helpers";
 import { useStore } from "../store";
 
 const store = useStore();
-const currentSong = computed(() => shallowReactive(store.currentSong));
+const currentSongFile = computed(() => store.currentSong.File);
 
 const liked = computed(() => store.currentSong.Liked);
 
