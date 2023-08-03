@@ -33,8 +33,7 @@ const (
 	crossfade      settingCommand = "crossfade"
 	download       settingCommand = "download"
 	mixrampdb      settingCommand = "mixrampdb"
-	enableOutput   settingCommand = "enableOutput"
-	disableOutput  settingCommand = "disableOutput"
+	toggleOutput   settingCommand = "toggleOutput"
 	deleteCache    settingCommand = "deleteCache"
 	setGain        settingCommand = "setGain"
 	updateDatabase settingCommand = "updateDatabase"
@@ -65,30 +64,13 @@ func (c Mpd) setingcommand(request SettingRequest) {
 	defer c.Close()
 
 	cmd := settingCommands{
-		crossfade: func(value int) {
-			c.ChangeCrossfade(value)
-		},
-		download: func(_ int) {
-			c.ToggleDownloadCover()
-		},
-		mixrampdb: func(value int) {
-			c.ChangeMixRampdb(value)
-		},
-		enableOutput: func(value int) {
-			c.ToggleOutput(value, true)
-		},
-		disableOutput: func(value int) {
-			c.ToggleOutput(value, false)
-		},
-		deleteCache: func(_ int) {
-			config.DeleteCache()
-		},
-		setGain: func(value int) {
-			c.ChangeReplayGain(value)
-		},
-		updateDatabase: func(_ int) {
-			c.UpdateDatabase()
-		},
+		download:       func(_ int) { c.ToggleDownloadCover() },
+		updateDatabase: func(_ int) { c.UpdateDatabase() },
+		deleteCache:    func(_ int) { config.DeleteCache() },
+		toggleOutput:   c.ToggleOutput,
+		crossfade:      c.ChangeCrossfade,
+		mixrampdb:      c.ChangeMixRampdb,
+		setGain:        c.ChangeReplayGain,
 	}
 
 	if action, ok := cmd[request.Command]; ok {

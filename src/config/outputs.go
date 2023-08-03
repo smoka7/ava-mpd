@@ -43,12 +43,7 @@ func (c Connection) GetOutputs() Outputs {
 	return outputs
 }
 
-func (c Connection) ToggleOutput(id int, enabled bool) {
-	if enabled {
-		err := c.EnableOutput(id)
-		Log(err)
-		return
-	}
-	err := c.DisableOutput(id)
+func (c Connection) ToggleOutput(id int) {
+	err := c.Command("toggleoutput %d", id).OK()
 	Log(err)
 }

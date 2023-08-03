@@ -27,13 +27,8 @@ const outputs = computed(() => store.settings.Outputs);
 function toggleOutput(index: number) {
   const id = Number(outputs.value[index].ID);
 
-  let command = "enableOutput";
-  if (outputs.value[index].Enabled) {
-    command = "disableOutput";
-  }
-
   store.sendCommandToSetting({
-    command: command,
+    command: "toggleOutput",
     data: { Value: id },
   });
 }
