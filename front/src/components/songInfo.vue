@@ -8,7 +8,7 @@
         class="flex items-center space-x-4 text-ellipsis text-3xl font-bold text-primary underline decoration-accent md:mr-2"
       >
         <span>
-          {{ state.Info["Title"] }}
+          {{ state.Info.Title }}
         </span>
         <likeSong :pLiked="state.liked" :file="state.Info['file']" icon-size="2x"/>
       </h1>

@@ -10,44 +10,56 @@ import (
 	"github.com/smoka7/ava/src/song"
 )
 
+type songCommand string
+
+const (
+	like     songCommand = "like"
+	info     songCommand = "info"
+	albumArt songCommand = "albumArt"
+)
+
 type SongRequest struct {
-	Command string   `json:"command"`
-	Data    SongData `json:"data"`
+	Command songCommand `json:"command"`
+	Data    SongData    `json:"data"`
 }
 
 type SongData struct {
-	File string
-	ID   int
+	File string `json:""`
+	ID   int    `json:""`
 }
 
 type SongInfoResponse struct {
-	Info     mpd.Attrs
-	Stickers []mpd.Sticker
+	Info     song.SongInfo `json:""`
+	Stickers []mpd.Sticker `json:""`
 }
 
 type CoverArtResponse struct {
-	Url string
+	Url string `json:""`
 }
 
 func (c Mpd) Song(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		return
+	}
+
 	var request SongRequest
-	if r.Method == http.MethodPost {
-		err := json.NewDecoder(r.Body).Decode(&request)
+	err := json.NewDecoder(r.Body).Decode(&request)
+	config.Log(err)
+
+	c.Connect()
+	defer c.Close()
+
+	switch request.Command {
+	case like:
+		song.ToggleLike(c.Connection, request.Data.File)
+	case info:
+		response := c.getSongResponse(request.Data.ID)
+		err := json.NewEncoder(w).Encode(response)
 		config.Log(err)
-		c.Connect()
-		switch request.Command {
-		case "like":
-			song.ToggleLike(c.Connection, request.Data.File)
-		case "info":
-			response := c.getSongResponse(request.Data.ID)
-			err := json.NewEncoder(w).Encode(response)
-			config.Log(err)
-		case "albumArt":
-			response := c.getSongCover(request.Data.ID)
-			err := json.NewEncoder(w).Encode(response)
-			config.Log(err)
-		}
-		c.Close()
+	case albumArt:
+		response := c.getSongCover(request.Data.ID)
+		err := json.NewEncoder(w).Encode(response)
+		config.Log(err)
 	}
 }
 

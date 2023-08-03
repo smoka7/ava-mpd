@@ -54,23 +54,22 @@ func ServeAlbumArt(c config.Connection, songPath string) string {
 
 // gets the cover from mpd.
 func (s *Song) getAlbumArt(c config.Connection) error {
-	coverBin, err := c.AlbumArt(s.Info["file"])
+	coverBin, err := c.AlbumArt(s.Info.File)
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return nil
 	}
 	//  get the embed cover.
-	coverBin, err = c.ReadPicture(s.Info["file"])
+	coverBin, err = c.ReadPicture(s.Info.File)
 	if err == nil {
 		s.writeCoverToFile(coverBin)
 		return nil
 	}
 
-	if releaseID, ok := s.Info["MUSICBRAINZ_ALBUMID"]; ok && c.DownloadCoverArt &&
-		releaseID != "" {
+	if c.DownloadCoverArt && s.Info.Musicbrainz_albumid != "" {
 		// create a nil temp file so we don't send multiple request for cover.
 		s.writeCoverToFile(nil)
-		coverBin, err = brainz.GetCover(releaseID)
+		coverBin, err = brainz.GetCover(s.Info.Musicbrainz_albumid)
 		if err == nil {
 			s.writeCoverToFile(coverBin)
 			return nil
@@ -90,10 +89,10 @@ func (s *Song) writeCoverToFile(data []byte) {
 
 // finds the path and URL of the cover art.
 func (s *Song) setCoverArtPath() error {
-	fileName := sanitize(s.Info["Album"] + s.Info["AlbumArtist"])
+	fileName := sanitize(s.Info.Album + s.Info.Albumartist)
 
 	if fileName == "" {
-		fileName = sanitize(s.Info["Title"] + s.Info["Artist"])
+		fileName = sanitize(s.Info.Title + s.Info.Artist)
 	}
 
 	if fileName == "" {

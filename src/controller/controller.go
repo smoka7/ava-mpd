@@ -91,20 +91,20 @@ func (c Mpd) Status(w http.ResponseWriter, _ *http.Request) {
 }
 
 func newCurrentSong(song song.Song) CurrentSongResponse {
-	if song.Info["Title"] == "" {
-		split := strings.Split(song.Info["file"], "/")
-		song.Info["Title"] = split[len(split)-1]
+	if song.Info.Title == "" {
+		split := strings.Split(song.Info.File, "/")
+		song.Info.Title = split[len(split)-1]
 	}
 
 	return CurrentSongResponse{
-		Album:  song.Info["Album"],
-		Artist: song.Info["Artist"],
-		Date:   song.Info["Date"],
-		Genre:  song.Info["Genre"],
-		Id:     song.Info["Id"],
-		Pos:    song.Info["Pos"],
-		Title:  song.Info["Title"],
-		File:   song.Info["file"],
+		Album:  song.Info.Album,
+		Artist: song.Info.Artist,
+		Date:   song.Info.Date,
+		Genre:  song.Info.Genre,
+		Id:     song.Info.Id,
+		Pos:    song.Info.Pos,
+		Title:  song.Info.Title,
+		File:   song.Info.File,
 		Liked:  song.Liked,
 	}
 }

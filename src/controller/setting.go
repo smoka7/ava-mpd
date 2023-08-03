@@ -23,13 +23,13 @@ type settingData struct {
 }
 
 type SettingsResponse struct {
-	ReplayGain       string
-	DatabaseStats    mpd.Attrs
-	Outputs          config.Outputs
-	DownloadCoverArt bool
+	ReplayGain       string         `json:"ReplayGain"`
+	DatabaseStats    mpd.Attrs      `json:"DatabaseStats"`
+	Outputs          config.Outputs `json:"Outputs"`
+	DownloadCoverArt bool           `json:"DownloadCoverArt"`
 }
 
-var (
+const (
 	crossfade      settingCommand = "crossfade"
 	download       settingCommand = "download"
 	mixrampdb      settingCommand = "mixrampdb"

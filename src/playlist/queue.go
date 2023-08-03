@@ -25,9 +25,6 @@ type action struct {
 const ClientQueueLimit = 200
 
 func NewAction(c config.Connection) action {
-	if c.Client.Ping() != nil {
-		c.Connect()
-	}
 	return action{c}
 }
 
