@@ -2,6 +2,7 @@
   <button aria-label="like-song" :class="btnClass" @click="likeSong">
     <font-awesome-icon
       :icon="[pLiked ? 'fas' : 'far', 'heart']"
+      :class="[pLiked ? 'text-rose-500' : color || 'text-rose-500']"
       :size="iconSize"
     />
   </button>
@@ -11,6 +12,7 @@ import { useStore } from "../store";
 
 const props = defineProps<{
   pLiked?: boolean;
+  color?: string;
   file?: string;
   iconSize: "2x" | "lg";
 }>();

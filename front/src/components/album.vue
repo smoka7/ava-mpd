@@ -74,7 +74,12 @@
       <div
         class="flex flex-shrink-0 cursor-pointer items-center justify-between space-x-2 md:w-2/12"
       >
-        <likeSong :p-liked="song.Liked" :file="song.File" icon-size="lg" />
+        <likeSong
+          :p-liked="song.Liked"
+          :file="song.File"
+          icon-size="lg"
+          color="text-primary/80 dark:text-white/80"
+        />
         <button
           @click="$emit('select', song.Id)"
           aria-label="select-the-song"

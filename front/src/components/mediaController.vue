@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex h-full max-h-full flex-col justify-around space-y-4 bg-primary p-2 text-white md:rounded"
+    class="flex h-full max-h-full flex-col justify-between space-y-2 bg-primary p-2 text-white md:rounded"
   >
     <div
-      class="flex w-full flex-col space-y-2 self-center sm:flex-row sm:justify-between md:max-h-[50dvh] md:flex-col md:justify-end"
+      class="flex w-full flex-col space-y-1 self-center sm:flex-row sm:justify-between md:max-h-[60dvh] md:flex-col md:justify-end"
       v-if="currentSong.Title"
     >
       <div
@@ -19,7 +19,7 @@
         :url="AlbumArtUrl"
         :altText="currentSong.Title + 'cover'"
         id="albumArt"
-        class="aspect-square w-2/3 flex-shrink-0 self-center sm:w-1/5 md:w-2/3"
+        class="aspect-square w-2/3 flex-shrink-0 self-center sm:w-1/5 md:w-3/5"
       />
     </div>
     <volume-control :v-if="status != null" :volume="Number(status.volume)" />

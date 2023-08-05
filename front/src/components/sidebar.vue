@@ -40,13 +40,6 @@
       <TabPanel v-for="(tab, name) in tabs" :key="name" as="div">
         <suspense>
           <component :is="tab.component" />
-          <template #fallback>
-            <div
-              class="flex h-full w-full items-center justify-center p-4 text-7xl underline decoration-accent md:text-9xl"
-            >
-              Loading...
-            </div>
-          </template>
         </suspense>
       </TabPanel>
     </TabPanels>
@@ -141,8 +134,8 @@ const tabs = {
 }
 
 .normal-tab {
-  @apply flex cursor-pointer items-center space-x-1 rounded p-3 duration-300;
-  @apply hover:bg-white/60 hover:px-4 focus:outline-none focus:ring focus:ring-lightest;
+  @apply flex cursor-pointer items-center space-x-1 rounded p-3 duration-100;
+  @apply hover:scale-x-105 hover:bg-white/60 focus:outline-none focus:ring focus:ring-lightest;
   @apply dark:hover:bg-gray-800/70;
   @apply md:p-2;
 }

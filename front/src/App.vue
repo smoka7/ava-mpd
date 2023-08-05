@@ -4,8 +4,9 @@
     v-if="store.connected"
   >
     <div
-      class="fixed inset-0 z-10 h-[100dvh] flex-shrink-0 md:static md:h-full md:w-1/4"
+      class="fixed inset-0 z-10 h-[100dvh] flex-shrink-0 md:static md:h-full md:w-[30%]"
       id="mediaController"
+      v-if="store.queue.Length > 0"
     >
       <media-controller />
     </div>
