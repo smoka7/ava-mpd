@@ -126,7 +126,7 @@ function play(id: number) {
 }
 
 function isCurrSong(pos: number): boolean {
-  return pos === props.currentSongPos;
+  return Number( pos ) === props.currentSongPos;
 }
 
 function isSelected(id: number): boolean {

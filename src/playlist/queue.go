@@ -28,26 +28,45 @@ func NewAction(c config.Connection) action {
 	return action{c}
 }
 
+func exists(arr []string, item string) bool {
+	for _, likedUri := range arr {
+		if likedUri == item {
+			return true
+		}
+	}
+	return false
+}
+
 // returns current queue list.
 func GetQueue(c config.Connection, pageNumber string) (q Queue) {
+	// get Queue Info
 	c.Connect()
 	queue, err := c.PlaylistInfo(-1, -1)
 	c.Close()
 	config.Log(err)
+
+	// set Queue Length and duration
 	q.Length = uint(len(queue))
 	if q.Length == 0 {
 		return
 	}
 	q.Duration = getDurationSum(queue)
+
+	// get queue bound for current page
 	d, u := q.getQueueInPage(c, pageNumber)
 	page := queue[d:u]
+
+	// get liked songs
+	likedSongs := getLikedURIS(c)
+
+	// create the first album
+	if exists(likedSongs, page[0]["file"]) {
+		page[0]["liked"] = ""
+	}
 	q.newAlbum(page[0])
-	liked := getLikedURIS(c)
 
 	for i := 1; i < len(page); i++ {
-
-		// find liked songs
-		if _, ok := liked[page[i]["file"]]; ok {
+		if exists(likedSongs, page[i]["file"]) {
 			page[i]["liked"] = ""
 		}
 

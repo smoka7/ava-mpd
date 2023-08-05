@@ -181,18 +181,12 @@ func (a action) AddSongToPlaylist(playlist, file string) {
 // returns a list of liked songs.
 func (a action) GetLikedSongs() []string {
 	uris := getLikedURIS(a.Connection)
-	likedSongs := make([]string, len(uris))
-	i := 0
-	for uri := range uris {
-		likedSongs[i] = uri
-		i++
-	}
 
-	sort.Slice(likedSongs, func(i, j int) bool {
-		return likedSongs[i] < likedSongs[j]
+	sort.Slice(uris, func(i, j int) bool {
+		return uris[i] < uris[j]
 	})
 
-	return likedSongs
+	return uris
 }
 
 type song struct {
@@ -204,43 +198,36 @@ type song struct {
 func (a action) GetMostPlayed() []string {
 	uris, stickers, err := a.StickerFind("", "playedcount")
 	config.Log(err)
-	count := len(uris)
-
-	unOrdered := make([]song, count)
-	for i := 0; i < count; i++ {
-		unOrdered[i] = song{uri: uris[i], playedCount: stickers[i].Value}
-	}
 
 	// sort songs based on played time
-	sort.Slice(unOrdered, func(i, j int) bool {
-		a, _ := strconv.Atoi(unOrdered[i].playedCount)
-		b, _ := strconv.Atoi(unOrdered[j].playedCount)
+	sort.Slice(uris, func(i, j int) bool {
+		a, _ := strconv.Atoi(stickers[i].Value)
+		b, _ := strconv.Atoi(stickers[j].Value)
 		return a > b
 	})
 
+	count := len(uris)
 	if count > 100 {
 		count = 100
 	}
-	mostPlayed := make([]string, count)
 
-	for i := 0; i < count; i++ {
-		mostPlayed[i] = unOrdered[i].uri
-	}
-	return mostPlayed
+	return uris[:count]
 }
 
-func getLikedURIS(c config.Connection) map[string]struct{} {
+func getLikedURIS(c config.Connection) []string {
 	c.Connect()
-	attrs, err := c.Command("sticker find song %s %s = %s", "", "liked", "true").AttrsList("file")
+	songs, err := c.Command("sticker find song %s %s = %s", "", "liked", "true").AttrsList("file")
 	c.Close()
 	if err != nil {
 		return nil
 	}
 	config.Log(err)
-	uris := make(map[string]struct{}, len(attrs))
-	for _, song := range attrs {
-		uris[song["file"]] = struct{}{}
+	uris := make([]string, len(songs))
+
+	for i, song := range songs {
+		uris[i] = song["file"]
 	}
+
 	return uris
 }
 
