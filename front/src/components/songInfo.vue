@@ -8,9 +8,13 @@
         class="flex items-center space-x-4 text-ellipsis text-3xl font-bold text-primary underline decoration-accent md:mr-2"
       >
         <span>
-          {{ state.Info.Title }}
+          {{ state.Info.title }}
         </span>
-        <likeSong :pLiked="state.liked" :file="state.Info['file']" icon-size="2x"/>
+        <likeSong
+          :pLiked="state.liked"
+          :file="state.Info.file"
+          icon-size="2x"
+        />
       </h1>
       <button
         aria-label="close-info"
@@ -26,19 +30,19 @@
       <album-art
         v-if="state.albumArt != 'default'"
         :url="state.albumArt"
-        :altText="state.Info['Title'] + ' cover'"
+        :altText="state.Info.title + ' cover'"
         class="top-0 h-fit md:sticky md:w-1/2"
       />
       <ul
         :class="{
-          'list flex w-full flex-col rounded bg-white dark:bg-gray-700 dark:text-white': true,
+          'list flex w-full flex-col rounded dark:text-white': true,
           'md:w-1/2': state.albumArt != 'default',
         }"
       >
         <li
           v-for="(value, index) in state.Info"
           :key="index"
-          class="p-2 first:rounded-t last:rounded-b"
+          class="bg-white p-2 first:rounded-t last:rounded-b dark:bg-gray-700"
         >
           {{ index }} : {{ value }}
         </li>

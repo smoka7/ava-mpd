@@ -6,10 +6,12 @@ type StatusResponse = {
   Status: Status;
   CurrentSong: CurrentSong;
 };
+
 type SongCommandData = {
   ID?: number;
   File?: string;
 };
+
 type CurrentSong = {
   Album: string;
   Artist: string;
@@ -21,6 +23,7 @@ type CurrentSong = {
   File: string;
   Liked: boolean;
 };
+
 type Status = {
   state: "pause" | "play" | "stop";
   duration: number;
@@ -34,6 +37,7 @@ type Status = {
   repeat: boolean;
   single: boolean;
 };
+
 type Queue = {
   Length: number;
   CurrentSongPage: number;
@@ -42,12 +46,14 @@ type Queue = {
   Duration: number;
   Albums: Array<Album>;
 };
+
 export type Album = {
   Songs: Songs;
   Album: string;
   Artist: string;
   Date: string;
 };
+
 type Song = {
   Album: string;
   Artist: string;
@@ -59,25 +65,30 @@ type Song = {
   Track: number;
   Duration: number;
 };
+
 export type Songs = Array<Song>;
+
 export type File = { File: string };
+
 export type Directory = { Directory: string };
+
 export type FoldersResponse = {
   Directories: Array<Directory>;
   Files: Array<File>;
 };
+
 type SongInfo = {
-  Album: string;
-  AlbumArtist: string;
-  AlbumArtistSort: string;
-  Artist: string;
-  ArtistSort: string;
-  Composer: string;
-  Date: string;
-  Disc: string;
-  Format: string;
-  Genre: string;
-  Label: string;
+  album: string;
+  albumArtist: string;
+  albumArtistSort: string;
+  artist: string;
+  artistSort: string;
+  composer: string;
+  date: string;
+  disc: string;
+  format: string;
+  genre: string;
+  label: string;
   "Last-Modified": string;
   MUSICBRAINZ_ALBUMARTISTID: string;
   MUSICBRAINZ_ALBUMID: string;
@@ -86,13 +97,15 @@ type SongInfo = {
   MUSICBRAINZ_TRACKID: string;
   MUSICBRAINZ_WORKID: string;
   OriginalDate: string;
-  Time: string;
-  Title: string;
-  Track: string;
+  time: string;
+  title: string;
+  track: string;
   duration: string;
   file: string;
 };
+
 type AlbumArtResponse = { Url: string };
+
 type SongInfoResponse = {
   Info: SongInfo;
   Stickers: Array<Stickers>;
@@ -100,6 +113,7 @@ type SongInfoResponse = {
   albumArt: string;
   show: boolean;
 };
+
 type Stickers = {
   Name: string;
   Value: string;
