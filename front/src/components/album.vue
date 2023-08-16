@@ -40,7 +40,7 @@
       :id="isCurrSong(song.Pos) ? 'currentSong' : ''"
     >
       <div
-        class="mr-2 flex flex-grow-0 space-x-4 overflow-x-clip text-ellipsis"
+        class="col-span-12 col-start-1 row-start-1 row-end-1 mr-2 flex space-x-4 overflow-x-clip text-ellipsis md:col-span-10"
       >
         <button
           class="group relative cursor-pointer"
@@ -50,9 +50,8 @@
             :id="song.Pos"
             :class="[
               isCurrSong(song.Pos)
-                ? ' group-hover:invisible group-focus:invisible'
-                : 'hide-unfocused',
-              'text-green-500',
+                ? ' text-green-500 group-hover:invisible group-focus:invisible'
+                : 'hide-unfocused text-primary',
             ]"
             :icon="['fas', 'play']"
           />
@@ -72,14 +71,15 @@
         </span>
       </div>
       <div
-        class="flex flex-shrink-0 cursor-pointer items-center justify-between space-x-2 md:w-2/12"
+        class="md;pr-0 col-span-5 col-start-8 row-start-2 row-end-2 flex cursor-pointer items-center justify-between space-x-2 pr-2 md:col-span-2 md:col-start-11 md:row-start-1 md:row-end-1"
       >
-        <likeSong
-          :p-liked="song.Liked"
-          :file="song.File"
-          icon-size="lg"
-          color="text-primary/80 dark:text-white/80"
-        />
+        <button
+          aria-label="show-menu"
+          @click="$emit('showMenu', song.Pos, song.Id, $event)"
+          class="hide-unfocused mr-2 text-primary dark:text-white"
+        >
+          <FontAwesomeIcon icon="ellipsis-h" />
+        </button>
         <button
           @click="$emit('select', song.Id)"
           aria-label="select-the-song"
@@ -91,13 +91,14 @@
         >
           <FontAwesomeIcon icon="check-circle" />
         </button>
-        <button
-          aria-label="show-menu"
-          @click="$emit('showMenu', song.Pos, song.Id, $event)"
-          class="hide-unfocused mr-2 text-primary dark:text-white"
-        >
-          <FontAwesomeIcon icon="ellipsis-h" />
-        </button>
+
+        <likeSong
+          :p-liked="song.Liked"
+          :file="song.File"
+          icon-size="lg"
+          color="text-primary/80 dark:text-white/80"
+        />
+
         <span>
           {{ humanizeTime(Number(song.Duration)) }}
         </span>
@@ -126,7 +127,7 @@ function play(id: number) {
 }
 
 function isCurrSong(pos: number): boolean {
-  return Number( pos ) === props.currentSongPos;
+  return Number(pos) === props.currentSongPos;
 }
 
 function isSelected(id: number): boolean {
@@ -178,7 +179,7 @@ details[open] summary ~ * {
 }
 
 .song {
-  @apply my-1 flex w-full justify-between p-1;
+  @apply my-1 grid w-full grid-cols-12 grid-rows-2 justify-between p-1 md:grid-rows-1;
   @apply hover:bg-white/60 dark:text-white dark:hover:bg-gray-800/70;
   @apply md:rounded md:px-3;
 }

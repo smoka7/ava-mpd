@@ -62,6 +62,7 @@ async function closeInfo() {
 * {
   @apply focus:outline-none focus:ring-2 focus:ring-accent  !important;
   @apply focus:rounded;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tooltip {
