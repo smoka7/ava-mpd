@@ -1,27 +1,22 @@
 <template>
   <div
-    class="flex h-full max-h-full flex-col justify-between space-y-2 bg-primary p-2 text-white md:rounded"
+    class="flex h-full max-h-full flex-col justify-between space-y-2 bg-primary p-2 text-white md:rounded-l"
   >
-    <div
-      class="flex w-full flex-col space-y-1 self-center sm:flex-row sm:justify-between md:max-h-[60dvh] md:flex-col md:justify-end"
-      v-if="currentSong.Title"
+    <album-art
+      :url="AlbumArtUrl"
+      :altText="currentSong.Title + 'cover'"
+      id="albumArt"
+      class="-m-2 flex h-[60dvh] w-[104%] flex-col justify-end space-y-1 self-center rounded-tl"
     >
       <div
-        class="my-2 flex w-full flex-col self-start overflow-hidden text-ellipsis text-left text-xl sm:w-2/3"
+        v-if="currentSong.Title"
+        class="absolute my-2 flex h-[50%] w-full flex-col justify-end self-start overflow-hidden text-ellipsis bg-gradient-to-b from-transparent via-primary/40 to-primary p-4 text-left text-3xl backdrop-opacity-70 md:text-xl"
       >
-        <span class="text-ellipsis">
-          {{ currentSong.Title }}
-        </span>
+        <span>{{ currentSong.Title }}</span>
         <span> {{ currentSong.Album }} </span>
         <span> {{ currentSong.Artist }} ({{ currentSong.Date }}) </span>
       </div>
-      <album-art
-        :url="AlbumArtUrl"
-        :altText="currentSong.Title + 'cover'"
-        id="albumArt"
-        class="aspect-square w-2/3 flex-shrink-0 self-center sm:w-1/5 md:w-3/5"
-      />
-    </div>
+    </album-art>
     <volume-control :v-if="status != null" :volume="Number(status.volume)" />
     <PlaybackCommands />
     <div class="flex w-full flex-col justify-start" v-if="status.elapsed">

@@ -25,7 +25,7 @@
       </button>
     </div>
   </div>
-  <div class="flex h-28 w-full justify-around text-lightest md:h-24">
+  <div class="flex h-28 w-full justify-around text-white md:h-24">
     <button
       aria-label="previous-song"
       @click="Command('previous')"
@@ -38,8 +38,9 @@
       aria-label="toggle-playback"
       @click="Command('toggle')"
       :class="[
-        status.state === 'pause' ? 'bg-secondary' : 'bg-accent',
-        'flex h-24 w-24 items-center justify-center rounded-full text-lightest duration-200 hover:scale-105 hover:border-8 hover:border-primary/40 hover:text-lighter',
+        status.state === 'pause' ? 'border-lightest' : 'border-accent',
+        status.state === 'pause' ? 'text-lightest' : 'text-accent',
+        'flex h-24 w-24 items-center justify-center rounded-full border-4 duration-200 hover:scale-105 hover:border-8',
       ]"
     >
       <font-awesome-icon
@@ -114,7 +115,7 @@ function Command(command: string) {
 </script>
 <style lang="postcss">
 .playback-btn {
-  @apply scale-125 transform bg-transparent p-2 text-lightest duration-200 hover:scale-[135%] hover:text-lighter;
+  @apply scale-125 transform bg-transparent p-2 text-white duration-200 hover:scale-[135%] hover:text-lighter;
 }
 .playback-active {
   @apply text-accent !important;

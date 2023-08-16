@@ -25,31 +25,31 @@
       </button>
     </div>
     <div
-      class="flex flex-col justify-around space-y-2 md:flex-row md:space-x-2 md:space-y-0"
+      class="flex flex-col justify-around space-y-2 md:flex-row md:space-y-0"
     >
       <album-art
         v-if="state.albumArt != 'default'"
         :url="state.albumArt"
         :altText="state.Info.title + ' cover'"
-        class="top-0 h-fit md:sticky md:w-1/2"
+        class="top-0 h-fit md:sticky md:w-1/2 aspect-square"
       />
       <ul
         :class="{
-          'list flex w-full flex-col rounded dark:text-white': true,
+          'list flex w-full flex-col rounded-r dark:text-white': true,
           'md:w-1/2': state.albumArt != 'default',
         }"
       >
         <li
           v-for="(value, index) in state.Info"
           :key="index"
-          class="bg-white p-2 first:rounded-t last:rounded-b dark:bg-gray-700"
+          class="bg-white p-2 first:rounded-tr last:rounded-br dark:bg-gray-700"
         >
           {{ index }} : {{ value }}
         </li>
         <li
           v-for="(sticker, index) in state.Stickers"
           :key="index"
-          class="p-2 last:rounded-b"
+          class="bg-white p-2 first:rounded-tr last:rounded-br dark:bg-gray-700"
         >
           {{ sticker.Name }} : {{ sticker.Value }}
         </li>

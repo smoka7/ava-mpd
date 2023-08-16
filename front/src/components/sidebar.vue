@@ -3,7 +3,7 @@
     as="div"
     :selectedIndex="selectedTab"
     @change="changeTab"
-    class="relative flex h-screen flex-col rounded bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
+    class="relative flex h-screen flex-col rounded-tr bg-white/60 text-primary shadow-md backdrop-blur-3xl dark:bg-gray-700/60 dark:text-white"
   >
     <TabList
       as="div"

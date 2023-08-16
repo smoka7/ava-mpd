@@ -40,12 +40,12 @@ progress {
   appearance: none;
 }
 ::-webkit-progress-value {
-  @apply rounded bg-gradient-to-r from-lighter via-secondary to-accent;
+  @apply rounded bg-accent;
 }
 ::-webkit-progress-bar {
   @apply rounded bg-lightest;
 }
 ::-moz-progress-bar {
-  @apply rounded bg-gradient-to-r from-lighter via-secondary to-accent;
+  @apply bg-accent;
 }
 </style>

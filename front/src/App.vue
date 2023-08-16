@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-primary duration-300 dark:text-white md:flex-row md:space-x-2 md:p-2"
+    class="flex h-screen w-screen flex-col overflow-hidden bg-gradient-to-br from-lightest via-lighter to-accent text-primary duration-300 dark:text-white md:flex-row md:p-2"
     v-if="store.connected"
   >
     <div
@@ -50,7 +50,7 @@ function listenKeyEvents(event: KeyboardEvent) {
 }
 
 const songInfo = defineAsyncComponent(
-  () => import("./components/songInfo.vue")
+  () => import("./components/songInfo.vue"),
 );
 const showSongInfo = computed(() => store.song.show);
 
@@ -67,6 +67,7 @@ async function closeInfo() {
 .tooltip {
   @apply relative inline-block;
 }
+
 .tooltip .tooltiptext {
   @apply invisible absolute bottom-full left-1/2 z-10 -ml-10 flex w-fit scale-0 rounded bg-lightest/90 p-1 text-center text-sm text-primary duration-100;
 }
