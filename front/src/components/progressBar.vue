@@ -28,11 +28,11 @@ function sendHover(e: MouseEvent) {
 
 function findSeekValue(e: MouseEvent): number {
   const percent = e.offsetX / (progress.value?.offsetWidth || 0);
-  return Math.floor(percent * props.data.max);
+  return Math.floor(percent * props.data.max + 0.01 * props.data.max);
 }
 
 const progressedPercentage = computed(
-  () => (props.data.value / props.data.max) * 100 || 0
+  () => (props.data.value / props.data.max) * 100 || 0,
 );
 </script>
 <style lang="postcss">

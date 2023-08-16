@@ -1,6 +1,6 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "allowJs": true,
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "allowJs": false,
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
@@ -15,11 +15,5 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    }
-  ]
-}
+  }
+  }
